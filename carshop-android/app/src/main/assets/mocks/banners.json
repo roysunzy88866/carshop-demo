@@ -1,0 +1,30 @@
+{
+  "code": 0,
+  "data": [
+    {
+      "id": 1,
+      "image_url": "https://picsum.photos/seed/banner-sale/1680/480",
+      "link_type": "product",
+      "link_target": 1,
+      "sort": 1,
+      "on_show": true
+    },
+    {
+      "id": 2,
+      "image_url": "https://picsum.photos/seed/banner-charge/1680/480",
+      "link_type": "none",
+      "link_target": null,
+      "sort": 2,
+      "on_show": true
+    },
+    {
+      "id": 3,
+      "image_url": "https://picsum.photos/seed/banner-newuser/1680/480",
+      "link_type": "category",
+      "link_target": 2,
+      "sort": 3,
+      "on_show": true
+    }
+  ],
+  "message": "ok"
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 4 · 屏 1 · 启动 + 合规弹窗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components-car.css" />
+<style>
+  .splash {
+    position: absolute; inset: 0;
+    background: var(--color-background);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .splash__glow {
+    position: absolute;
+    width: 1100px; height: 1100px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-tertiary), transparent 65%);
+    opacity: var(--o-hero-glow);
+    pointer-events: none;
+  }
+  .splash__center { position: relative; text-align: center; }
+  .splash__logo {
+    font-size: 128px; font-weight: var(--fw-bold);
+    letter-spacing: -0.03em; color: var(--color-on-surface);
+    line-height: 1;
+  }
+  .splash__logo em { font-style: normal; color: var(--color-tertiary); }
+  .splash__sub {
+    font-family: var(--font-mono);
+    font-size: 18px; letter-spacing: 0.4em;
+    color: var(--color-text-secondary);
+    text-transform: uppercase; margin-top: 28px;
+  }
+  .splash__foot {
+    position: absolute;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 13px; letter-spacing: 0.18em;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+  }
+  .dialog-wrap {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dlg {
+    width: 760px;
+    padding: 48px 56px;
+  }
+  .dlg .terms-link { color: var(--color-tertiary); font-weight: var(--fw-semibold); cursor: pointer;}
+</style>
+</head>
+<body>
+<div class="stage-page">
+  <header class="stage-label">
+    <div>
+      <h1>屏 1 · 启动 + 合规弹窗</h1>
+      <div>SPLASH(瓷白 + 海泡青光晕)+ DIALOG(scrim 60% · 16dp radius · 两个 80dp 按钮)</div>
+    </div>
+    <div class="right">
+      <b>1920 × 1080</b> · 4 / 8 STAGE<br/>
+      Direction C · 海泡青电车感
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="stage">
+
+      <!-- SPLASH -->
+      <div class="splash">
+        <div class="splash__glow"></div>
+        <div class="splash__center">
+          <div class="splash__logo">EV·MALL<em>.</em></div>
+          <div class="splash__sub">CAR INFOTAINMENT</div>
+        </div>
+        <div class="splash__foot">© 2026 EV·MALL · v1.0.0 · AAOS COMPATIBLE</div>
+      </div>
+
+      <!-- COMPLIANCE DIALOG -->
+      <div class="scrim"></div>
+      <div class="dialog-wrap">
+        <div class="dialog dlg">
+          <h2 class="dialog__title">欢迎使用 EV·MALL 车主商城</h2>
+          <p class="dialog__body">
+            在使用本应用前,请阅读并同意
+            <a class="terms-link">《用户协议》</a>
+            和
+            <a class="terms-link">《隐私政策》</a>
+            。我们将依据相关协议为你提供购物、支付、客服等服务,并妥善保护你的个人信息。
+          </p>
+          <p class="dialog__body t-tertiary" style="font-size:18px">
+            为提供准确的位置推荐(如周边充电桩、附近门店),应用将申请获取车辆 <b style="color:var(--color-text-secondary);font-weight:500">位置信息</b> 权限。
+          </p>
+          <div class="dialog__actions" style="flex-direction:column;gap:12px">
+            <button class="btn btn--primary btn--block">同意并继续</button>
+            <button class="btn btn--secondary btn--block">不同意 · 退出应用</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    const stage = document.querySelector('.stage');
+    const wrap = document.querySelector('.stage-wrap');
+    function fit() {
+      const max = wrap.clientWidth;
+      const scale = Math.min(max / 1920, 1);
+      stage.style.transform = `scale(${scale})`;
+      wrap.style.height = (1080 * scale) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    fit();
+  })();
+</script>
+</body>
+</html>

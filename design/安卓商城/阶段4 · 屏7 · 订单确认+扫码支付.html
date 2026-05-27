@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 4 · 屏 7 · 订单确认 + 扫码支付</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components-car.css" />
+<style>
+  .stage { display: flex; }
+  .main { flex: 1; padding: 24px 40px 0; display: flex; flex-direction: column; min-width: 0; position: relative; }
+  .appbar__back-title { display: flex; align-items: center; gap: 16px; flex: 1; }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0 16px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+  }
+  .left-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .right-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+  .order-group {
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-card);
+    padding: 20px 24px;
+  }
+  .order-group__head {
+    display: flex; align-items: baseline; gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-divider);
+  }
+  .order-group__head h4 { font-size: 22px; font-weight: 700; }
+  .order-group__head .meta {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.06em;
+  }
+  .order-group__list {
+    display: flex; flex-direction: column;
+  }
+  .order-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-outline-variant);
+  }
+  .order-item:last-child { border-bottom: 0; }
+  .order-item .thumb {
+    width: 80px; height: 80px;
+    border-radius: var(--radius-image);
+    background: repeating-linear-gradient(135deg, var(--color-surface-container) 0 8px, var(--color-surface-container-low) 8px 16px);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--color-text-tertiary); letter-spacing: 0.18em;
+  }
+  .order-item .thumb--voucher { background: var(--color-tertiary-container); color: var(--color-tertiary); }
+  .order-item .body { min-width: 0; }
+  .order-item .name { font-size: 18px; font-weight: 600; color: var(--color-on-surface); line-height: 1.4; }
+  .order-item .spec { font-size: 15px; color: var(--color-text-secondary); margin-top: 4px; }
+  .order-item .qty-tag {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--color-text-secondary);
+  }
+
+  /* price detail */
+  .price-detail {
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-card);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .price-detail .row {
+    display: flex; justify-content: space-between;
+    font-size: 18px;
+    color: var(--color-text-secondary);
+  }
+  .price-detail .row b { color: var(--color-on-surface); font-weight: 600; }
+  .price-detail .row.energy b { color: var(--color-text-price-energy); }
+  .price-detail .row.discount b { color: var(--color-error); }
+  .price-detail .divider { margin: 4px 0; }
+  .price-detail .total {
+    font-size: 22px;
+    color: var(--color-text-secondary);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .price-detail .total .v { font-size: 36px; font-weight: 700; color: var(--color-text-price); letter-spacing: -0.02em;}
+  .price-detail .total .v .yuan { font-size: 22px; margin-right: 2px;}
+
+  /* pay method */
+  .pay-method {
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-card);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pay-method h4 { font-size: 22px; font-weight: 700; }
+  .pay-row { display: flex; gap: 12px; }
+  .pay-chip {
+    flex: 1;
+    height: 72px;
+    padding: 0 20px;
+    display: flex; align-items: center; gap: 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .pay-chip .ic {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 700;
+  }
+  .pay-chip .ic--wx { background: #07C160; }
+  .pay-chip .ic--alipay { background: #1677FF; }
+  .pay-chip .name { font-size: 18px; font-weight: 600; flex: 1; color: var(--color-on-surface); }
+  .pay-chip[data-state="selected"] {
+    border-color: var(--color-primary);
+    border-width: 2px;
+    padding: 0 19px;
+  }
+  .pay-chip .check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--color-outline);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pay-chip[data-state="selected"] .check {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+  .pay-chip[data-state="selected"] .check::after {
+    content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--color-on-primary);
+  }
+
+  .invoice {
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-card);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+  }
+  .invoice b { color: var(--color-on-surface); font-weight: 600;}
+
+  /* bottom bar */
+  .bottom-bar {
+    height: 96px;
+    border-top: 1px solid var(--color-divider);
+    background: var(--color-surface);
+    display: flex; align-items: center; gap: 24px;
+    flex-shrink: 0;
+  }
+  .bottom-bar .total {
+    flex: 1;
+    text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .bottom-bar .total .l { font-size: 18px; color: var(--color-text-secondary); }
+  .bottom-bar .total .l b { color: var(--color-on-surface); font-weight: 600; }
+  .bottom-bar .total .price__now { font-size: 36px; }
+  .bottom-bar .btn--primary { width: 320px; height: 80px; font-size: 22px; }
+
+  /* bottomsheet */
+  .bs {
+    height: 720px;
+    padding: 28px 56px 56px;
+    gap: 24px;
+  }
+  .bs__head { padding: 0 0 16px; border-bottom: 1px solid var(--color-divider); }
+  .bs__head .total-line {
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    margin-top: 6px;
+  }
+  .bs__head .total-line b {
+    color: var(--color-text-price);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+  }
+  .bs__head .total-line b .yuan { font-size: 18px; }
+  .bs__body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .bs__qr-block { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+  .bs__qr-block .pay-tab {
+    display: flex; gap: 8px;
+  }
+  .bs__qr-block .pay-tab .chip { height: 40px; padding: 0 16px; font-size: 16px; }
+  .bs__guide {
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .bs__guide .countdown-box {
+    background: var(--color-tertiary-container);
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .bs__guide .countdown-box .lbl {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--color-on-tertiary-container);
+    text-transform: uppercase;
+  }
+  .bs__guide .countdown-box .v {
+    font-family: var(--font-mono);
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--color-tertiary);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .bs__guide .countdown-box .sub {
+    font-size: 16px;
+    color: var(--color-on-tertiary-container);
+    opacity: 0.85;
+  }
+  .bs__guide .steps {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .bs__guide .steps .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 18px;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+  }
+  .bs__guide .steps .step .n {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--color-on-surface);
+    color: var(--color-surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .bs__guide .steps .step b { font-weight: 600; }
+  .bs__guide .secondary-action {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    display: flex; gap: 16px; align-items: center;
+  }
+  .bs__guide .secondary-action a { color: var(--color-tertiary); font-weight: 600; cursor: pointer; }
+
+  /* simple QR svg pattern */
+  .qr-svg { width: 100%; height: 100%; }
+  .qr-svg rect.fg { fill: var(--color-on-surface); }
+</style>
+</head>
+<body>
+<div class="stage-page">
+  <header class="stage-label">
+    <div>
+      <h1>屏 7 · 订单确认 + 扫码支付</h1>
+      <div>地址卡 + 商品分组列表 + 价格明细 + 支付方式 · 底部扫码支付按钮 → 上滑 BottomSheet 720dp(QR 480 + 倒计时)</div>
+    </div>
+    <div class="right">
+      <b>1920 × 1080</b> · 4 / 8 STAGE<br/>
+      Direction C · 海泡青电车感
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="stage">
+
+      <!-- RAIL -->
+      <aside class="rail">
+        <div class="rail__brand">
+          <div class="logo">EV·MALL<em>.</em></div>
+          <div class="sub">CAR INFOTAINMENT</div>
+        </div>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L14 4 L25 13 L25 25 L17 25 L17 17 L11 17 L11 25 L3 25 Z"/></svg>首页
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="10" rx="1"/><rect x="15" y="3" width="10" height="10" rx="1"/><rect x="3" y="15" width="10" height="10" rx="1"/><rect x="15" y="15" width="10" height="10" rx="1"/></svg>分类
+        </button>
+        <button class="rail__item rail__item--active">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 L7 6 L9 19 L23 19 L25 9 L8 9"/><circle cx="11" cy="24" r="1.5"/><circle cx="21" cy="24" r="1.5"/></svg>购物车<span class="badge">5</span>
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25 s-9-5.5-9-13 a5 5 0 0 1 9-3 a5 5 0 0 1 9 3 c0 7.5-9 13-9 13z"/></svg>收藏
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L25 7 L23 24 L5 24 Z"/><path d="M10 11 L10 4 C 10 2.5, 18 2.5, 18 4 L 18 11"/></svg>订单
+        </button>
+        <div class="rail__foot">
+          <div class="avatar">张</div>
+          <div><div class="who">张明</div><div class="plate">京 A·E 88888</div></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- APPBAR -->
+        <div class="appbar">
+          <div class="appbar__back-title">
+            <button class="appbar__icon-btn">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 L10 16 L20 26"/></svg>
+            </button>
+            <div class="appbar__title">确认订单</div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- LEFT COL: address + items -->
+          <div class="left-col">
+            <!-- ADDRESS (only because order contains physical) -->
+            <div class="card--address">
+              <div class="head">
+                <span class="name">张明</span>
+                <span class="phone">138 0000 0000</span>
+                <span class="tag tag--new" style="margin-left:auto">默认</span>
+                <svg style="width:20px;height:20px;color:var(--color-text-tertiary)" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L13 10 L7 16"/></svg>
+              </div>
+              <div class="body">北京市朝阳区国贸 SOHO · 国贸中心 18 层 1801 室 · 实物到货后由保安代收</div>
+            </div>
+
+            <!-- 实物 GROUP -->
+            <div class="order-group">
+              <div class="order-group__head">
+                <h4>实物 · 3 件</h4>
+                <span class="meta">京东仓 · 明日 14:00 前送达</span>
+              </div>
+              <div class="order-group__list">
+                <div class="order-item">
+                  <div class="thumb">OIL</div>
+                  <div class="body">
+                    <div class="name">美孚 1 号 ESP 0W-20 4L · 含上门更换</div>
+                    <div class="spec">容量 4L · 京 A·E 88888 · 国贸 SOHO 安装</div>
+                  </div>
+                  <span class="qty-tag">×1</span>
+                  <span class="price"><span class="price__now"><span class="yuan">¥</span>289</span></span>
+                </div>
+                <div class="order-item">
+                  <div class="thumb">TYRE</div>
+                  <div class="body">
+                    <div class="name">米其林 PILOT SPORT 4 ZP · 单条</div>
+                    <div class="spec">225/45 R18 · 含动平衡 + 上门安装</div>
+                  </div>
+                  <span class="qty-tag">×1</span>
+                  <span class="price"><span class="price__now"><span class="yuan">¥</span>1280</span></span>
+                </div>
+                <div class="order-item">
+                  <div class="thumb">WIPER</div>
+                  <div class="body">
+                    <div class="name">博世 蓝标雨刷 24+22 寸 · 套装</div>
+                    <div class="spec">原厂同款 · 涡轮静音 · 包邮</div>
+                  </div>
+                  <span class="qty-tag">×2</span>
+                  <span class="price"><span class="price__now"><span class="yuan">¥</span>196</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 服务券 GROUP -->
+            <div class="order-group">
+              <div class="order-group__head">
+                <h4>服务券 · 2 张</h4>
+                <span class="meta">购买后立即可用 · 无需物流</span>
+              </div>
+              <div class="order-group__list">
+                <div class="order-item">
+                  <div class="thumb thumb--voucher">NIO</div>
+                  <div class="body">
+                    <div class="name">蔚来 NIO Power 超充月卡 · 北京</div>
+                    <div class="spec">有效期 30 天 · 月内 800 kWh 免费</div>
+                  </div>
+                  <span class="qty-tag">×1</span>
+                  <span class="price price--energy"><span class="price__now"><span class="yuan">¥</span>298</span></span>
+                </div>
+                <div class="order-item">
+                  <div class="thumb thumb--voucher">WASH</div>
+                  <div class="body">
+                    <div class="name">e 洗车 · 单次券</div>
+                    <div class="spec">有效期 90 天 · 北京 18 家通用</div>
+                  </div>
+                  <span class="qty-tag">×2</span>
+                  <span class="price price--energy"><span class="price__now"><span class="yuan">¥</span>116</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COL: price + pay + invoice -->
+          <div class="right-col">
+            <div class="price-detail">
+              <div class="row"><span>商品小计 · 实物 3 件</span><b>¥1,765</b></div>
+              <div class="row energy"><span>服务券小计 · 2 张</span><b>¥414</b></div>
+              <div class="row"><span>运费</span><b>¥0 · 包邮</b></div>
+              <div class="row discount"><span>车主优惠</span><b>−¥98</b></div>
+              <div class="row discount"><span>满 2000 减 80 券</span><b>−¥80</b></div>
+              <div class="divider"></div>
+              <div class="total">
+                <span>应付 <b style="color:var(--color-on-surface);font-weight:600">5 件</b></span>
+                <span class="v"><span class="yuan">¥</span>2,001</span>
+              </div>
+            </div>
+
+            <div class="pay-method">
+              <h4>支付方式</h4>
+              <div class="pay-row">
+                <div class="pay-chip" data-state="selected">
+                  <div class="ic ic--wx">微</div>
+                  <div class="name">微信支付</div>
+                  <div class="check"></div>
+                </div>
+                <div class="pay-chip">
+                  <div class="ic ic--alipay">支</div>
+                  <div class="name">支付宝</div>
+                  <div class="check"></div>
+                </div>
+              </div>
+              <div class="row" style="font-size:15px;color:var(--color-text-tertiary);line-height:1.5">扫码后跳转手机端完成支付 · 支持微信 / 支付宝 / 银联</div>
+            </div>
+
+            <div class="invoice">
+              <span>发票 · <b>不开发票</b></span>
+              <svg style="width:20px;height:20px;color:var(--color-text-tertiary)" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L13 10 L7 16"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM BAR -->
+        <div class="bottom-bar">
+          <div class="total">
+            <span class="l">合计 <b>5 件</b> · 实物 ¥1,667 + 服务 ¥414 − 优惠 ¥80</span>
+            <span class="price price--display"><span class="price__now"><span class="yuan">¥</span>2,001</span></span>
+          </div>
+          <button class="btn btn--primary">扫码支付</button>
+        </div>
+
+        <!-- SCRIM + BOTTOMSHEET -->
+        <div class="scrim"></div>
+        <div class="bottomsheet bs">
+          <div class="bottomsheet__handle"></div>
+          <div class="bs__head">
+            <div class="bottomsheet__head">
+              <div>
+                <div class="bottomsheet__title">扫码支付 · 微信</div>
+                <div class="total-line">应付 <b><span class="yuan">¥</span>2,001<span style="font-size:14px;letter-spacing:0">.00</span></b></div>
+              </div>
+              <button class="bottomsheet__close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="bs__body">
+            <!-- QR + tab -->
+            <div class="bs__qr-block">
+              <div class="qr">
+                <svg class="qr-svg" viewBox="0 0 50 50" shape-rendering="crispEdges">
+                  <!-- finder patterns -->
+                  <g fill="currentColor" style="color:var(--color-on-surface)">
+                    <rect x="0" y="0" width="14" height="14"/><rect x="2" y="2" width="10" height="10" fill="#fff"/><rect x="4" y="4" width="6" height="6"/>
+                    <rect x="36" y="0" width="14" height="14"/><rect x="38" y="2" width="10" height="10" fill="#fff"/><rect x="40" y="4" width="6" height="6"/>
+                    <rect x="0" y="36" width="14" height="14"/><rect x="2" y="38" width="10" height="10" fill="#fff"/><rect x="4" y="40" width="6" height="6"/>
+                  </g>
+                  <!-- noise -->
+                  <g fill="currentColor" style="color:var(--color-on-surface)">
+                    <rect x="16" y="2"  width="2" height="2"/><rect x="22" y="2"  width="2" height="2"/><rect x="28" y="2"  width="4" height="2"/>
+                    <rect x="18" y="6"  width="2" height="2"/><rect x="24" y="6"  width="6" height="2"/><rect x="32" y="6"  width="2" height="2"/>
+                    <rect x="16" y="10" width="2" height="4"/><rect x="22" y="10" width="2" height="2"/><rect x="28" y="10" width="2" height="2"/><rect x="32" y="10" width="2" height="4"/>
+                    <rect x="2"  y="16" width="2" height="2"/><rect x="6"  y="16" width="4" height="2"/><rect x="14" y="16" width="2" height="4"/><rect x="20" y="16" width="2" height="4"/><rect x="26" y="16" width="4" height="2"/><rect x="34" y="16" width="2" height="2"/><rect x="40" y="16" width="2" height="2"/><rect x="46" y="16" width="2" height="2"/>
+                    <rect x="4"  y="20" width="2" height="2"/><rect x="8"  y="20" width="2" height="2"/><rect x="12" y="20" width="2" height="2"/><rect x="18" y="20" width="6" height="2"/><rect x="26" y="20" width="2" height="2"/><rect x="32" y="20" width="2" height="2"/><rect x="38" y="20" width="4" height="2"/><rect x="46" y="20" width="2" height="2"/>
+                    <rect x="2"  y="24" width="4" height="2"/><rect x="10" y="24" width="2" height="2"/><rect x="16" y="24" width="2" height="2"/><rect x="22" y="24" width="2" height="2"/><rect x="28" y="24" width="4" height="2"/><rect x="36" y="24" width="2" height="2"/><rect x="40" y="24" width="6" height="2"/>
+                    <rect x="6"  y="28" width="2" height="2"/><rect x="14" y="28" width="2" height="4"/><rect x="20" y="28" width="4" height="2"/><rect x="26" y="28" width="2" height="2"/><rect x="32" y="28" width="2" height="2"/><rect x="38" y="28" width="2" height="2"/><rect x="44" y="28" width="2" height="2"/>
+                    <rect x="2"  y="32" width="2" height="2"/><rect x="8"  y="32" width="4" height="2"/><rect x="18" y="32" width="2" height="2"/><rect x="22" y="32" width="6" height="2"/><rect x="30" y="32" width="2" height="2"/><rect x="34" y="32" width="4" height="2"/><rect x="40" y="32" width="2" height="2"/><rect x="46" y="32" width="2" height="2"/>
+                    <rect x="16" y="36" width="2" height="2"/><rect x="22" y="36" width="2" height="2"/><rect x="26" y="36" width="4" height="2"/><rect x="32" y="36" width="2" height="2"/><rect x="38" y="36" width="2" height="4"/><rect x="44" y="36" width="2" height="2"/>
+                    <rect x="18" y="40" width="2" height="2"/><rect x="22" y="40" width="2" height="2"/><rect x="28" y="40" width="2" height="2"/><rect x="32" y="40" width="4" height="2"/><rect x="42" y="40" width="2" height="2"/><rect x="46" y="40" width="2" height="2"/>
+                    <rect x="16" y="44" width="2" height="2"/><rect x="22" y="44" width="4" height="2"/><rect x="28" y="44" width="2" height="2"/><rect x="34" y="44" width="2" height="2"/><rect x="38" y="44" width="2" height="2"/><rect x="42" y="44" width="4" height="2"/>
+                    <rect x="20" y="48" width="2" height="2"/><rect x="26" y="48" width="2" height="2"/><rect x="32" y="48" width="4" height="2"/><rect x="40" y="48" width="2" height="2"/><rect x="46" y="48" width="2" height="2"/>
+                  </g>
+                  <!-- center logo -->
+                  <rect x="20" y="20" width="10" height="10" fill="#fff"/>
+                  <rect x="22" y="22" width="6" height="6" fill="#07C160"/>
+                  <text x="25" y="27.2" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="4.5" font-weight="700">微</text>
+                </svg>
+              </div>
+              <div class="pay-tab">
+                <button class="chip" data-state="selected">微信</button>
+                <button class="chip">支付宝</button>
+                <button class="chip">银联</button>
+              </div>
+            </div>
+
+            <!-- guide -->
+            <div class="bs__guide">
+              <div class="countdown-box">
+                <span class="lbl">QR 有效倒计时</span>
+                <span class="v">02 : 45</span>
+                <span class="sub">超时后请关闭弹窗重新扫码</span>
+              </div>
+
+              <div class="steps">
+                <div class="step"><span class="n">1</span><span>打开 <b>微信 / 支付宝</b> 任一 App,使用 <b>扫一扫</b> 功能</span></div>
+                <div class="step"><span class="n">2</span><span>对准车机屏幕左侧二维码完成扫描</span></div>
+                <div class="step"><span class="n">3</span><span>在手机上确认订单 <b>¥2,001.00</b>,完成支付</span></div>
+                <div class="step"><span class="n">4</span><span>车机端将自动收到支付成功提示</span></div>
+              </div>
+
+              <div class="secondary-action">
+                支付遇到问题?<a>切换其他支付方式</a> · <a>联系客服</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    const stage = document.querySelector('.stage');
+    const wrap = document.querySelector('.stage-wrap');
+    function fit() {
+      const max = wrap.clientWidth;
+      const scale = Math.min(max / 1920, 1);
+      stage.style.transform = `scale(${scale})`;
+      wrap.style.height = (1080 * scale) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    fit();
+  })();
+</script>
+</body>
+</html>

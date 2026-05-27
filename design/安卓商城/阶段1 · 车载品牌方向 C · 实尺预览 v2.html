@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>方向 C · 海泡青电车感 · 1920×1080 实尺预览 v2(加大版)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1A2027;
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #F5F7F9;
+    overflow-x: auto;
+  }
+
+  /* page chrome */
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 24px 64px;
+    gap: 32px;
+  }
+  .ribbon {
+    width: 100%;
+    max-width: 1920px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    color: #8FA4B1;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #2A3038;
+  }
+  .ribbon b { color: #fff; font-weight: 500;}
+  .ribbon h1 {
+    font-family: "Noto Sans SC", sans-serif;
+    font-size: 22px;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin-bottom: 6px;
+  }
+  .ribbon .right { text-align: right; line-height: 1.9;}
+
+  /* The 1920×1080 stage · scaled to fit viewport but content sized true-to-spec */
+  .stage-wrap {
+    width: 100%;
+    max-width: 1920px;
+    position: relative;
+  }
+  .stage {
+    width: 1920px;
+    height: 1080px;
+    background: #F5F7F9;
+    color: #1A2027;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #2A3038;
+    transform-origin: top left;
+  }
+
+  /* === LEFT NAV RAIL · 240dp wide · car-scale === */
+  .rail {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #D4DCE4;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rail__brand {
+    padding: 12px 16px 24px;
+    margin-bottom: 8px;
+  }
+  .rail__brand .logo {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1A2027;
+  }
+  .rail__brand .logo em { font-style: normal; color: #00A892;}
+  .rail__brand .sub { font-family: "JetBrains Mono", monospace; font-size: 13px; color: #5D7B8A; letter-spacing: 0.18em; margin-top: 6px; text-transform: uppercase;}
+  .rail__item {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 500;
+    color: #5D7B8A;
+    cursor: pointer;
+  }
+  .rail__item svg { width: 32px; height: 32px; flex-shrink: 0;}
+  .rail__item.is-active {
+    background: #1A2027;
+    color: #fff;
+    position: relative;
+  }
+  .rail__item.is-active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 12px; bottom: 12px;
+    width: 3px;
+    background: #00C2A8;
+    border-radius: 0 2px 2px 0;
+  }
+  .rail__foot {
+    margin-top: auto;
+    padding: 16px;
+    background: #F5F7F9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rail__foot .avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: #1A2027;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .rail__foot .who { font-size: 18px; font-weight: 600;}
+  .rail__foot .plate { font-family: "JetBrains Mono", monospace; font-size: 14px; color: #5D7B8A; letter-spacing: 0.08em; margin-top: 4px;}
+
+  /* === MAIN STAGE · 1680×1080 === */
+  .main {
+    position: absolute;
+    left: 240px; right: 0; top: 0; bottom: 0;
+    padding: 32px 40px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* top bar 80dp */
+  .topbar {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .topbar .search {
+    flex: 1;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 12px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #5D7B8A;
+    font-size: 22px;
+  }
+  .topbar .search svg { width: 28px; height: 28px; }
+  .topbar .badge {
+    height: 64px;
+    padding: 0 24px;
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 20px;
+    color: #1A2027;
+  }
+  .topbar .badge .dot { width: 10px; height: 10px; background: #00C2A8; border-radius: 50%;}
+  .topbar .badge b { font-weight: 600;}
+  .topbar .icon-btn {
+    width: 64px; height: 64px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1A2027;
+    position: relative;
+  }
+  .topbar .icon-btn svg { width: 32px; height: 32px;}
+  .topbar .icon-btn .dot-red {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #E63946;
+    border: 2px solid #fff;
+  }
+
+  /* hero · greeting + range card */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    height: 240px;
+  }
+  .hero-greet {
+    background: #1A2027;
+    color: #fff;
+    border-radius: 16px;
+    padding: 32px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-greet::before {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,194,168,0.18), transparent 60%);
+  }
+  .hero-greet .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: #8FA4B1;
+    text-transform: uppercase;
+  }
+  .hero-greet h2 {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-top: 14px;
+    line-height: 1.2;
+  }
+  .hero-greet .where {
+    font-size: 20px;
+    color: #8FA4B1;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-greet .where svg { width: 22px; height: 22px;}
+  .hero-greet .where b { color: #fff; font-weight: 500;}
+
+  .hero-range {
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hero-range .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hero-range .head .l {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    color: #5D7B8A;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .hero-range .head .tag {
+    padding: 6px 14px;
+    background: #DFFAF4;
+    color: #005245;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .hero-range .km {
+    font-size: 72px;
+    font-weight: 700;
+    color: #00A892;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .hero-range .km .u { font-size: 24px; color: #5D7B8A; margin-left: 8px; font-weight: 500; letter-spacing: 0;}
+  .hero-range .bar {
+    height: 10px;
+    background: #E8EDF1;
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-range .bar::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 78%;
+    background: linear-gradient(90deg, #00C2A8, #00A892);
+    border-radius: 9999px;
+  }
+  .hero-range .sub {
+    font-size: 18px;
+    color: #5D7B8A;
+    display: flex;
+    justify-content: space-between;
+  }
+  .hero-range .sub b { color: #1A2027; font-weight: 600;}
+
+  /* categories rail */
+  .cats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .cat {
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 176px;
+    position: relative;
+  }
+  .cat .ic {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    background: #F5F7F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1A2027;
+  }
+  .cat .ic svg { width: 32px; height: 32px; }
+  .cat .ic--accent { background: #DFFAF4; color: #00A892;}
+  .cat .name { font-size: 24px; font-weight: 600; letter-spacing: -0.005em;}
+  .cat .meta {
+    font-size: 17px;
+    color: #5D7B8A;
+    margin-top: auto;
+  }
+  .cat .meta b { color: #1A2027; font-weight: 600;}
+  .cat .badge {
+    position: absolute;
+    top: 18px; right: 18px;
+    padding: 5px 12px;
+    background: #00C2A8;
+    color: #002A26;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  /* nearby section */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-top: 8px;
+  }
+  .section-head h3 { font-size: 34px; font-weight: 700; letter-spacing: -0.012em;}
+  .section-head .meta-r {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    color: #5D7B8A;
+    letter-spacing: 0.08em;
+  }
+  .section-head .more { color: #00A892; font-size: 20px; font-weight: 500;}
+  .nearby {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .near {
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 22px;
+    align-items: stretch;
+    position: relative;
+  }
+  .near .img {
+    width: 112px; height: 112px;
+    border-radius: 8px;
+    background: repeating-linear-gradient(135deg, #D4DCE4 0 8px, #E8EDF1 8px 16px);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5D7B8A;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+  .near .body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;}
+  .near .name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1A2027;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+  .near .spec {
+    font-size: 17px;
+    color: #5D7B8A;
+    line-height: 1.4;
+  }
+  .near .meta {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .near .price {
+    font-size: 30px;
+    font-weight: 700;
+    color: #00A892;
+    letter-spacing: -0.015em;
+  }
+  .near .price .y { font-size: 16px; margin-right: 2px;}
+  .near .price .u { font-size: 15px; color: #5D7B8A; font-weight: 500; margin-left: 4px;}
+  .near .strike {
+    font-size: 16px;
+    color: #8FA4B1;
+    text-decoration: line-through;
+  }
+  .near .tag-corner {
+    position: absolute;
+    top: 18px; right: 22px;
+    padding: 5px 12px;
+    background: #00C2A8;
+    color: #002A26;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .near .tag-corner.muted { background: #F5F7F9; color: #5D7B8A;}
+
+  /* annotations */
+  .anno-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .anno {
+    position: absolute;
+    color: #00C2A8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: auto;
+  }
+  .anno .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00C2A8;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .anno b { color: #fff; font-weight: 500;}
+
+  /* Type spec card · floats below */
+  .spec-card {
+    width: 100%;
+    max-width: 1920px;
+    background: #2A3038;
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .spec-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .spec-card h4 small { display: block; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.2em; color: #8FA4B1; margin-bottom: 6px; text-transform: uppercase; font-weight: 400;}
+  .spec-card .col h5 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: #8FA4B1;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .spec-card .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid #3A4048;
+    color: #C8D3DC;
+  }
+  .spec-card .row:last-child { border-bottom: 0;}
+  .spec-card .row b { color: #fff; font-weight: 500;}
+  .spec-card .row .v {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+    color: #00C2A8;
+  }
+
+  .pick-bar {
+    width: 100%;
+    max-width: 1920px;
+    margin-top: 16px;
+    padding: 24px 32px;
+    background: #00C2A8;
+    color: #002A26;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pick-bar h4 { font-size: 18px; font-weight: 700; letter-spacing: -0.005em;}
+  .pick-bar p { font-size: 14px; opacity: 0.7; margin-top: 4px;}
+  .pick-bar .picks {
+    display: flex;
+    gap: 8px;
+  }
+  .pick-bar .picks span {
+    padding: 10px 18px;
+    background: #002A26;
+    color: #00C2A8;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="ribbon">
+    <div>
+      <h1>方向 C · 海泡青电车感 · 1920×1080 实尺预览 v2(加大版)</h1>
+      <div>v1 → v2 · body 18→20sp · h2 36→44sp · 续航 56→72sp · 触控 72→80dp · 类目卡 144→176dp</div>
+    </div>
+    <div class="right">
+      <b>SCREEN</b>&nbsp;&nbsp;1920×1080 · landscape<br/>
+      <b>BASE</b>&nbsp;&nbsp;body 20sp · h2 44sp · touch 80dp<br/>
+      <b>STATE</b>&nbsp;&nbsp;PARKED · light only
+    </div>
+  </header>
+
+  <!-- THE STAGE -->
+  <div class="stage-wrap">
+    <div class="stage">
+
+      <!-- LEFT NAV RAIL -->
+      <aside class="rail">
+        <div class="rail__brand">
+          <div class="logo">EV·MALL<em>.</em></div>
+          <div class="sub">CAR INFOTAINMENT</div>
+        </div>
+        <div class="rail__item is-active">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L14 4 L25 13 L25 25 L17 25 L17 17 L11 17 L11 25 L3 25 Z"/></svg>
+          首页
+        </div>
+        <div class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="10" rx="1"/><rect x="15" y="3" width="10" height="10" rx="1"/><rect x="3" y="15" width="10" height="10" rx="1"/><rect x="15" y="15" width="10" height="10" rx="1"/></svg>
+          分类
+        </div>
+        <div class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 L7 6 L9 19 L23 19 L25 9 L8 9"/><circle cx="11" cy="24" r="1.5"/><circle cx="21" cy="24" r="1.5"/></svg>
+          购物车
+        </div>
+        <div class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25 s-9-5.5-9-13 a5 5 0 0 1 9-3 a5 5 0 0 1 9 3 c0 7.5-9 13-9 13z"/></svg>
+          收藏
+        </div>
+        <div class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L25 7 L23 24 L5 24 Z"/><path d="M10 11 L10 4 C 10 2.5, 18 2.5, 18 4 L 18 11"/></svg>
+          订单
+        </div>
+        <div class="rail__foot">
+          <div class="avatar">张</div>
+          <div>
+            <div class="who">张明</div>
+            <div class="plate">京 A·E 88888</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"/><path d="M15 15 L21 21"/></svg>
+            <span>搜索商品、品牌、服务</span>
+          </div>
+          <div class="badge">
+            <span class="dot"></span>
+            <span>已停车 · <b>国贸地下 B2</b></span>
+          </div>
+          <button class="icon-btn">
+            <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3 a8 8 0 0 0 -8 8 c0 6 -3 8 -3 9 h22 c0-1 -3-3 -3-9 a8 8 0 0 0 -8-8 Z"/><path d="M11 23 a3 3 0 0 0 6 0"/></svg>
+            <span class="dot-red"></span>
+          </button>
+          <button class="icon-btn">
+            <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="10" r="5"/><path d="M4 25 C 4 17, 24 17, 24 25"/></svg>
+          </button>
+        </div>
+
+        <!-- HERO -->
+        <div class="hero">
+          <div class="hero-greet">
+            <div class="label">PARKED · 14:32</div>
+            <h2>傍晚好,张明 · 给爱车补点电</h2>
+            <div class="where">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18 s-6-5-6-10 a6 6 0 0 1 12 0 c0 5 -6 10 -6 10 z"/><circle cx="10" cy="8" r="2.5"/></svg>
+              <span>当前 <b>国贸三期 B2 · 215 号车位</b> · 周边 32 项服务可预订</span>
+            </div>
+          </div>
+          <div class="hero-range">
+            <div class="head">
+              <span class="l">RANGE · 续航</span>
+              <span class="tag">充电中 · 12 kW</span>
+            </div>
+            <div>
+              <div class="km">412<span class="u">km</span></div>
+              <div class="bar"></div>
+            </div>
+            <div class="sub">
+              <span><b>78%</b> · 上次满电 3 天前</span>
+              <span>预估满电 02:18</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="cats">
+          <div class="cat">
+            <div class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18 L3 12 C 3 10, 5 8, 7 8 L 21 8 C 23 8, 25 10, 25 12 L 25 18"/><circle cx="7" cy="20" r="3"/><circle cx="21" cy="20" r="3"/><path d="M7 8 L9 4 L19 4 L21 8"/></svg></div>
+            <div class="name">汽车用品</div>
+            <div class="meta"><b>1,280</b> 件 · 包邮</div>
+          </div>
+          <div class="cat">
+            <div class="ic ic--accent"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3 L7 13 L13 13 L9 25 L21 11 L15 11 L17 3 Z"/></svg></div>
+            <div class="name">加油充电</div>
+            <div class="meta"><b>12</b> 桩闲 · 周边</div>
+            <span class="badge">推荐</span>
+          </div>
+          <div class="cat">
+            <div class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3 C 9 9, 6 14, 6 18 a8 8 0 0 0 16 0 c0-4 -3-9 -8-15z"/></svg></div>
+            <div class="name">洗车保养</div>
+            <div class="meta"><b>¥58</b> 起 · 上门</div>
+          </div>
+          <div class="cat">
+            <div class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4 L22 4 L22 12 C 22 16, 18 18, 14 18 C 10 18, 6 16, 6 12 Z"/><path d="M22 6 L25 6 L25 11 L22 11"/><path d="M9 24 L19 24"/><path d="M14 18 L14 24"/></svg></div>
+            <div class="name">周边餐饮</div>
+            <div class="meta"><b>32</b> 家 · 步行 5 分</div>
+          </div>
+          <div class="cat">
+            <div class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="11"/><path d="M3 14 L25 14 M14 3 C 18 8, 18 20, 14 25 C 10 20, 10 8, 14 3"/></svg></div>
+            <div class="name">旅行服务</div>
+            <div class="meta">高速 / 酒店 / 票务</div>
+          </div>
+        </div>
+
+        <!-- NEARBY -->
+        <div class="section-head">
+          <h3>停车 5 分钟内可办</h3>
+          <span class="meta-r">国贸地下 B2 · 实时</span>
+          <span class="more">查看全部 →</span>
+        </div>
+        <div class="nearby">
+          <div class="near">
+            <div class="img">CHARGE</div>
+            <div class="body">
+              <div class="name">特斯拉 V3 超充 · 国贸三期</div>
+              <div class="spec">B2 楼层 · 12 桩闲 / 16 桩 · 最大 250 kW</div>
+              <div class="meta">
+                <span class="price"><span class="y">¥</span>1.28<span class="u">/kWh</span></span>
+                <span class="strike">¥1.68</span>
+              </div>
+            </div>
+            <span class="tag-corner">推荐</span>
+          </div>
+          <div class="near">
+            <div class="img">WASH</div>
+            <div class="body">
+              <div class="name">e 洗车 · 智能机洗 + 内饰擦拭</div>
+              <div class="spec">国贸店 · 排队 2 位 · 约 18 分钟</div>
+              <div class="meta">
+                <span class="price"><span class="y">¥</span>58</span>
+                <span class="strike">¥98</span>
+              </div>
+            </div>
+            <span class="tag-corner muted">8 折</span>
+          </div>
+          <div class="near">
+            <div class="img">FOOD</div>
+            <div class="body">
+              <div class="name">星巴克 · 燕麦拿铁 大杯</div>
+              <div class="spec">国贸店 · 步行 3 分 · 27 分取餐</div>
+              <div class="meta">
+                <span class="price"><span class="y">¥</span>38</span>
+                <span class="strike">¥45</span>
+              </div>
+            </div>
+            <span class="tag-corner muted">车主券</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- annotation overlays · scale dots -->
+      <div class="anno-layer">
+        <div class="anno" style="left:256px;top:30px"><span class="dot"></span>RAIL <b>240dp</b></div>
+        <div class="anno" style="left:660px;top:128px"><span class="dot"></span>TOP BAR <b>80dp</b></div>
+        <div class="anno" style="left:1660px;top:300px"><span class="dot"></span>HERO <b>240dp</b></div>
+        <div class="anno" style="left:320px;top:610px"><span class="dot"></span>CAT TILE <b>min 176dp</b></div>
+        <div class="anno" style="left:1720px;top:820px"><span class="dot"></span>CARD <b>radius 12dp</b></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TYPE SPEC -->
+  <div class="spec-card">
+    <div>
+      <h4><small>TYPE & DENSITY</small>车载 vs 手机</h4>
+      <p style="font-size:12.5px;color:#8FA4B1;line-height:1.55;margin-top:8px">
+        车机观看距离约 70cm,字号需比手机放大 ~30%。所有数字给的是 sp;Compose 1:1 映射。
+      </p>
+    </div>
+    <div class="col">
+      <h5>TYPE 字号阶梯</h5>
+      <div class="row"><span>display-large</span><span class="v">56sp · 700</span></div>
+      <div class="row"><span>headline-large</span><span class="v">44sp · 700</span></div>
+      <div class="row"><span>title-large</span><span class="v">34sp · 700</span></div>
+      <div class="row"><span>title-medium</span><span class="v">24sp · 600</span></div>
+      <div class="row"><span>body-large ★</span><span class="v">20sp · 400</span></div>
+      <div class="row"><span>body-medium</span><span class="v">18sp · 400</span></div>
+      <div class="row"><span>label-small ↓最小</span><span class="v">16sp · 500</span></div>
+    </div>
+    <div class="col">
+      <h5>SPACING · 8dp grid</h5>
+      <div class="row"><span>页面边距</span><span class="v">space-5 · 40dp</span></div>
+      <div class="row"><span>section 间距</span><span class="v">space-3 · 24dp</span></div>
+      <div class="row"><span>卡片内 pad</span><span class="v">space-3-4 · 24-28dp</span></div>
+      <div class="row"><span>卡片间 gap</span><span class="v">space-2 · 16dp</span></div>
+      <div class="row"><span>触控目标 ★</span><span class="v">80dp 主 · 64dp 紧</span></div>
+      <div class="row"><span>圆角</span><span class="v">12dp 卡 · 8dp 元</span></div>
+    </div>
+    <div class="col">
+      <h5>COLOR · 海泡青语义</h5>
+      <div class="row"><span>主色 primary</span><span class="v">#1A2027</span></div>
+      <div class="row"><span>副色 secondary</span><span class="v">#5D7B8A</span></div>
+      <div class="row"><span>强调 tertiary</span><span class="v">#00C2A8 海泡青</span></div>
+      <div class="row"><span>价格红 error</span><span class="v">#E63946</span></div>
+      <div class="row"><span>背景 surface</span><span class="v">#F5F7F9</span></div>
+      <div class="row"><span>分割线</span><span class="v">#D4DCE4</span></div>
+    </div>
+  </div>
+
+  <!-- PICK -->
+  <div class="pick-bar">
+    <div>
+      <h4>v2 加大版 · 字号 / 触控 / 间距 都符合预期了吗?</h4>
+      <p>v2 vs v1:body 18→20sp · h2 36→44sp · 续航 56→72sp · 触控 72→80dp · 类目卡 144→176dp</p>
+    </div>
+    <div class="picks">
+      <span>确认 · 进 Stage 2</span><span>字还要更大</span><span>密度还要更松</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Scale the 1920×1080 stage to fit viewport width
+  function fit() {
+    const stage = document.querySelector('.stage');
+    const wrap = document.querySelector('.stage-wrap');
+    const max = wrap.clientWidth;
+    const scale = Math.min(max / 1920, 1);
+    stage.style.transform = `scale(${scale})`;
+    wrap.style.height = (1080 * scale) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+</script>
+</body>
+</html>

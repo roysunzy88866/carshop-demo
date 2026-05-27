@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 3 · 通用组件库 · 10 类 × 5 态</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components.css" />
+<style>
+  /* ════════ Page chrome (review-only, NOT part of component lib) ════════ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 56px 40px 96px; }
+
+  /* head */
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+    padding-bottom: 24px;
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--color-divider);
+  }
+  .head .crumb {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .head h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  .head h1 small { display: block; font-size: 14px; font-weight: 400; color: var(--color-text-secondary); margin-top: 10px; letter-spacing: 0; }
+  .head .meta { text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-tertiary); line-height: 1.9; }
+  .head .meta b { color: var(--color-on-surface); font-weight: 500; }
+
+  /* file list */
+  .files { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 56px; }
+  .file { border: var(--border-default) solid var(--color-outline); border-radius: var(--radius-sm); padding: 14px 18px; background: var(--color-surface-container-low); display: flex; justify-content: space-between; align-items: center; }
+  .file .name { font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+  .file .desc { font-size: 10.5px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .file .badge { font-family: var(--font-mono); font-size: 10px; padding: 4px 8px; border: var(--border-default) solid var(--color-outline); border-radius: var(--radius-xs); background: var(--color-surface); }
+
+  /* toc */
+  .toc { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-bottom: 72px; }
+  .toc a {
+    text-decoration: none;
+    color: var(--color-on-surface);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 10px 10px;
+    border: 1px solid var(--color-outline);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .toc a:hover { background: var(--color-primary); color: var(--color-on-primary); }
+  .toc a span.n { color: var(--color-text-tertiary); font-size: 9px; letter-spacing: 0.18em; }
+  .toc a:hover span.n { color: var(--color-neutral-400); }
+
+  /* section */
+  section.sec { margin-bottom: 96px; scroll-margin-top: 24px; }
+  .sec-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    padding-bottom: 14px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--color-on-surface);
+  }
+  .sec-head .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; color: var(--color-text-tertiary); margin-bottom: 8px; }
+  .sec-head h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.015em; }
+  .sec-head .meta-r { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-tertiary); text-align: right; line-height: 1.7; }
+  .sec-head .meta-r b { color: var(--color-on-surface); font-weight: 500; }
+
+  /* subsection grid · demo + tokens */
+  .sub { margin-bottom: 48px; }
+  .sub-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--color-divider); }
+  .sub-head h3 { font-size: 15px; font-weight: 600; }
+  .sub-head .hint { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); letter-spacing: 0.06em; }
+
+  /* demo rail · 5 states side-by-side */
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .rail--3  { grid-template-columns: repeat(3, 1fr); }
+  .rail--4  { grid-template-columns: repeat(4, 1fr); }
+  .rail--2  { grid-template-columns: repeat(2, 1fr); }
+  .cell {
+    border: var(--border-default) solid var(--color-outline-variant);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    padding: 24px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 120px;
+    position: relative;
+  }
+  .cell--bg-alt { background: var(--color-surface-container-low); }
+  .cell__state {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+  }
+  .cell__demo { display: flex; align-items: center; justify-content: center; flex: 1; min-height: 60px; padding: 12px 0; }
+
+  /* token card */
+  .toks {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--color-surface-container-low);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 24px;
+  }
+  .toks .k { color: var(--color-text-tertiary); }
+  .toks b { color: var(--color-on-surface); font-weight: 500; }
+
+  /* mock device frame for full-screen previews */
+  .phone {
+    width: 260px;
+    background: var(--color-surface);
+    border: var(--border-default) solid var(--color-outline);
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+  }
+  .phone__status {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-on-surface);
+  }
+  .phone__home {
+    display: flex; justify-content: center; padding: 6px 0 8px;
+  }
+  .phone__home::after {
+    content: ""; width: 96px; height: 3px;
+    border-radius: var(--radius-full);
+    background: var(--color-on-surface);
+    opacity: 0.85;
+  }
+  .phone--with-overlay { position: relative; min-height: 480px; }
+
+  /* footer next */
+  .next {
+    margin-top: 64px; padding: 28px 32px;
+    background: var(--color-primary); color: var(--color-on-primary);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  }
+  .next .left { display: flex; align-items: center; gap: 24px; }
+  .next .num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
+    padding: 6px 10px; border: 1px solid rgba(255,255,255,0.3); border-radius: var(--radius-xs);
+  }
+  .next h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+  .next p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .next .picks { display: flex; gap: 8px; }
+  .next .picks span {
+    font-family: var(--font-mono); font-size: 11px;
+    padding: 8px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: var(--radius-xs);
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body class="cmp-frame">
+
+<div class="wrap">
+
+  <!-- HEAD -->
+  <header class="head">
+    <div>
+      <div class="crumb">STAGE 03 / 04 · COMPONENT LIBRARY</div>
+      <h1>
+        通用组件库 · 10 类 × 5 态
+        <small>严格引用 _tokens.css · 不允许 hardcode · 每个组件标注用了哪些 token · 不画页面(那是阶段 4-7)</small>
+      </h1>
+    </div>
+    <div class="meta">
+      <b>方向</b>&nbsp;&nbsp;A · 极简黑白<br/>
+      <b>状态</b>&nbsp;&nbsp;normal / pressed / disabled / focused / error<br/>
+      <b>圆角</b>&nbsp;&nbsp;默认 4dp · Dialog 8dp · Sheet 12dp<br/>
+      <b>无</b>&nbsp;&nbsp;阴影优先 / 无动效 / 无深色
+    </div>
+  </header>
+
+  <!-- FILES -->
+  <div class="files">
+    <div class="file"><div><div class="name">components/_tokens.css</div><div class="desc">tokens.json → CSS 变量映射</div></div><span class="badge">TOKENS</span></div>
+    <div class="file"><div><div class="name">components/_components.css</div><div class="desc">组件类定义(本页用)</div></div><span class="badge">CSS</span></div>
+    <div class="file"><div><div class="name">阶段3 · 组件库.html</div><div class="desc">本页 · 可视化展示</div></div><span class="badge">REVIEW</span></div>
+    <div class="file"><div><div class="name">阶段3 · 组件-tokens 对照表.md</div><div class="desc">工程消费用</div></div><span class="badge">SPEC</span></div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#s1"><span class="n">01</span>Buttons</a>
+    <a href="#s2"><span class="n">02</span>Inputs</a>
+    <a href="#s3"><span class="n">03</span>Cards</a>
+    <a href="#s4"><span class="n">04</span>Chips &amp; Tags</a>
+    <a href="#s5"><span class="n">05</span>Dialog &amp; Overlay</a>
+    <a href="#s6"><span class="n">06</span>List Items</a>
+    <a href="#s7"><span class="n">07</span>Top App Bar</a>
+    <a href="#s8"><span class="n">08</span>Bottom Tab</a>
+    <a href="#s9"><span class="n">09</span>State Pages</a>
+    <a href="#s10"><span class="n">10</span>Loaders</a>
+  </nav>
+
+  <!-- ════════════════════════════ 01 BUTTONS ════════════════════════════ -->
+  <section class="sec" id="s1">
+    <header class="sec-head">
+      <div>
+        <div class="label">01 · BUTTONS · 按钮</div>
+        <h2>4 变体 · 5 状态 · 高度统一 48dp</h2>
+      </div>
+      <div class="meta-r">
+        <b>height</b> 48dp = <code>space-12</code><br/>
+        <b>radius</b> 4dp = <code>radius-button</code><br/>
+        <b>text</b> <code>label-large</code> · 14sp / 500
+      </div>
+    </header>
+
+    <!-- 1.1 Primary -->
+    <div class="sub">
+      <div class="sub-head"><h3>1.1 Primary · 填充黑底白字 · 主 CTA(立即购买/提交订单)</h3><span class="hint">.btn.btn--primary</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo"><button class="btn btn--primary">立即购买</button></div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo"><button class="btn btn--primary" data-state="pressed">立即购买</button></div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo"><button class="btn btn--primary" data-state="disabled">立即购买</button></div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo"><button class="btn btn--primary" data-state="focused">立即购买</button></div></div>
+        <div class="cell"><span class="cell__state">Loading</span><div class="cell__demo"><button class="btn btn--primary" data-state="loading"><span class="btn__label">立即购买</span><span class="btn__spinner"><span class="spinner" style="border-color:#fff transparent #fff #fff"></span></span></button></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">bg</span> <b>color.semantic.primary</b> <span class="k">→</span> #0F0F0F</div>
+        <div><span class="k">fg</span> <b>color.semantic.on-primary</b> <span class="k">→</span> #FFFFFF</div>
+        <div><span class="k">bg pressed</span> <b>color.primitive.neutral-800</b> <span class="k">→</span> #2E2E2E</div>
+        <div><span class="k">bg disabled</span> <b>color.primitive.neutral-200</b> · fg <b>color.text-disabled</b></div>
+        <div><span class="k">radius</span> <b>radius-button</b> · 4dp</div>
+        <div><span class="k">height</span> <b>space-12</b> · 48dp · pad-button-h <b>space-4</b></div>
+        <div><span class="k">type</span> <b>label-large</b> · 14sp / 500</div>
+        <div><span class="k">focus ring</span> <b>border-focus</b> · 2dp · offset 2px</div>
+      </div>
+    </div>
+
+    <!-- 1.2 Secondary -->
+    <div class="sub">
+      <div class="sub-head"><h3>1.2 Secondary · 描边按钮 · 次级操作(加入购物车/取消)</h3><span class="hint">.btn.btn--secondary</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo"><button class="btn btn--secondary">加入购物车</button></div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo"><button class="btn btn--secondary" data-state="pressed">加入购物车</button></div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo"><button class="btn btn--secondary" data-state="disabled">加入购物车</button></div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo"><button class="btn btn--secondary" data-state="focused">加入购物车</button></div></div>
+        <div class="cell"><span class="cell__state">Loading</span><div class="cell__demo"><button class="btn btn--secondary" data-state="loading"><span class="btn__label">加入购物车</span><span class="btn__spinner"><span class="spinner" style="color:var(--color-on-surface)"></span></span></button></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">bg</span> <b>transparent</b></div>
+        <div><span class="k">fg</span> <b>color.semantic.on-surface</b> · #0F0F0F</div>
+        <div><span class="k">border</span> <b>color.outline</b> · 1dp · #D6D6D6</div>
+        <div><span class="k">border focused</span> <b>color.border-focus</b> · 2dp · #0F0F0F</div>
+        <div><span class="k">bg pressed</span> <b>color.surface-variant</b> · #F5F5F5</div>
+        <div><span class="k">disabled border</span> <b>color.outline-variant</b> · #EAEAEA</div>
+      </div>
+    </div>
+
+    <!-- 1.3 Text -->
+    <div class="sub">
+      <div class="sub-head"><h3>1.3 Text · 纯文字 · 弱操作(查看更多/跳过)</h3><span class="hint">.btn.btn--text</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo"><button class="btn btn--text">查看全部</button></div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo"><button class="btn btn--text" data-state="pressed">查看全部</button></div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo"><button class="btn btn--text" data-state="disabled">查看全部</button></div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo"><button class="btn btn--text" data-state="focused">查看全部</button></div></div>
+        <div class="cell"><span class="cell__state">Loading</span><div class="cell__demo"><button class="btn btn--text" data-state="loading"><span class="btn__label">查看全部</span><span class="btn__spinner"><span class="spinner" style="color:var(--color-primary)"></span></span></button></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">fg</span> <b>color.semantic.primary</b> · #0F0F0F · 文字色</div>
+        <div><span class="k">bg</span> <b>transparent</b> · normal</div>
+        <div><span class="k">bg pressed/focused</span> <b>color.surface-variant</b></div>
+        <div><span class="k">padding</span> <b>space-3</b> · 12dp · 紧凑</div>
+      </div>
+    </div>
+
+    <!-- 1.4 Icon Button -->
+    <div class="sub">
+      <div class="sub-head"><h3>1.4 Icon Button · 40×40dp · 顶栏 / 卡片角操作</h3><span class="hint">.btn.btn--icon</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo">
+          <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"></circle><path d="M14.5 14.5 L19 19"></path></svg></button>
+        </div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo">
+          <button class="btn btn--icon" data-state="pressed"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"></circle><path d="M14.5 14.5 L19 19"></path></svg></button>
+        </div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo">
+          <button class="btn btn--icon" data-state="disabled"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"></circle><path d="M14.5 14.5 L19 19"></path></svg></button>
+        </div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo">
+          <button class="btn btn--icon" data-state="focused"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"></circle><path d="M14.5 14.5 L19 19"></path></svg></button>
+        </div></div>
+        <div class="cell"><span class="cell__state">Loading</span><div class="cell__demo">
+          <button class="btn btn--icon" data-state="loading"><span class="spinner s-20" style="color:var(--color-on-surface)"></span></button>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">size</span> 40×40 · hit area · 图标 22×22</div>
+        <div><span class="k">color</span> <b>color.on-surface</b> · #0F0F0F</div>
+        <div><span class="k">bg pressed/focused</span> <b>color.surface-variant</b></div>
+        <div><span class="k">radius</span> <b>radius-full</b> · 圆形 ripple</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 02 INPUTS ════════════════════════════ -->
+  <section class="sec" id="s2">
+    <header class="sec-head">
+      <div>
+        <div class="label">02 · INPUTS · 输入框</div>
+        <h2>多变体 · 5 状态 · 高度 48dp / 多行自适应</h2>
+      </div>
+      <div class="meta-r">
+        <b>height</b> 48dp(单行) · auto(多行 ≤3 行)<br/>
+        <b>radius</b> 4dp = <code>radius-input</code><br/>
+        <b>border</b> 1dp 默认 / 2dp focused / 2dp error
+      </div>
+    </header>
+
+    <!-- 2.1 单行 -->
+    <div class="sub">
+      <div class="sub-head"><h3>2.1 单行 · 5 态完整</h3><span class="hint">.input</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo" style="width:100%"><div class="input-field"><label class="input-field__label">手机号</label><div class="input"><input placeholder="请输入手机号" /></div></div></div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo" style="width:100%"><div class="input-field"><label class="input-field__label">手机号</label><div class="input" data-state="focused"><input value="138 0000 0000" /></div></div></div></div>
+        <div class="cell"><span class="cell__state">Filled</span><div class="cell__demo" style="width:100%"><div class="input-field"><label class="input-field__label">手机号</label><div class="input"><input value="138 0000 0000" /></div></div></div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo" style="width:100%"><div class="input-field"><label class="input-field__label">手机号</label><div class="input" data-state="disabled"><input value="138 0000 0000" disabled /></div></div></div></div>
+        <div class="cell"><span class="cell__state">Error</span><div class="cell__demo" style="width:100%;flex-direction:column;align-items:stretch;gap:4px"><div class="input-field"><label class="input-field__label">手机号</label><div class="input" data-state="error"><input value="138 0000" /></div><div class="input-field__helper is-error">手机号格式不正确</div></div></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">bg</span> <b>color.surface</b></div>
+        <div><span class="k">border normal</span> <b>color.border-default</b> · 1dp</div>
+        <div><span class="k">border focused</span> <b>color.border-focus</b> · 2dp</div>
+        <div><span class="k">border error</span> <b>color.error</b> · 2dp</div>
+        <div><span class="k">placeholder</span> <b>color.text-tertiary</b> · #8A8A8A</div>
+        <div><span class="k">label</span> <b>body-small</b> · color.text-secondary</div>
+        <div><span class="k">helper error</span> <b>body-small</b> · color.error</div>
+        <div><span class="k">disabled bg</span> <b>color.surface-variant</b> · #F5F5F5</div>
+      </div>
+    </div>
+
+    <!-- 2.2 带前后缀 + 清除 + 密码 -->
+    <div class="sub">
+      <div class="sub-head"><h3>2.2 前后缀 / 清除 / 密码 / 多行</h3><span class="hint">5 个变体</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Prefix Icon</span><div class="cell__demo" style="width:100%">
+          <div class="input">
+            <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13 L17 17"/></svg>
+            <input placeholder="搜索商品 / 品牌" />
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Suffix · Clear</span><div class="cell__demo" style="width:100%">
+          <div class="input" data-state="focused">
+            <input value="夏季 连衣裙" />
+            <button class="clear-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="7" opacity=".2"/><path d="M4.5 4.5 L9.5 9.5 M9.5 4.5 L4.5 9.5" stroke="#fff" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg></button>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Password · Hidden</span><div class="cell__demo" style="width:100%">
+          <div class="input">
+            <input type="password" value="••••••••" />
+            <button class="eye-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 9 C 3 4, 6 3, 9 3 S 15 4, 17 9 C 15 14, 12 15, 9 15 S 3 14, 1 9 Z"/><circle cx="9" cy="9" r="2.5"/></svg></button>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Password · Shown</span><div class="cell__demo" style="width:100%">
+          <div class="input" data-state="focused">
+            <input type="text" value="P@ssword2026" />
+            <button class="eye-btn" style="color:var(--color-on-surface)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 9 C 3 4, 6 3, 9 3 S 15 4, 17 9 C 15 14, 12 15, 9 15 S 3 14, 1 9 Z"/><circle cx="9" cy="9" r="2.5"/><path d="M2 16 L 16 2" stroke-width="1.5"/></svg></button>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Multi · 3 lines max</span><div class="cell__demo" style="width:100%">
+          <div class="input input--multi">
+            <textarea placeholder="留言备注(可选)"></textarea>
+          </div>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">icon</span> 20×20 · <b>color.text-secondary</b></div>
+        <div><span class="k">clear / eye</span> 24×24 hit · <b>color.text-tertiary</b></div>
+        <div><span class="k">multi-line min-height</span> 96px · 自适应 ≤3 行</div>
+        <div><span class="k">spacing 内</span> gap <b>space-2</b> · pad <b>pad-input-h</b>/<b>pad-input-v</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 03 CARDS ════════════════════════════ -->
+  <section class="sec" id="s3">
+    <header class="sec-head">
+      <div>
+        <div class="label">03 · CARDS · 卡片</div>
+        <h2>4 变体 · radius 4dp · 1dp 描边 · 不加阴影</h2>
+      </div>
+      <div class="meta-r">
+        <b>radius</b> <code>radius-card</code> · 4dp<br/>
+        <b>border</b> 1dp <code>border-default</code><br/>
+        <b>shadow</b> <code>elevation-0</code> · 不用
+      </div>
+    </header>
+
+    <!-- 3.1 双列商品卡 -->
+    <div class="sub">
+      <div class="sub-head"><h3>3.1 商品卡 · 双列网格 · 信息流主力</h3><span class="hint">.card.card--product-grid</span></div>
+      <div class="rail rail--4">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-grid" style="width:160px">
+            <div class="card__img"><span class="card__overlay-tag"><span class="tag tag--new">新品</span></span><span class="card__img-label">PRODUCT</span></div>
+            <div class="card__body">
+              <div class="card__title">条纹宽松针织开衫女 春秋外套</div>
+              <div class="price"><span class="price__now"><span class="yuan">¥</span>129</span><span class="price__strike">¥259</span></div>
+              <div class="t-body-small t-tertiary" style="margin-top:2px">已售 6.2k</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-grid" data-state="pressed" style="width:160px">
+            <div class="card__img"><span class="card__img-label">PRODUCT</span></div>
+            <div class="card__body">
+              <div class="card__title">复古直筒牛仔裤 高腰显瘦</div>
+              <div class="price"><span class="price__now"><span class="yuan">¥</span>189</span><span class="price__strike">¥329</span></div>
+              <div class="t-body-small t-tertiary" style="margin-top:2px">已售 3.1k</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">With Tag SALE</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-grid" style="width:160px">
+            <div class="card__img"><span class="card__overlay-tag"><span class="tag tag--sale tag--sale-block">SALE</span></span><span class="card__img-label">PRODUCT</span></div>
+            <div class="card__body">
+              <div class="card__title">真丝桑蚕丝长款方巾 90×90 礼盒</div>
+              <div class="price"><span class="price__now"><span class="yuan">¥</span>168</span><span class="price__strike">¥358</span></div>
+              <div class="t-body-small t-tertiary" style="margin-top:2px">已售 980</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Disabled · 售罄</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-grid" data-state="disabled" style="width:160px">
+            <div class="card__img"><span class="card__img-label">PRODUCT</span></div>
+            <div class="card__body">
+              <div class="card__title">手工陶瓷家用饭碗 日式釉下彩</div>
+              <div class="price"><span class="price__now"><span class="yuan">¥</span>49</span></div>
+              <div class="t-body-small t-tertiary" style="margin-top:2px">已售罄</div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">card bg</span> <b>color.surface</b> · 1dp <b>border-default</b></div>
+        <div><span class="k">image radius</span> <b>radius-image</b> · 2dp · 卡片内贴边图</div>
+        <div><span class="k">title</span> <b>fs-product-title-card</b> · 13sp · 2 行 max</div>
+        <div><span class="k">price now</span> <b>fs-price-card</b> · 16sp / 700 · <b>color.text-price</b></div>
+        <div><span class="k">price strike</span> <b>fs-price-strike</b> · 12sp · <b>color.text-price-strike</b></div>
+        <div><span class="k">tag overlay</span> top-left · <b>space-2</b> from edge</div>
+      </div>
+    </div>
+
+    <!-- 3.2 横版商品卡 -->
+    <div class="sub">
+      <div class="sub-head"><h3>3.2 商品卡 · 横版 · 列表流 / 收藏 / 浏览历史</h3><span class="hint">.card.card--product-horizontal</span></div>
+      <div class="rail rail--3">
+        <div class="cell"><span class="cell__state">Normal</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-horizontal" style="width:100%">
+            <div class="card__img"></div>
+            <div class="card__body">
+              <div class="card__title">真丝长款方巾 桑蚕丝 90×90cm 礼盒装</div>
+              <div class="t-body-small t-tertiary" style="margin-top:4px">深咖色 · 90×90</div>
+              <div class="price" style="margin-top:6px"><span class="price__now"><span class="yuan">¥</span>168</span><span class="price__strike">¥358</span></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-horizontal" data-state="pressed" style="width:100%">
+            <div class="card__img"></div>
+            <div class="card__body">
+              <div class="card__title">机械键盘 75% 客制化 三模无线 RGB</div>
+              <div class="t-body-small t-tertiary" style="margin-top:4px">机械青轴 · 白色</div>
+              <div class="price" style="margin-top:6px"><span class="price__now"><span class="yuan">¥</span>499</span><span class="price__strike">¥699</span></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Disabled · 失效</span><div class="cell__demo" style="width:100%">
+          <div class="card card--product-horizontal" data-state="disabled" style="width:100%">
+            <div class="card__img"></div>
+            <div class="card__body">
+              <div class="card__title">蓝牙降噪耳机 主动降噪 40h</div>
+              <div class="t-body-small t-tertiary" style="margin-top:4px">已下架</div>
+              <div class="price" style="margin-top:6px"><span class="price__now"><span class="yuan">¥</span>329</span></div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">image</span> 100×100 · 固定方形</div>
+        <div><span class="k">title</span> <b>body-medium</b> · 2 行 max · 弹性宽度</div>
+        <div><span class="k">disabled</span> opacity <b>opacity-disabled-content</b> · 38%</div>
+      </div>
+    </div>
+
+    <!-- 3.3 订单卡 -->
+    <div class="sub">
+      <div class="sub-head"><h3>3.3 订单卡 · 订单列表项</h3><span class="hint">.card.card--order</span></div>
+      <div class="rail rail--2">
+        <div class="cell"><span class="cell__state">Normal · 待付款</span><div class="cell__demo" style="width:100%">
+          <div class="card card--order" style="width:100%">
+            <div class="order__head">
+              <span class="order__no">订单号 NO20260522001384</span>
+              <span class="order__status" style="color:var(--color-error)">待付款</span>
+            </div>
+            <div class="order__items">
+              <div class="order__item">
+                <div class="order__thumb"></div>
+                <div class="order__name">条纹宽松针织开衫女 春秋外套 韩版宽松显瘦</div>
+                <div class="order__qty">×1</div>
+              </div>
+              <div class="order__item">
+                <div class="order__thumb"></div>
+                <div class="order__name">复古直筒牛仔裤 高腰显瘦 蓝色 M</div>
+                <div class="order__qty">×1</div>
+              </div>
+            </div>
+            <div class="order__foot">
+              <span class="order__total-label">合计 2 件 · 应付</span>
+              <span><span class="price__now"><span class="yuan">¥</span>318</span></span>
+            </div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Normal · 已完成</span><div class="cell__demo" style="width:100%">
+          <div class="card card--order" style="width:100%">
+            <div class="order__head">
+              <span class="order__no">订单号 NO20260518003217</span>
+              <span class="order__status">已完成</span>
+            </div>
+            <div class="order__items">
+              <div class="order__item">
+                <div class="order__thumb"></div>
+                <div class="order__name">真丝长款方巾 桑蚕丝 90×90cm 深咖色</div>
+                <div class="order__qty">×1</div>
+              </div>
+            </div>
+            <div class="order__foot">
+              <span class="order__total-label">合计 1 件 · 已付</span>
+              <span><span class="price__now" style="color:var(--color-on-surface)"><span class="yuan">¥</span>168</span></span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">order no</span> <b>font-mono</b> · body-small · <b>text-tertiary</b></div>
+        <div><span class="k">status</span> <b>label-medium</b> · 按状态着色(待付款=error,其他=on-surface)</div>
+        <div><span class="k">item thumb</span> 56×56 · <b>radius-image</b> · 2dp</div>
+        <div><span class="k">total</span> <b>price-line-item</b> · 14sp / 700</div>
+        <div><span class="k">分割线</span> head 下 / foot 上 · 1dp <b>color.divider</b></div>
+      </div>
+    </div>
+
+    <!-- 3.4 地址卡 -->
+    <div class="sub">
+      <div class="sub-head"><h3>3.4 地址卡 · 收货地址列表</h3><span class="hint">.card.card--address</span></div>
+      <div class="rail rail--2">
+        <div class="cell"><span class="cell__state">Normal · 默认</span><div class="cell__demo" style="width:100%">
+          <div class="card card--address" style="width:100%">
+            <div class="addr__head">
+              <span class="addr__name">张明</span>
+              <span class="addr__phone">138 0000 0000</span>
+              <span class="tag tag--new" style="margin-left:auto">默认</span>
+            </div>
+            <div class="addr__body">北京市 海淀区 中关村大街 1 号 中关村大厦 18 层 1801 室</div>
+          </div>
+        </div></div>
+        <div class="cell"><span class="cell__state">Selected</span><div class="cell__demo" style="width:100%">
+          <div class="card card--address" data-state="selected" style="width:100%">
+            <div class="addr__head">
+              <span class="addr__name">李雪</span>
+              <span class="addr__phone">139 8888 8888</span>
+            </div>
+            <div class="addr__body">上海市 浦东新区 张江高科 科苑路 88 号 1 栋 5 楼 502</div>
+          </div>
+        </div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">name</span> <b>title-medium</b> · 16sp / 600</div>
+        <div><span class="k">phone</span> <b>font-mono</b> · body-medium</div>
+        <div><span class="k">body</span> <b>body-medium</b> · <b>text-secondary</b> · 1.5 line-height</div>
+        <div><span class="k">selected</span> border <b>border-focus</b> · 2dp · #0F0F0F</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 04 CHIPS & TAGS ════════════════════════════ -->
+  <section class="sec" id="s4">
+    <header class="sec-head">
+      <div>
+        <div class="label">04 · CHIPS &amp; TAGS · 标签</div>
+        <h2>状态标 / SALE / 筛选 Chip / 品牌 Chip</h2>
+      </div>
+      <div class="meta-r">
+        <b>tag radius</b> 2dp <code>radius-tag</code><br/>
+        <b>chip radius</b> 9999 <code>radius-pill</code><br/>
+        <b>tag type</b> <code>label-small</code> · 11sp / 500
+      </div>
+    </header>
+
+    <!-- 4.1 状态标 -->
+    <div class="sub">
+      <div class="sub-head"><h3>4.1 状态标 · 商品角标 · 4 种 + SALE 大块</h3><span class="hint">.tag</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">新品 NEW</span><div class="cell__demo"><span class="tag tag--new">新品</span></div></div>
+        <div class="cell"><span class="cell__state">热卖 HOT</span><div class="cell__demo"><span class="tag tag--hot">热卖</span></div></div>
+        <div class="cell"><span class="cell__state">在售 ON-SALE</span><div class="cell__demo"><span class="tag tag--hot">在售</span></div></div>
+        <div class="cell"><span class="cell__state">预售 PRE</span><div class="cell__demo"><span class="tag tag--preorder">预售</span></div></div>
+        <div class="cell"><span class="cell__state">SALE block</span><div class="cell__demo"><span class="tag tag--sale tag--sale-block">-36% SALE</span></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">tag-new</span> bg <b>color.tag-new-bg</b> #0F0F0F · text <b>color.tag-new-text</b> #FFFFFF</div>
+        <div><span class="k">tag-hot</span> bg <b>color.tag-hot-bg</b> #F5F5F5 · text <b>color.tag-hot-text</b> #1A1A1A</div>
+        <div><span class="k">tag-preorder</span> bg/text 同 hot</div>
+        <div><span class="k">tag-sale</span> bg <b>color.tag-sale-bg</b> #FEF2F3 · text <b>color.tag-sale-text</b> #A91823</div>
+      </div>
+    </div>
+
+    <!-- 4.2 筛选 Chip -->
+    <div class="sub">
+      <div class="sub-head"><h3>4.2 筛选 Chip · 5 态 · 品牌 / 价格区间 / 三级分类</h3><span class="hint">.chip</span></div>
+      <div class="rail">
+        <div class="cell"><span class="cell__state">Normal · 未选</span><div class="cell__demo"><button class="chip">UNIQLO</button></div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo"><button class="chip" data-state="pressed">UNIQLO</button></div></div>
+        <div class="cell"><span class="cell__state">Selected · 已选</span><div class="cell__demo"><button class="chip" data-state="selected"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L6 10 L11 4"/></svg>UNIQLO</button></div></div>
+        <div class="cell"><span class="cell__state">Focused</span><div class="cell__demo"><button class="chip" data-state="focused">UNIQLO</button></div></div>
+        <div class="cell"><span class="cell__state">Disabled</span><div class="cell__demo"><button class="chip" data-state="disabled">UNIQLO</button></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">normal</span> bg <b>color.surface</b> · 1dp <b>color.outline</b> · text <b>color.on-surface</b></div>
+        <div><span class="k">selected</span> bg <b>color.primary</b> · text <b>color.on-primary</b> · 黑底白字</div>
+        <div><span class="k">pressed</span> bg <b>color.surface-variant</b></div>
+        <div><span class="k">focused</span> border 2dp <b>color.border-focus</b></div>
+        <div><span class="k">height</span> 32 · pad-h <b>space-3</b> · gap <b>space-1</b> · radius <b>pill</b></div>
+      </div>
+    </div>
+
+    <!-- 4.3 实战 -->
+    <div class="sub">
+      <div class="sub-head"><h3>4.3 实战组合 · 品牌筛选条 + 价格区间</h3><span class="hint">真实使用场景</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;padding:14px;border:1px solid var(--color-outline-variant);border-radius:4px;background:var(--color-surface)">
+        <button class="chip" data-state="selected">综合</button>
+        <button class="chip">销量↓</button>
+        <button class="chip">价格↑</button>
+        <button class="chip">价格↓</button>
+        <button class="chip" data-state="selected">UNIQLO</button>
+        <button class="chip">无印良品</button>
+        <button class="chip">ZARA</button>
+        <button class="chip">¥0-99</button>
+        <button class="chip" data-state="selected">¥100-299</button>
+        <button class="chip">¥300-599</button>
+        <button class="chip">更多品牌 +</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 05 DIALOG & OVERLAY ════════════════════════════ -->
+  <section class="sec" id="s5">
+    <header class="sec-head">
+      <div>
+        <div class="label">05 · DIALOG &amp; OVERLAY · 弹窗 / 浮层</div>
+        <h2>Dialog · BottomSheet · Toast · Snackbar</h2>
+      </div>
+      <div class="meta-r">
+        <b>scrim</b> #000 · 60% <code>opacity-scrim</code><br/>
+        <b>dialog radius</b> 8dp · <b>sheet</b> 12dp 顶角<br/>
+        <b>toast/snackbar</b> <code>inverse-surface</code>
+      </div>
+    </header>
+
+    <div class="rail rail--2">
+      <!-- Dialog -->
+      <div class="cell"><span class="cell__state">5.1 Dialog · 确认对话框</span><div class="cell__demo" style="width:100%">
+        <div class="phone phone--with-overlay" style="background:#fff">
+          <div style="filter:saturate(0);padding:60px 16px 100px;display:flex;flex-direction:column;gap:12px;background:var(--color-surface-container-low)">
+            <div class="skeleton h-20 w-50"></div>
+            <div class="skeleton h-14"></div>
+            <div class="skeleton h-14"></div>
+            <div class="skeleton h-14 w-70"></div>
+          </div>
+          <div class="scrim"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+            <div class="dialog">
+              <h4 class="dialog__title">确认取消订单?</h4>
+              <p class="dialog__body">取消后已预占的库存将自动释放,优惠券将退回账户。</p>
+              <div class="dialog__actions">
+                <button class="btn btn--text">再想想</button>
+                <button class="btn btn--primary" style="height:40px;padding:0 20px">确认取消</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- BottomSheet -->
+      <div class="cell"><span class="cell__state">5.2 BottomSheet · SKU 选择</span><div class="cell__demo" style="width:100%">
+        <div class="phone phone--with-overlay" style="background:#fff">
+          <div style="filter:saturate(0);padding:60px 16px 100px;display:flex;flex-direction:column;gap:12px;background:var(--color-surface-container-low)">
+            <div class="skeleton h-20 w-50"></div>
+            <div class="skeleton h-14"></div>
+            <div class="skeleton h-14 w-70"></div>
+            <div class="skeleton h-36"></div>
+          </div>
+          <div class="scrim"></div>
+          <div class="bottomsheet">
+            <div class="bottomsheet__handle"></div>
+            <div style="display:flex;gap:12px;align-items:flex-end">
+              <div style="width:80px;height:80px;border-radius:4px;background:repeating-linear-gradient(135deg,var(--color-surface-variant) 0 6px,var(--color-surface-container-low) 6px 12px)"></div>
+              <div style="flex:1">
+                <div class="price price--display"><span class="price__now"><span class="yuan">¥</span>129</span><span class="price__strike">¥259</span></div>
+                <div class="t-body-small t-tertiary" style="margin-top:4px">库存 23 · 已选:深咖 / M</div>
+              </div>
+            </div>
+            <div>
+              <div class="t-label-medium t-secondary" style="margin-bottom:8px">颜色</div>
+              <div style="display:flex;gap:6px"><button class="chip" data-state="selected">深咖</button><button class="chip">米白</button><button class="chip">黑色</button></div>
+            </div>
+            <div>
+              <div class="t-label-medium t-secondary" style="margin-bottom:8px">尺码</div>
+              <div style="display:flex;gap:6px"><button class="chip">S</button><button class="chip" data-state="selected">M</button><button class="chip">L</button><button class="chip" data-state="disabled">XL</button></div>
+            </div>
+            <button class="btn btn--primary btn--block">确认</button>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Toast -->
+      <div class="cell"><span class="cell__state">5.3 Toast · 2 秒自动消失</span><div class="cell__demo" style="width:100%">
+        <div class="phone" style="background:#fff;min-height:280px;position:relative">
+          <div style="filter:saturate(0);padding:60px 16px 100px;display:flex;flex-direction:column;gap:12px;background:var(--color-surface-container-low)">
+            <div class="skeleton h-20 w-50"></div>
+            <div class="skeleton h-14"></div>
+            <div class="skeleton h-14 w-70"></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;justify-content:center">
+            <span class="toast">已加入购物车</span>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Snackbar -->
+      <div class="cell"><span class="cell__state">5.4 Snackbar · 底部 · 带操作</span><div class="cell__demo" style="width:100%">
+        <div class="phone" style="background:#fff;min-height:280px;position:relative">
+          <div style="filter:saturate(0);padding:60px 16px 100px;display:flex;flex-direction:column;gap:12px;background:var(--color-surface-container-low)">
+            <div class="skeleton h-20 w-50"></div>
+            <div class="skeleton h-14"></div>
+            <div class="skeleton h-14 w-70"></div>
+          </div>
+          <div style="position:absolute;left:12px;right:12px;bottom:16px">
+            <div class="snackbar">
+              <span>已删除 1 件商品</span>
+              <button class="snackbar__action">撤销</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="toks">
+      <div><span class="k">scrim</span> <b>color.scrim</b> · opacity 0.6 · 全屏蒙层</div>
+      <div><span class="k">dialog</span> bg <b>color.surface</b> · radius <b>radius-dialog</b> 8dp · elev <b>elevation-3</b></div>
+      <div><span class="k">bottomsheet</span> radius <b>radius-bottomsheet</b> 12dp 仅顶部两角 · handle 32×4 <b>color.outline</b></div>
+      <div><span class="k">toast / snackbar</span> bg <b>color.inverse-surface</b> · text <b>color.inverse-on-surface</b></div>
+      <div><span class="k">snackbar action</span> color <b>color.inverse-primary</b> · #FFFFFF · 反色按钮</div>
+      <div><span class="k">duration</span> toast 2s · snackbar 4s · 由代码控制,不在 token</div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 06 LIST ITEMS ════════════════════════════ -->
+  <section class="sec" id="s6">
+    <header class="sec-head">
+      <div>
+        <div class="label">06 · LIST ITEMS · 列表项</div>
+        <h2>4 变体 · 高度 56dp · 个人中心 / 设置常用</h2>
+      </div>
+      <div class="meta-r">
+        <b>min-height</b> 56dp = <code>space-14</code><br/>
+        <b>padding-h</b> 16dp = <code>space-4</code><br/>
+        <b>分割线</b> 1dp <code>color.divider</code>
+      </div>
+    </header>
+
+    <div class="rail rail--2">
+      <div class="cell"><span class="cell__state">6.1 头像 · 跳转</span><div class="cell__demo" style="width:100%">
+        <div class="list" style="width:100%">
+          <div class="list__item">
+            <div class="list__avatar">张</div>
+            <div class="list__body"><span class="list__title">张明</span><span class="list__secondary">138 ··· 0000 · 已实名</span></div>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+          <div class="list__item" data-state="pressed">
+            <div class="list__avatar">李</div>
+            <div class="list__body"><span class="list__title">李雪</span><span class="list__secondary">139 ··· 8888</span></div>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+          <div class="list__item" data-state="disabled">
+            <div class="list__avatar">王</div>
+            <div class="list__body"><span class="list__title">王芳(已离开)</span><span class="list__secondary">已注销</span></div>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">6.2 图标 · 跳转 · 带 Badge</span><div class="cell__demo" style="width:100%">
+        <div class="list" style="width:100%">
+          <div class="list__item">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L21 7 L19 21 L5 21 Z"/><path d="M8 11 L8 4 C 8 2, 16 2, 16 4 L 16 11"/></svg>
+            <div class="list__body"><span class="list__title">我的订单</span></div>
+            <span class="list__badge">3</span>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+          <div class="list__item">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-11 a4 4 0 0 1 7-2.6 a4 4 0 0 1 7 2.6 c0 6.5-7 11-7 11z"/></svg>
+            <div class="list__body"><span class="list__title">我的收藏</span></div>
+            <span class="list__secondary">128</span>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+          <div class="list__item">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5 L21 5 L21 19 L3 19 Z"/><path d="M3 9 L21 9"/></svg>
+            <div class="list__body"><span class="list__title">收货地址</span><span class="list__secondary">已添加 2 个</span></div>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">6.3 设置 · 带开关</span><div class="cell__demo" style="width:100%">
+        <div class="list" style="width:100%">
+          <div class="list__item">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 8 L12 13 L21 8"/></svg>
+            <div class="list__body"><span class="list__title">订单消息推送</span></div>
+            <div class="switch is-on"></div>
+          </div>
+          <div class="list__item">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5 L12 7 M12 17 L12 19 M5 12 L7 12 M17 12 L19 12"/></svg>
+            <div class="list__body"><span class="list__title">营销活动推送</span></div>
+            <div class="switch"></div>
+          </div>
+          <div class="list__item" data-state="disabled">
+            <svg class="list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L4 7 L4 14 C 4 18, 8 21, 12 22 C 16 21, 20 18, 20 14 L 20 7 Z"/></svg>
+            <div class="list__body"><span class="list__title">指纹支付(暂不可用)</span><span class="list__secondary">需先绑定支付方式</span></div>
+            <div class="switch"></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">6.4 仅文字 + 右侧值</span><div class="cell__demo" style="width:100%">
+        <div class="list" style="width:100%">
+          <div class="list__item">
+            <div class="list__body"><span class="list__title">手机号</span></div>
+            <span class="list__secondary" style="font-family:var(--font-mono)">138 ··· 0000</span>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+          <div class="list__item" data-state="selected">
+            <div class="list__body"><span class="list__title">支付宝</span></div>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--color-on-surface)"><path d="M4 11 L8 15 L16 5"/></svg>
+          </div>
+          <div class="list__item">
+            <div class="list__body"><span class="list__title">注销账号</span></div>
+            <svg class="list__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4 L13 10 L7 16"/></svg>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="toks">
+      <div><span class="k">avatar</span> 40×40 · <b>radius-full</b> · bg <b>surface-container</b></div>
+      <div><span class="k">icon</span> 24×24 · stroke 1.6 · <b>color.on-surface-variant</b></div>
+      <div><span class="k">title</span> <b>body-large</b> · 16sp · <b>color.on-surface</b></div>
+      <div><span class="k">secondary</span> <b>body-small</b> · 12sp · <b>color.text-tertiary</b></div>
+      <div><span class="k">chevron</span> 20×20 · <b>color.text-tertiary</b></div>
+      <div><span class="k">badge</span> 16×16 · <b>color.error</b> · 红圆角数字</div>
+      <div><span class="k">switch on</span> bg <b>color.primary</b> · 黑底</div>
+      <div><span class="k">pressed</span> bg <b>color.surface-variant</b></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 07 TOP APP BAR ════════════════════════════ -->
+  <section class="sec" id="s7">
+    <header class="sec-head">
+      <div>
+        <div class="label">07 · TOP APP BAR · 顶部栏</div>
+        <h2>3 变体 · 高度 56dp</h2>
+      </div>
+      <div class="meta-r">
+        <b>height</b> 56dp = <code>space-14</code><br/>
+        <b>title</b> <code>title-large</code> · 22sp / 600<br/>
+        <b>底部分割</b> 1dp <code>color.divider</code>
+      </div>
+    </header>
+
+    <div class="rail rail--3">
+      <div class="cell"><span class="cell__state">7.1 普通 · 返回 + 标题 + 操作</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden">
+          <div class="appbar">
+            <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5 L7 11 L14 17"/></svg></button>
+            <div class="appbar__title">商品详情</div>
+            <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="6" r="1.5"/><circle cx="11" cy="11" r="1.5"/><circle cx="11" cy="16" r="1.5"/></svg></button>
+          </div>
+          <div style="height:80px;background:repeating-linear-gradient(135deg,var(--color-surface-variant) 0 6px,var(--color-surface-container-low) 6px 12px)"></div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">7.2 搜索 Bar</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden">
+          <div class="appbar">
+            <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5 L7 11 L14 17"/></svg></button>
+            <div class="appbar__search">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 L14 14"/></svg>
+              搜索商品 / 品牌
+            </div>
+            <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="14" height="14" rx="2"/></svg></button>
+          </div>
+          <div style="height:80px;background:repeating-linear-gradient(135deg,var(--color-surface-variant) 0 6px,var(--color-surface-container-low) 6px 12px)"></div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">7.3 沉浸式 · 透明叠层</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden;background:#1a1a1a;position:relative">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.5),transparent 60%)"></div>
+          <div class="appbar appbar--immersive" style="position:relative;z-index:1">
+            <button class="btn btn--icon" style="color:#fff"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5 L7 11 L14 17"/></svg></button>
+            <div class="appbar__title" style="color:#fff">&nbsp;</div>
+            <button class="btn btn--icon" style="color:#fff"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19 s-7-4.5-7-11 a4 4 0 0 1 7-2.6 a4 4 0 0 1 7 2.6 c0 6.5-7 11-7 11z"/></svg></button>
+            <button class="btn btn--icon" style="color:#fff"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 L11 16 M5 10 L11 16 L17 10"/></svg></button>
+          </div>
+          <div style="height:80px;background:repeating-linear-gradient(135deg,#2a2a2a 0 8px,#1f1f1f 8px 16px);position:relative;z-index:0"></div>
+        </div>
+      </div></div>
+    </div>
+    <div class="toks">
+      <div><span class="k">普通</span> bg <b>color.surface</b> · 底部 1dp <b>color.divider</b></div>
+      <div><span class="k">搜索 Bar</span> bg <b>color.surface-container</b> · radius <b>radius-pill</b> · 36dp 高</div>
+      <div><span class="k">沉浸式</span> bg transparent · icon 反色 #FFFFFF · 配合图片背景</div>
+      <div><span class="k">icon button</span> 40×40 · <b>color.on-surface</b></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 08 BOTTOM TAB ════════════════════════════ -->
+  <section class="sec" id="s8">
+    <header class="sec-head">
+      <div>
+        <div class="label">08 · BOTTOM TAB · 底部导航</div>
+        <h2>4 Tab · 高度 80dp · 选中 / 未选 / Badge</h2>
+      </div>
+      <div class="meta-r">
+        <b>height</b> 80dp · 顶 1dp 分割线<br/>
+        <b>icon</b> 24×24 · <b>label</b> 11sp / 500<br/>
+        <b>selected</b> <code>color.on-surface</code> · <b>idle</b> <code>color.text-tertiary</code>
+      </div>
+    </header>
+
+    <div class="sub">
+      <div class="sub-head"><h3>8.1 完整 4 Tab · Home 选中 · Cart 带 Badge</h3><span class="hint">.tabbar / .tab</span></div>
+      <div style="border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden;background:var(--color-surface)">
+        <div class="tabbar">
+          <button class="tab" data-state="selected">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11 L21 21 L14 21 L14 14 L10 14 L10 21 L3 21 Z"/></svg>
+            <span class="tab__label">首页</span>
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+            <span class="tab__label">分类</span>
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5 L6 5 L8 16 L20 16 L22 7 L7 7"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+            <span class="tab__label">购物车</span>
+            <span class="tab__badge">3</span>
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21 C 4 15, 20 15, 20 21"/></svg>
+            <span class="tab__label">我的</span>
+            <span class="tab__dot"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="sub-head"><h3>8.2 状态对比 · 单 Tab 五态</h3></div>
+      <div class="rail rail--4">
+        <div class="cell"><span class="cell__state">Idle · 未选</span><div class="cell__demo" style="background:var(--color-surface)"><div style="width:64px"><button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11 L21 21 L14 21 L14 14 L10 14 L10 21 L3 21 Z"/></svg><span class="tab__label">首页</span></button></div></div></div>
+        <div class="cell"><span class="cell__state">Selected · 选中</span><div class="cell__demo"><div style="width:64px"><button class="tab" data-state="selected"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11 L12 3 L21 11 L21 21 L14 21 L14 14 L10 14 L10 21 L3 21 Z"/></svg><span class="tab__label">首页</span></button></div></div></div>
+        <div class="cell"><span class="cell__state">Pressed</span><div class="cell__demo"><div style="width:64px"><button class="tab" data-state="pressed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11 L21 21 L14 21 L14 14 L10 14 L10 21 L3 21 Z"/></svg><span class="tab__label">首页</span></button></div></div></div>
+        <div class="cell"><span class="cell__state">With Badge</span><div class="cell__demo"><div style="width:64px"><button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5 L6 5 L8 16 L20 16 L22 7 L7 7"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span class="tab__label">购物车</span><span class="tab__badge">99+</span></button></div></div></div>
+      </div>
+      <div class="toks">
+        <div><span class="k">selected fill</span> icon stroke→fill · color <b>color.on-surface</b></div>
+        <div><span class="k">idle</span> stroke only · color <b>color.text-tertiary</b> · #8A8A8A</div>
+        <div><span class="k">label</span> 11sp · 选中 600,未选 500</div>
+        <div><span class="k">badge</span> 16dp 高 · 1dp 白描边贴底色 · 99+ 截断</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 09 STATE PAGES ════════════════════════════ -->
+  <section class="sec" id="s9">
+    <header class="sec-head">
+      <div>
+        <div class="label">09 · STATE PAGES · 状态页</div>
+        <h2>骨架屏 / 空 / 错误 / 网络异常 / 404</h2>
+      </div>
+      <div class="meta-r">
+        <b>占满</b> 屏幕 · 居中<br/>
+        <b>icon</b> 72×72 · <b>color.text-tertiary</b> 或 on-surface<br/>
+        <b>title</b> <code>title-medium</code> · <b>desc</b> <code>body-small</code>
+      </div>
+    </header>
+
+    <div class="rail">
+      <!-- skeleton -->
+      <div class="cell"><span class="cell__state">9.1 骨架屏 Loading</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;background:var(--color-surface);padding:16px;display:flex;flex-direction:column;gap:14px;border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm)">
+          <div class="skeleton h-24 w-50"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <div><div class="skeleton" style="aspect-ratio:3/4;width:100%;border-radius:4px"></div><div class="skeleton h-14" style="margin-top:8px"></div><div class="skeleton h-14 w-70" style="margin-top:4px"></div></div>
+            <div><div class="skeleton" style="aspect-ratio:3/4;width:100%;border-radius:4px"></div><div class="skeleton h-14" style="margin-top:8px"></div><div class="skeleton h-14 w-70" style="margin-top:4px"></div></div>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- empty -->
+      <div class="cell"><span class="cell__state">9.2 空状态 · 购物车为空</span><div class="cell__demo" style="width:100%">
+        <div class="state-page" style="border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);padding:48px 24px">
+          <svg class="state-page__icon" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 22 L20 22 L24 50 L60 50 L66 26 L23 26"/><circle cx="28" cy="60" r="3"/><circle cx="54" cy="60" r="3"/><path d="M30 35 L50 35" stroke-dasharray="2 3"/></svg>
+          <div class="state-page__title">购物车空空如也</div>
+          <div class="state-page__desc">逛逛首页 · 把心仪的好物收进来</div>
+          <div class="state-page__action"><button class="btn btn--primary" style="height:40px;padding:0 28px">去逛逛</button></div>
+        </div>
+      </div></div>
+
+      <!-- error -->
+      <div class="cell"><span class="cell__state">9.3 错误 · 加载失败</span><div class="cell__demo" style="width:100%">
+        <div class="state-page" style="border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);padding:48px 24px">
+          <svg class="state-page__icon" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="36" r="26"/><path d="M36 22 L36 40 M36 48 L36 50"/></svg>
+          <div class="state-page__title">加载失败</div>
+          <div class="state-page__desc">服务器开了点小差 · 请稍后再试</div>
+          <div class="state-page__action"><button class="btn btn--secondary" style="height:40px;padding:0 24px">点我重试</button></div>
+        </div>
+      </div></div>
+
+      <!-- network -->
+      <div class="cell"><span class="cell__state">9.4 网络异常</span><div class="cell__demo" style="width:100%">
+        <div class="state-page" style="border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);padding:48px 24px">
+          <svg class="state-page__icon" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26 C 22 16, 50 16, 62 26"/><path d="M18 36 C 26 30, 46 30, 54 36"/><path d="M26 46 C 30 42, 42 42, 46 46"/><circle cx="36" cy="56" r="2.5"/><path d="M14 18 L 58 56" stroke-width="2"/></svg>
+          <div class="state-page__title">网络连接已断开</div>
+          <div class="state-page__desc">请检查 Wi-Fi 或移动数据网络</div>
+          <div class="state-page__action"><button class="btn btn--secondary" style="height:40px;padding:0 24px">点我重试</button></div>
+        </div>
+      </div></div>
+
+      <!-- 404 -->
+      <div class="cell"><span class="cell__state">9.5 404 · 页面不存在</span><div class="cell__demo" style="width:100%">
+        <div class="state-page" style="border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);padding:32px 24px 48px">
+          <div class="state-page__number">404</div>
+          <div class="state-page__title">页面不存在</div>
+          <div class="state-page__desc">链接已失效或商品已下架</div>
+          <div class="state-page__action"><button class="btn btn--primary" style="height:40px;padding:0 28px">返回首页</button></div>
+        </div>
+      </div></div>
+    </div>
+    <div class="toks">
+      <div><span class="k">skeleton bg</span> <b>color.surface-variant</b> · 静态(不闪烁,符合 no-motion)</div>
+      <div><span class="k">icon size</span> 72×72 · stroke 1.4-1.6 · 风格统一</div>
+      <div><span class="k">icon color</span> <b>color.text-tertiary</b> 默认 / on-surface 强调态</div>
+      <div><span class="k">title</span> <b>title-medium</b> · 16sp / 600</div>
+      <div><span class="k">desc</span> <b>body-small</b> · max-width 240</div>
+      <div><span class="k">404 number</span> <b>font-mono</b> · 64px / 700 · 锐利大字</div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ 10 LOADERS ════════════════════════════ -->
+  <section class="sec" id="s10">
+    <header class="sec-head">
+      <div>
+        <div class="label">10 · LOADERS · 加载指示器</div>
+        <h2>静态外观 · 4 类 · 实际由 Compose 提供旋转</h2>
+      </div>
+      <div class="meta-r">
+        <b>规则</b> 此处只画外观 · 旋转动效由组件实现<br/>
+        <b>颜色</b> <code>color.primary</code> 主 · <code>text-tertiary</code> 弱
+      </div>
+    </header>
+
+    <div class="rail rail--4">
+      <div class="cell"><span class="cell__state">10.1 圆形 Loading</span><div class="cell__demo">
+        <div style="display:flex;flex-direction:column;gap:16px;align-items:center">
+          <span class="spinner s-24" style="color:var(--color-primary)"></span>
+          <span class="spinner s-40" style="color:var(--color-primary)"></span>
+          <span class="spinner s-20" style="color:var(--color-text-tertiary)"></span>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">10.2 顶部进度条</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;background:var(--color-surface);border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden">
+          <div class="appbar">
+            <button class="btn btn--icon"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 5 L7 11 L14 17"/></svg></button>
+            <div class="appbar__title">提交订单</div>
+          </div>
+          <div class="loader--top"></div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+            <div class="skeleton h-14"></div><div class="skeleton h-14 w-70"></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">10.3 下拉刷新</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;background:var(--color-surface);border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden">
+          <div class="loader--pull">
+            <span class="spinner s-20" style="color:var(--color-text-tertiary)"></span>
+            <span>正在刷新...</span>
+          </div>
+          <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">
+            <div class="skeleton h-14"></div><div class="skeleton h-14 w-70"></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="cell"><span class="cell__state">10.4 上拉加载更多</span><div class="cell__demo" style="width:100%">
+        <div style="width:100%;background:var(--color-surface);border:var(--border-default) solid var(--color-outline-variant);border-radius:var(--radius-sm);overflow:hidden">
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+            <div class="skeleton h-14"></div><div class="skeleton h-14 w-70"></div>
+            <div class="skeleton h-14"></div>
+          </div>
+          <div class="loader--more">
+            <span class="spinner" style="width:14px;height:14px;color:var(--color-text-tertiary);border-width:1.5px"></span>
+            <span>加载更多...</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="toks">
+      <div><span class="k">spinner</span> 270° 弧 · border 2dp currentColor · right-color transparent</div>
+      <div><span class="k">top progress</span> 2dp 高 · bg <b>color.surface-variant</b> · indicator <b>color.primary</b></div>
+      <div><span class="k">pull</span> 文字 <b>body-small</b> <b>color.text-tertiary</b></div>
+      <div><span class="k">load more</span> 同上 · 居中 · 触底自动触发</div>
+      <div><span class="k">animation</span> Compose CircularProgressIndicator 自带旋转 · token 不定义</div>
+    </div>
+  </section>
+
+  <!-- NEXT -->
+  <section class="next">
+    <div class="left">
+      <span class="num">NEXT</span>
+      <div>
+        <h3>组件审核通过 → 进入阶段 4:核心页面 mockup</h3>
+        <p>14 个页面按用户路径组装:首页 · 分类 · 商品详情 · 搜索 · 购物车 · 下单 · 支付 · 订单 · 售后 · 评价 · 个人 · 地址 · 品牌 · 客服</p>
+      </div>
+    </div>
+    <div class="picks">
+      <span>通过</span><span>有改动</span><span>整套重做</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

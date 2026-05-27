@@ -1,0 +1,62 @@
+{
+  "mode": "mock",
+  "ok": 11,
+  "total": 11,
+  "results": [
+    {
+      "story": "US-08.2",
+      "msg": "密码错 → 文案 \"用户名或密码错误\"",
+      "ok": true
+    },
+    {
+      "story": "US-08.1",
+      "msg": "正确密码 → 跳 /products",
+      "ok": true
+    },
+    {
+      "story": "US-10.1",
+      "msg": "删有商品分类 → 1002 文案命中",
+      "ok": true
+    },
+    {
+      "story": "US-10.2a",
+      "msg": "新建空分类 → 成功",
+      "ok": true
+    },
+    {
+      "story": "US-10.2b",
+      "msg": "删空分类 → 成功",
+      "ok": true
+    },
+    {
+      "story": "US-09.2",
+      "msg": "上传 > 5MB → 文案 \"文件不能超过 5MB\"",
+      "ok": true
+    },
+    {
+      "story": "US-09.3",
+      "msg": "上传 .exe → 文案 \"格式不支持\"",
+      "ok": true
+    },
+    {
+      "story": "US-09.1",
+      "msg": "新建商品后在列表里看到",
+      "ok": true
+    },
+    {
+      "story": "US-09.1",
+      "msg": "新商品价格 ¥12.34(元→分→元 边界转换正确)",
+      "ok": true
+    },
+    {
+      "story": "US-11",
+      "msg": "订单列表有数据 + device_id_short 可见",
+      "ok": true
+    },
+    {
+      "story": "US-11",
+      "msg": "订单详情 Drawer 可打开",
+      "ok": true
+    }
+  ]
+}

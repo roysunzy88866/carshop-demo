@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 4 · 屏 5 · 商品详情 · 服务券(蔚来超充月卡)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components-car.css" />
+<style>
+  .stage { display: flex; }
+  .main {
+    flex: 1;
+    padding: 24px 40px 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .appbar__back-title { display: flex; align-items: center; gap: 16px; flex: 1; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 800px 1fr;
+    gap: 40px;
+    flex: 1;
+    min-height: 0;
+    padding: 16px 0 24px;
+  }
+
+  /* ── Brand card (replaces image carousel) ── */
+  .brand-card {
+    height: 560px;
+    border-radius: var(--radius-card-large);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    padding: 56px 56px 40px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand-card::before {
+    content: "";
+    position: absolute;
+    right: -180px; top: -180px;
+    width: 640px; height: 640px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-tertiary), transparent 60%);
+    opacity: var(--o-hero-glow);
+  }
+  .brand-card::after {
+    content: "";
+    position: absolute;
+    left: -120px; bottom: -120px;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-tertiary), transparent 60%);
+    opacity: 0.1;
+  }
+  .brand-card .top {
+    position: relative;
+    display: flex; align-items: center;
+    gap: 20px;
+  }
+  .brand-card .logo-mark {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--color-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-tertiary);
+    letter-spacing: -0.02em;
+  }
+  .brand-card .brand-meta {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .brand-card .brand-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-on-primary);
+    letter-spacing: -0.005em;
+  }
+  .brand-card .brand-sub {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--color-steel-400);
+    text-transform: uppercase;
+  }
+  .brand-card .core {
+    position: relative;
+  }
+  .brand-card .overline {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--color-tertiary);
+    text-transform: uppercase;
+  }
+  .brand-card .title {
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--color-on-primary);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-top: 12px;
+  }
+  .brand-card .sub {
+    font-size: 22px;
+    color: var(--color-steel-300);
+    margin-top: 18px;
+    font-weight: 400;
+  }
+  .brand-card .footnote {
+    position: relative;
+    display: flex; gap: 28px;
+    align-items: center;
+    color: var(--color-steel-400);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+  }
+  .brand-card .footnote .v { color: #fff; font-weight: 500; }
+
+  /* stores chip strip below brand card */
+  .stores-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .stores-block h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-on-surface);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .stores-block h4 b {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .stores-strip {
+    display: flex; gap: 12px;
+    overflow-x: auto;
+  }
+  .store-chip {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    display: flex; flex-direction: column; gap: 4px;
+    min-width: 188px;
+  }
+  .store-chip .name { font-size: 18px; font-weight: 600; color: var(--color-on-surface); }
+  .store-chip .dist { font-size: 14px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; }
+  .store-chip .dist .dot { background: var(--color-tertiary); }
+
+  /* info right */
+  .info { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .info__title {
+    font-size: var(--fs-product-title-detail);
+    font-weight: var(--fw-bold);
+    line-height: 1.32;
+    letter-spacing: -0.005em;
+  }
+  .info__subtitle { font-size: 18px; color: var(--color-text-secondary); }
+  .info__price-block { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .meta-block {
+    background: var(--color-surface-container-low);
+    border-radius: var(--radius-card);
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .meta-block .row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+    font-size: 18px;
+  }
+  .meta-block .row .lbl { color: var(--color-text-secondary); display: flex; align-items: center; gap: 10px; }
+  .meta-block .row .lbl svg { width: 18px; height: 18px; color: var(--color-tertiary); }
+  .meta-block .row .val { color: var(--color-on-surface); font-weight: var(--fw-semibold); }
+  .meta-block .row .val.t-tertiary { font-weight: 500; }
+
+  .redeem-note {
+    background: var(--color-tertiary-container);
+    border-radius: var(--radius-card);
+    padding: 18px 22px;
+    color: var(--color-on-tertiary-container);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+  .redeem-note b { font-weight: 700; color: var(--color-seafoam-800); }
+
+  .sku-block { display: flex; flex-direction: column; gap: 10px; }
+  .sku-block__label { font-size: 18px; color: var(--color-text-secondary); }
+  .sku-block__label b { color: var(--color-on-surface); font-weight: var(--fw-semibold); }
+  .sku-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* action bar (same as 4) */
+  .action-bar {
+    height: 80px;
+    border-top: 1px solid var(--color-divider);
+    display: flex; align-items: center; gap: 16px;
+    background: var(--color-surface);
+  }
+  .action-bar .btn--icon { background: transparent; border: 0; flex-direction: column; gap: 4px; height: 64px; width: 72px; }
+  .action-bar .btn--icon span { font-size: 14px; color: var(--color-text-secondary); }
+  .action-bar .btn--icon svg { width: 28px; height: 28px; }
+  .action-bar .spacer { flex: 1; }
+  .action-bar .btn { width: 280px; }
+</style>
+</head>
+<body>
+<div class="stage-page">
+  <header class="stage-label">
+    <div>
+      <h1>屏 5 · 商品详情(服务券 · 蔚来超充月卡)</h1>
+      <div>左 品牌图卡(石墨蓝 + 海泡青光晕)+ 适用门店 chip · 右 信息(价格海泡青 #00A892 · 有效期 · 核销说明)</div>
+    </div>
+    <div class="right">
+      <b>1920 × 1080</b> · 4 / 8 STAGE<br/>
+      Direction C · 海泡青电车感
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="stage">
+
+      <!-- RAIL -->
+      <aside class="rail">
+        <div class="rail__brand">
+          <div class="logo">EV·MALL<em>.</em></div>
+          <div class="sub">CAR INFOTAINMENT</div>
+        </div>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L14 4 L25 13 L25 25 L17 25 L17 17 L11 17 L11 25 L3 25 Z"/></svg>首页
+        </button>
+        <button class="rail__item rail__item--active">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="10" rx="1"/><rect x="15" y="3" width="10" height="10" rx="1"/><rect x="3" y="15" width="10" height="10" rx="1"/><rect x="15" y="15" width="10" height="10" rx="1"/></svg>分类
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 L7 6 L9 19 L23 19 L25 9 L8 9"/><circle cx="11" cy="24" r="1.5"/><circle cx="21" cy="24" r="1.5"/></svg>购物车<span class="badge">3</span>
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25 s-9-5.5-9-13 a5 5 0 0 1 9-3 a5 5 0 0 1 9 3 c0 7.5-9 13-9 13z"/></svg>收藏
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L25 7 L23 24 L5 24 Z"/><path d="M10 11 L10 4 C 10 2.5, 18 2.5, 18 4 L 18 11"/></svg>订单
+        </button>
+        <div class="rail__foot">
+          <div class="avatar">张</div>
+          <div><div class="who">张明</div><div class="plate">京 A·E 88888</div></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- APPBAR -->
+        <div class="appbar">
+          <div class="appbar__back-title">
+            <button class="appbar__icon-btn">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 L10 16 L20 26"/></svg>
+            </button>
+            <div class="appbar__title">服务券详情</div>
+          </div>
+          <button class="appbar__icon-btn">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="16" r="3"/><circle cx="23" cy="9" r="3"/><circle cx="23" cy="23" r="3"/><path d="M12 14 L20 10 M12 18 L20 22"/></svg>
+          </button>
+          <button class="appbar__icon-btn">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 s-11-7-11-16 a6 6 0 0 1 11-3 a6 6 0 0 1 11 3 c0 9-11 16-11 16z"/></svg>
+          </button>
+        </div>
+
+        <!-- DETAIL GRID -->
+        <div class="detail-grid">
+          <!-- LEFT: BRAND CARD + STORES -->
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="brand-card">
+              <div class="top">
+                <div class="logo-mark">N</div>
+                <div class="brand-meta">
+                  <div class="brand-name">蔚来汽车 · NIO</div>
+                  <div class="brand-sub">OFFICIAL · CHARGE PARTNER</div>
+                </div>
+              </div>
+              <div class="core">
+                <div class="overline">NIO POWER · MONTHLY PASS</div>
+                <h2 class="title">蔚来超充月卡</h2>
+                <div class="sub">30 天内 NIO Power 超充站点不限次数充电 · 月内 <b style="color:var(--color-tertiary);font-weight:600">800 kWh 免费</b></div>
+              </div>
+              <div class="footnote">
+                <span>有效期 <span class="v">30 天</span></span>
+                <span>核销门店 <span class="v">412 家</span></span>
+                <span>北京覆盖 <span class="v">42 家</span></span>
+              </div>
+            </div>
+
+            <div class="stores-block">
+              <h4>适用门店 · 国贸地下 B2 周边 <b>42 家</b> · 按距离排序</h4>
+              <div class="stores-strip">
+                <div class="store-chip">
+                  <div class="name">国贸三期 B2</div>
+                  <div class="dist"><span class="dot"></span>180m · 12 桩闲 / 16</div>
+                </div>
+                <div class="store-chip">
+                  <div class="name">华贸中心</div>
+                  <div class="dist"><span class="dot"></span>620m · 8 桩闲 / 12</div>
+                </div>
+                <div class="store-chip">
+                  <div class="name">望京 SOHO</div>
+                  <div class="dist"><span class="dot"></span>5.2km · 6 桩闲 / 20</div>
+                </div>
+                <div class="store-chip">
+                  <div class="name">三里屯 太古里</div>
+                  <div class="dist"><span class="dot"></span>3.8km · 4 桩闲 / 8</div>
+                </div>
+                <div class="store-chip">
+                  <div class="name">东大桥 银泰</div>
+                  <div class="dist"><span class="dot"></span>2.1km · 10 桩闲 / 16</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: INFO -->
+          <div class="info">
+            <div>
+              <div class="info__title">蔚来 NIO Power 超充月卡 · 北京全城通用</div>
+              <div class="info__subtitle">月内不限次数 · 单月最高 800 kWh 免费 · 仅限蔚来超充桩</div>
+            </div>
+
+            <div class="info__price-block">
+              <span class="price price--display price--energy">
+                <span class="price__now"><span class="yuan">¥</span>298</span>
+                <span class="price__strike">¥399</span>
+              </span>
+              <span class="tag tag--charge tag--lg">充电服务</span>
+              <span class="tag tag--coupon">车主立省 ¥101</span>
+            </div>
+
+            <div class="meta-block">
+              <div class="row">
+                <span class="lbl">
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="12" rx="1"/><path d="M2 8 L16 8"/></svg>
+                  有效期
+                </span>
+                <span class="val">购买后 30 天内 · 激活生效</span>
+              </div>
+              <div class="row">
+                <span class="lbl">
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1 L9 17 M3 5 L15 5 M3 13 L15 13"/></svg>
+                  本月已售
+                </span>
+                <span class="val">2,408 张 · 好评 99.1%</span>
+              </div>
+              <div class="row">
+                <span class="lbl">
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><path d="M9 4 L9 9 L12 11"/></svg>
+                  核销方式
+                </span>
+                <span class="val">出示车机端二维码 · 即时核销</span>
+              </div>
+              <div class="row">
+                <span class="lbl">
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 a6 6 0 0 1 12 0 v3 a3 3 0 0 1 -3 3 v-5 h3"/><path d="M3 9 v3 a3 3 0 0 0 3 3 v-5 h-3"/></svg>
+                  退款
+                </span>
+                <span class="val t-tertiary">未激活可退 · 已激活不支持</span>
+              </div>
+            </div>
+
+            <div class="redeem-note">
+              <b>核销说明:</b> 到达蔚来超充桩后,使用车机端打开本券,出示二维码给桩端扫码即可开始充电。也可在 NIO App 内绑定本券激活。
+            </div>
+
+            <div class="sku-block">
+              <div class="sku-block__label">绑定车辆 · 已选 <b>京 A·E 88888 · NIO ET7</b></div>
+              <div class="sku-row">
+                <button class="chip" data-state="selected">
+                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9 L8 13 L14 5"/></svg>
+                  京 A·E 88888 · NIO ET7
+                </button>
+                <button class="chip">+ 添加车辆</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BAR -->
+        <div class="action-bar">
+          <button class="btn btn--icon btn--icon-naked" style="display:inline-flex;flex-direction:column">
+            <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4 a10 10 0 0 1 10 10 v6 a4 4 0 0 1 -4 4 h-1 v-8 h5"/><path d="M14 4 a10 10 0 0 0 -10 10 v6 a4 4 0 0 0 4 4 h1 v-8 h-5"/></svg>
+            <span>客服</span>
+          </button>
+          <button class="btn btn--icon btn--icon-naked" style="display:inline-flex;flex-direction:column">
+            <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 24 s-9-5.5-9-13 a5 5 0 0 1 9-3 a5 5 0 0 1 9 3 c0 7.5-9 13-9 13z"/></svg>
+            <span>收藏</span>
+          </button>
+          <span class="spacer"></span>
+          <button class="btn btn--secondary">加入购物车</button>
+          <button class="btn btn--primary">立即购买</button>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    const stage = document.querySelector('.stage');
+    const wrap = document.querySelector('.stage-wrap');
+    function fit() {
+      const max = wrap.clientWidth;
+      const scale = Math.min(max / 1920, 1);
+      stage.style.transform = `scale(${scale})`;
+      wrap.style.height = (1080 * scale) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    fit();
+  })();
+</script>
+</body>
+</html>

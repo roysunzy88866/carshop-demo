@@ -1,0 +1,1 @@
+{"code":0,"data":{"id":13,"category_id":1,"category_name":"汽车用品","title":"测试商品-02session","product_type":"physical","price":1000,"original_price":null,"spec":null,"main_image_url":"http://localhost:8000/static/uploads/test.png","description":"测试描述","on_sale":true,"created_at":"2026-05-25T10:55:26.818342+00:00","updated_at":"2026-05-25T10:55:26.818345+00:00"},"message":"ok"}

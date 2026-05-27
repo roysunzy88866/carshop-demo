@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "data": {
+    "id": 2,
+    "category_id": 1,
+    "category_name": "汽车用品",
+    "title": "便携式车载吸尘器 120W",
+    "product_type": "physical",
+    "price": 19900,
+    "original_price": 29900,
+    "spec": "120W · 含三种吸头",
+    "main_image_url": "https://picsum.photos/seed/carvac/600/400",
+    "description": "便携式车载吸尘器 120W · 演示商品(已下架,US-02.2 mock)。",
+    "on_sale": false,
+    "created_at": "2026-05-25T10:28:47.053218+00:00",
+    "updated_at": "2026-05-26T03:00:00.000000+00:00"
+  },
+  "message": "ok"
+}

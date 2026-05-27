@@ -1,0 +1,253 @@
+/* ════════════════════════════════════════════════════════════════════
+ * _tokens.css · 车载版 v1.0.0 · Direction C 海泡青电车感
+ * SSOT: tokens.json (v1.0.0 supersedes 0.1.0)
+ * 1920×1080 · 80dp touch · 8dp grid · 12dp radius · light only
+ * ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* primitive · steel (冷调中性) */
+  --color-steel-0:   #FFFFFF;
+  --color-steel-50:  #F5F7F9;
+  --color-steel-100: #E8EDF1;
+  --color-steel-200: #D4DCE4;
+  --color-steel-300: #B8C5CF;
+  --color-steel-400: #8FA4B1;
+  --color-steel-500: #5D7B8A;
+  --color-steel-600: #3F5867;
+  --color-steel-700: #2A3D49;
+  --color-steel-800: #1A2027;
+  --color-steel-900: #0A0E12;
+
+  /* primitive · seafoam */
+  --color-seafoam-50:  #E6FBF6;
+  --color-seafoam-100: #C2F5E8;
+  --color-seafoam-200: #93EAD4;
+  --color-seafoam-300: #5BDABE;
+  --color-seafoam-400: #2BC9A7;
+  --color-seafoam-500: #00C2A8;
+  --color-seafoam-600: #00A892;
+  --color-seafoam-700: #008270;
+  --color-seafoam-800: #006150;
+  --color-seafoam-900: #003D33;
+
+  /* primitive · signal */
+  --color-signal-50:  #FEF2F3;
+  --color-signal-100: #FCE4E6;
+  --color-signal-200: #F8BFC4;
+  --color-signal-300: #F2929A;
+  --color-signal-400: #EC6470;
+  --color-signal-500: #E63946;
+  --color-signal-600: #C9293A;
+  --color-signal-700: #A91823;
+  --color-signal-800: #80131B;
+  --color-signal-900: #570D12;
+
+  /* semantic · M3 ColorScheme */
+  --color-primary:                    var(--color-steel-800);
+  --color-on-primary:                 var(--color-steel-0);
+  --color-primary-container:          var(--color-steel-700);
+  --color-on-primary-container:       var(--color-steel-50);
+  --color-inverse-primary:            var(--color-steel-0);
+  --color-secondary:                  var(--color-steel-500);
+  --color-on-secondary:               var(--color-steel-0);
+  --color-secondary-container:        var(--color-steel-100);
+  --color-on-secondary-container:     var(--color-steel-800);
+  --color-tertiary:                   var(--color-seafoam-600);
+  --color-on-tertiary:                var(--color-steel-0);
+  --color-tertiary-container:         var(--color-seafoam-50);
+  --color-on-tertiary-container:      var(--color-seafoam-700);
+  --color-error:                      var(--color-signal-500);
+  --color-on-error:                   var(--color-steel-0);
+  --color-error-container:            var(--color-signal-50);
+  --color-on-error-container:         var(--color-signal-900);
+  --color-background:                 var(--color-steel-50);
+  --color-on-background:              var(--color-steel-800);
+  --color-surface:                    var(--color-steel-0);
+  --color-on-surface:                 var(--color-steel-800);
+  --color-surface-variant:            var(--color-steel-100);
+  --color-on-surface-variant:         var(--color-steel-500);
+  --color-surface-container-lowest:   var(--color-steel-0);
+  --color-surface-container-low:      var(--color-steel-50);
+  --color-surface-container:          var(--color-steel-100);
+  --color-surface-container-high:     var(--color-steel-200);
+  --color-surface-container-highest:  var(--color-steel-300);
+  --color-inverse-surface:            var(--color-steel-700);
+  --color-inverse-on-surface:         var(--color-steel-50);
+  --color-outline:                    var(--color-steel-200);
+  --color-outline-variant:            var(--color-steel-100);
+  --color-scrim:                      #000000;
+  --color-shadow:                     #000000;
+
+  /* custom · 双价格 */
+  --color-text-primary:       var(--color-steel-800);
+  --color-text-secondary:     var(--color-steel-500);
+  --color-text-tertiary:      var(--color-steel-400);
+  --color-text-disabled:      var(--color-steel-300);
+  --color-text-inverse:       var(--color-steel-0);
+  --color-text-price:         var(--color-signal-500);   /* 实物 */
+  --color-text-price-energy:  var(--color-seafoam-600);  /* 服务券 / 能源 */
+  --color-text-price-strike:  var(--color-steel-300);
+  --color-text-link:          var(--color-steel-800);
+
+  --color-divider:        var(--color-steel-200);
+  --color-border-default: var(--color-steel-200);
+  --color-border-subtle:  var(--color-steel-100);
+  --color-border-strong:  var(--color-steel-500);
+  --color-border-focus:   var(--color-steel-800);
+  --color-border-accent:  var(--color-seafoam-500);
+
+  --color-tag-charge-bg:     var(--color-seafoam-50);
+  --color-tag-charge-text:   var(--color-seafoam-700);
+  --color-tag-recommend-bg:  var(--color-seafoam-500);
+  --color-tag-recommend-text:var(--color-seafoam-900);
+  --color-tag-onsale-bg:     var(--color-steel-100);
+  --color-tag-onsale-text:   var(--color-steel-700);
+  --color-tag-coupon-bg:     var(--color-signal-50);
+  --color-tag-coupon-text:   var(--color-signal-700);
+  --color-tag-preorder-bg:   var(--color-steel-100);
+  --color-tag-preorder-text: var(--color-steel-700);
+
+  --color-dot-online:  var(--color-seafoam-500);
+  --color-dot-offline: var(--color-steel-400);
+  --color-dot-alert:   var(--color-signal-500);
+
+  /* typography */
+  --font-sans: "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 900;
+
+  /* sp = px in preview · M3 scale */
+  --fs-display-large:   64px;
+  --fs-display-medium:  56px;
+  --fs-display-small:   48px;
+  --fs-headline-large:  44px;
+  --fs-headline-medium: 36px;
+  --fs-headline-small:  32px;
+  --fs-title-large:     28px;
+  --fs-title-medium:    24px;
+  --fs-title-small:     22px;
+  --fs-body-large:      20px;
+  --fs-body-medium:     18px;
+  --fs-body-small:      16px;
+  --fs-label-large:     22px;
+  --fs-label-medium:    20px;
+  --fs-label-small:     16px;
+  /* aliases */
+  --fs-price-display:        44px;
+  --fs-price-card:           30px;
+  --fs-price-line-item:      22px;
+  --fs-price-strike:         16px;
+  --fs-product-title-card:   22px;
+  --fs-product-title-detail: 28px;
+  --fs-range-number:         72px;
+  --fs-plate-mono:           16px;
+  --fs-qr-countdown:         36px;
+  --fs-topbar-overline:      14px;
+
+  /* spacing · 8dp grid */
+  --space-0:   0;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  16px;
+  --space-4:  24px;
+  --space-5:  32px;
+  --space-6:  40px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  80px;
+  --space-10: 96px;
+  --space-11: 128px;
+
+  --pad-screen-h:   var(--space-6); /* 40 */
+  --pad-screen-v:   var(--space-5); /* 32 */
+  --pad-section-v:  var(--space-4); /* 24 */
+  --pad-card:       var(--space-4); /* 24 */
+  --pad-card-large: var(--space-5); /* 32 */
+  --gap-card-grid:  var(--space-3); /* 16 */
+  --gap-section:    var(--space-4); /* 24 */
+  --pad-button-h:   var(--space-5); /* 32 */
+  --pad-input-h:    var(--space-4); /* 24 */
+
+  /* sizing */
+  --h-touch:          80px;
+  --h-touch-compact:  64px;
+  --h-button:         80px;
+  --h-button-compact: 64px;
+  --h-input:          80px;
+  --h-topbar:         80px;
+  --h-rail-item:      80px;
+  --h-list-item:      80px;
+  --h-chip:           48px;
+  --h-tag:            32px;
+  --h-tag-lg:         40px;
+  --h-hero:           240px;
+  --w-rail:           240px;
+  --w-content:        1680px;
+
+  --min-h-cat-tile:        176px;
+  --min-h-card-product:    320px;
+  --min-h-card-service:    176px;
+
+  --size-icon-sm: 20px;
+  --size-icon-md: 28px;
+  --size-icon-lg: 32px;
+  --size-icon-xl: 48px;
+  --size-avatar-sm: 40px;
+  --size-avatar-md: 56px;
+  --size-avatar-lg: 80px;
+  --size-product-thumb-sm: 80px;
+  --size-product-thumb-md: 112px;
+  --size-product-thumb-lg: 160px;
+  --size-qr-code: 480px;
+
+  /* radius */
+  --radius-none: 0;
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  --radius-button:      var(--radius-md);
+  --radius-input:       var(--radius-md);
+  --radius-card:        var(--radius-md);
+  --radius-card-large:  var(--radius-lg);
+  --radius-image:       var(--radius-sm);
+  --radius-tag:         var(--radius-xs);
+  --radius-chip:        var(--radius-full);
+  --radius-dialog:      var(--radius-lg);
+  --radius-bottomsheet: var(--radius-xl);
+  --radius-icon-tile:   var(--radius-md);
+
+  /* border width */
+  --bw-thin:    0.5px;
+  --bw-default: 1px;
+  --bw-thick:   2px;
+  --bw-accent:  3px;
+
+  /* elevation */
+  --elev-0: none;
+  --elev-1: 0 1px 2px rgba(0,0,0,0.06);
+  --elev-2: 0 1px 2px rgba(0,0,0,0.06), 0 3px 6px rgba(0,0,0,0.07);
+  --elev-3: 0 2px 4px rgba(0,0,0,0.07), 0 6px 12px rgba(0,0,0,0.09);
+  --elev-4: 0 3px 6px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.10);
+  --elev-5: 0 4px 8px rgba(0,0,0,0.09), 0 12px 24px rgba(0,0,0,0.12);
+
+  /* opacity */
+  --o-hover:    0.08;
+  --o-focus:    0.12;
+  --o-pressed:  0.12;
+  --o-selected: 0.12;
+  --o-disabled-content:   0.38;
+  --o-disabled-container: 0.12;
+  --o-scrim:        0.6;
+  --o-hero-glow:    0.18;
+  --o-scrim-glass:  0.6;
+}

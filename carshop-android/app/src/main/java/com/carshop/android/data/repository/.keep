@@ -1,0 +1,2 @@
+// repository 层占位:09 / 10 session 实现 CategoryRepository / ProductRepository / OrderRepository
+// 08 只搭骨架,不实现 repository。08 在 MainActivity LaunchedEffect 里直接调 ApiClient.categoryApi.list() 验证链路通。

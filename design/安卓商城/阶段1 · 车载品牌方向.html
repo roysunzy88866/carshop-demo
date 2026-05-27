@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 1 · 车载商城 · 3 个品牌方向预览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", system-ui, sans-serif;
+    background: #FAFAFA;
+    color: #0F0F0F;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  /* head */
+  .head { padding-bottom: 24px; margin-bottom: 40px; border-bottom: 1px solid #EAEAEA; display:flex; align-items: flex-end; justify-content: space-between; gap: 48px;}
+  .head .crumb { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.2em; color: #8A8A8A; margin-bottom: 12px; text-transform: uppercase;}
+  .head h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  .head h1 small { display: block; font-size: 13px; font-weight: 400; color: #4A4A4A; margin-top: 10px; max-width: 720px; text-wrap: pretty;}
+  .head .meta { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 11px; color: #8A8A8A; line-height: 1.9;}
+  .head .meta b { color: #0F0F0F; font-weight: 500; }
+
+  /* direction card */
+  .dir {
+    border: 1px solid #EAEAEA;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    background: #fff;
+  }
+  .dir__head {
+    display: grid;
+    grid-template-columns: 280px 1fr 180px;
+    gap: 32px;
+    padding: 24px 28px;
+    border-bottom: 1px solid #EAEAEA;
+    align-items: center;
+  }
+  .dir__id {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: #8A8A8A;
+    margin-bottom: 6px;
+  }
+  .dir__title { font-size: 24px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+  .dir__subtitle { font-size: 12px; color: #6B6B6B; margin-top: 4px; }
+  .dir__keywords { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dir__keywords span {
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid #D6D6D6;
+    border-radius: 9999px;
+    color: #4A4A4A;
+    background: #FAFAFA;
+    letter-spacing: 0.02em;
+  }
+  .dir__fit {
+    font-size: 11.5px;
+    color: #4A4A4A;
+    line-height: 1.6;
+    border-left: 2px solid #0F0F0F;
+    padding-left: 10px;
+  }
+
+  /* color rail */
+  .palette {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
+    height: 88px;
+    border-top: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+  }
+  .swatch {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .swatch .role {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .swatch .name {
+    font-family: "Noto Sans SC", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .swatch .hex { font-size: 11px; opacity: 0.85; }
+  .swatch--neutral {
+    border-left: 1px solid currentColor;
+  }
+
+  /* mood preview · landscape 16:9 mini "infotainment frame" */
+  .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .mood {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: "Noto Sans SC", sans-serif;
+    border-right: 1px solid #EAEAEA;
+  }
+  .mood:last-child { border-right: 0; }
+  .mood::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    opacity: 0.4;
+  }
+  .mood--cabin::before { content: "PARKED · 1920×1080"; }
+  .mood--card::before  { content: "PRODUCT CARD"; }
+
+  /* === A · 仪表黑白 === */
+  .a-cabin {
+    background: #FAFAFA;
+    color: #0F0F0F;
+  }
+  .a-cabin .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #6B6B6B;
+    letter-spacing: 0.08em;
+  }
+  .a-cabin .topbar b { color: #0F0F0F; font-weight: 500;}
+  .a-cabin .h { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin-top: 4px;}
+  .a-cabin .h em { font-style: normal; color: #6B6B6B; font-weight: 400; font-size: 14px; display: block; margin-top: 6px;}
+  .a-cabin .grid-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .a-cabin .tile {
+    background: #fff;
+    border: 1px solid #D6D6D6;
+    border-radius: 2px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 64px;
+  }
+  .a-cabin .tile .lbl { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: 0.15em; color: #6B6B6B; }
+  .a-cabin .tile .val { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .a-cabin .tile.accent .val { color: #D9342B; }
+  .a-cabin .cta {
+    align-self: flex-start;
+    background: #0F0F0F; color: #fff;
+    font-size: 13px; font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+  .a-card {
+    background: #FAFAFA;
+    color: #0F0F0F;
+    padding: 24px 28px;
+  }
+  .a-card .product {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    background: #fff;
+    border: 1px solid #D6D6D6;
+    border-radius: 2px;
+    padding: 12px;
+  }
+  .a-card .product .img {
+    width: 80px; height: 80px;
+    background: repeating-linear-gradient(135deg, #EAEAEA 0 8px, #FAFAFA 8px 16px);
+    border-radius: 2px;
+  }
+  .a-card .product .meta { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .a-card .product .name { font-size: 13px; font-weight: 500; line-height: 1.4;}
+  .a-card .product .spec { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: #6B6B6B; letter-spacing: 0.06em;}
+  .a-card .product .price { font-size: 20px; font-weight: 700; color: #D9342B; letter-spacing: -0.02em;}
+  .a-card .product .price .y { font-size: 12px; margin-right: 1px;}
+  .a-card .product .price s { font-size: 10px; color: #B8B8B8; margin-left: 6px; font-weight: 400;}
+  .a-card .product .btn-mini { align-self: flex-start; background: #0F0F0F; color: #fff; font-size: 11px; padding: 6px 12px; border-radius: 2px; letter-spacing: 0.04em; }
+
+  /* === B · 暖陶皮革 === */
+  .b-cabin {
+    background: #F5EDDF;
+    color: #3A2F26;
+  }
+  .b-cabin .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #8A7A66;
+    letter-spacing: 0.08em;
+  }
+  .b-cabin .topbar b { color: #3A2F26; font-weight: 500;}
+  .b-cabin .h { font-size: 26px; font-weight: 700; letter-spacing: -0.005em; line-height: 1.15; margin-top: 4px;}
+  .b-cabin .h em { font-style: normal; color: #8A7A66; font-weight: 400; font-size: 14px; display: block; margin-top: 6px;}
+  .b-cabin .grid-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .b-cabin .tile {
+    background: #FAF4E9;
+    border: 1px solid #E0D2B6;
+    border-radius: 4px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 64px;
+  }
+  .b-cabin .tile .lbl { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: 0.15em; color: #8A7A66; }
+  .b-cabin .tile .val { font-size: 16px; font-weight: 700; letter-spacing: -0.005em; color: #3A2F26;}
+  .b-cabin .tile.accent .val { color: #B89968; }
+  .b-cabin .cta {
+    align-self: flex-start;
+    background: #3A2F26; color: #FAF4E9;
+    font-size: 13px; font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .b-card {
+    background: #F5EDDF;
+    color: #3A2F26;
+    padding: 24px 28px;
+  }
+  .b-card .product {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    background: #FAF4E9;
+    border: 1px solid #E0D2B6;
+    border-radius: 4px;
+    padding: 12px;
+  }
+  .b-card .product .img {
+    width: 80px; height: 80px;
+    background: repeating-linear-gradient(135deg, #E0D2B6 0 8px, #F0E4CC 8px 16px);
+    border-radius: 4px;
+  }
+  .b-card .product .meta { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .b-card .product .name { font-size: 13px; font-weight: 500; line-height: 1.4;}
+  .b-card .product .spec { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: #8A7A66; letter-spacing: 0.06em;}
+  .b-card .product .price { font-size: 20px; font-weight: 700; color: #C8472E; letter-spacing: -0.01em;}
+  .b-card .product .price .y { font-size: 12px; margin-right: 1px;}
+  .b-card .product .price s { font-size: 10px; color: #B89968; margin-left: 6px; font-weight: 400;}
+  .b-card .product .btn-mini { align-self: flex-start; background: #B89968; color: #3A2F26; font-size: 11px; padding: 6px 12px; border-radius: 4px; letter-spacing: 0.04em; font-weight: 600; }
+
+  /* === C · 海泡青电车 === */
+  .c-cabin {
+    background: #F5F7F9;
+    color: #1A2027;
+  }
+  .c-cabin .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #5D7B8A;
+    letter-spacing: 0.08em;
+  }
+  .c-cabin .topbar b { color: #1A2027; font-weight: 500;}
+  .c-cabin .h { font-size: 26px; font-weight: 700; letter-spacing: -0.012em; line-height: 1.15; margin-top: 4px;}
+  .c-cabin .h em { font-style: normal; color: #5D7B8A; font-weight: 400; font-size: 14px; display: block; margin-top: 6px;}
+  .c-cabin .grid-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .c-cabin .tile {
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 2px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 64px;
+  }
+  .c-cabin .tile .lbl { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: 0.15em; color: #5D7B8A; }
+  .c-cabin .tile .val { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .c-cabin .tile.accent .val { color: #00A892; }
+  .c-cabin .cta {
+    align-self: flex-start;
+    background: #1A2027; color: #F5F7F9;
+    font-size: 13px; font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .c-cabin .cta::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 30%; height: 2px;
+    background: #00C2A8;
+  }
+  .c-card {
+    background: #F5F7F9;
+    color: #1A2027;
+    padding: 24px 28px;
+  }
+  .c-card .product {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    background: #fff;
+    border: 1px solid #D4DCE4;
+    border-radius: 2px;
+    padding: 12px;
+  }
+  .c-card .product .img {
+    width: 80px; height: 80px;
+    background: repeating-linear-gradient(135deg, #D4DCE4 0 8px, #E8EDF1 8px 16px);
+    border-radius: 2px;
+  }
+  .c-card .product .meta { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .c-card .product .name { font-size: 13px; font-weight: 500; line-height: 1.4;}
+  .c-card .product .spec { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: #5D7B8A; letter-spacing: 0.06em;}
+  .c-card .product .price { font-size: 20px; font-weight: 700; color: #00A892; letter-spacing: -0.02em;}
+  .c-card .product .price .y { font-size: 12px; margin-right: 1px;}
+  .c-card .product .price s { font-size: 10px; color: #8FA4B1; margin-left: 6px; font-weight: 400;}
+  .c-card .product .btn-mini { align-self: flex-start; background: #00C2A8; color: #002A26; font-size: 11px; padding: 6px 12px; border-radius: 2px; letter-spacing: 0.04em; font-weight: 600; }
+
+  /* diff table */
+  .diff {
+    margin-top: 48px;
+    border: 1px solid #EAEAEA;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .diff-head {
+    padding: 20px 28px;
+    border-bottom: 1px solid #EAEAEA;
+    background: #FAFAFA;
+  }
+  .diff-head .label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.22em; color: #8A8A8A;}
+  .diff-head h3 { font-size: 18px; font-weight: 700; margin-top: 6px; letter-spacing: -0.005em;}
+  table { width: 100%; border-collapse: collapse; font-size: 13px;}
+  table th, table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #EAEAEA; vertical-align: top;}
+  table thead th { background: #0F0F0F; color: #fff; font-weight: 500; font-size: 11px; letter-spacing: 0.12em; font-family: "JetBrains Mono", monospace;}
+  table tbody td:first-child { font-weight: 600; color: #0F0F0F; width: 16%; }
+  table tbody tr:last-child td { border-bottom: 0;}
+  td .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  td .pill .d { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* footer pick */
+  .pick {
+    margin-top: 48px;
+    padding: 28px 32px;
+    background: #0F0F0F;
+    color: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .pick .l { display: flex; align-items: center; gap: 24px; }
+  .pick .num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; letter-spacing: 0.22em;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+  .pick h4 { font-size: 17px; font-weight: 600; letter-spacing: -0.005em;}
+  .pick p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px;}
+  .pick .picks span {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div>
+      <div class="crumb">STAGE 01 / ? · BRAND DIRECTIONS · 车载 RESTART</div>
+      <h1>
+        车载商城 · 3 个品牌方向
+        <small>AAOS 原生 · 1920×1080 横屏 · 停车场景 · 仅浅色 · 触控目标 72dp · 车主品类(汽车用品 / 加油充电 / 洗车保养 / 周边餐饮 / 旅行服务)</small>
+      </h1>
+    </div>
+    <div class="meta">
+      <b>STATE</b>&nbsp;&nbsp;Phone deliverables 弃用<br/>
+      <b>NEXT</b>&nbsp;&nbsp;选定方向后进入 Stage 2<br/>
+      <b>FONT</b>&nbsp;&nbsp;Source Han Sans SC
+    </div>
+  </header>
+
+  <!-- ════════════ A · 仪表黑白 ════════════ -->
+  <article class="dir">
+    <div class="dir__head">
+      <div>
+        <div class="dir__id">DIRECTION A</div>
+        <div class="dir__title">仪表盘黑白</div>
+        <div class="dir__subtitle">车机工具 · Tesla light mode 美学</div>
+      </div>
+      <div class="dir__keywords">
+        <span>工具感</span><span>信息直给</span><span>高对比</span><span>工业精度</span><span>仪表盘 DNA</span>
+      </div>
+      <div class="dir__fit">
+        把车当工具的极客车主 / 性能车 / 纯电用户 · 把消费做成「车内服务面板」
+      </div>
+    </div>
+
+    <div class="palette">
+      <div class="swatch" style="background:#0F0F0F;color:#fff">
+        <div><div class="role">PRIMARY 主色</div><div class="name">仪表黑</div></div>
+        <div class="hex">#0F0F0F</div>
+      </div>
+      <div class="swatch" style="background:#4A4A4A;color:#fff">
+        <div><div class="role">SECONDARY 副色</div><div class="name">中性深灰</div></div>
+        <div class="hex">#4A4A4A</div>
+      </div>
+      <div class="swatch" style="background:#D9342B;color:#fff">
+        <div><div class="role">ACCENT 强调</div><div class="name">警示朱</div></div>
+        <div class="hex">#D9342B</div>
+      </div>
+      <div class="swatch" style="background:#FAFAFA;color:#0F0F0F">
+        <div><div class="role">NEUTRAL 基调 · 冷灰</div><div class="name">仪表白</div></div>
+        <div class="hex">#FAFAFA · #EAEAEA · #D6D6D6</div>
+      </div>
+    </div>
+
+    <div class="mood-grid">
+      <div class="mood mood--cabin a-cabin">
+        <div>
+          <div class="topbar"><span><b>车主商城</b> · 停车中</span><span>14:32 · 22°C</span></div>
+          <div class="h">今天给爱车加点什么<em>停在 国贸地下车库 · 推荐 5 项服务</em></div>
+        </div>
+        <div class="grid-tiles">
+          <div class="tile"><span class="lbl">FUEL</span><span class="val">¥8.21/L</span></div>
+          <div class="tile accent"><span class="lbl">CHARGE</span><span class="val">12 桩闲</span></div>
+          <div class="tile"><span class="lbl">WASH</span><span class="val">¥58 起</span></div>
+          <div class="tile"><span class="lbl">PARK</span><span class="val">¥8/h</span></div>
+        </div>
+        <div class="cta">查看附近服务 →</div>
+      </div>
+      <div class="mood mood--card a-card">
+        <div class="topbar" style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6B6B6B;letter-spacing:0.08em;margin-bottom:14px"><span style="color:#0F0F0F;font-weight:500">汽车用品</span><span>78 件商品</span></div>
+        <div class="product">
+          <div class="img"></div>
+          <div class="meta">
+            <div class="name">米其林 PILOT SPORT 4 ZP 防爆胎</div>
+            <div class="spec">225/45 R18 · 适配 BMW 3 系</div>
+            <div class="price"><span class="y">¥</span>1280<s>¥1580</s></div>
+            <div class="btn-mini">立即购买</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════════ B · 暖陶皮革 ════════════ -->
+  <article class="dir">
+    <div class="dir__head">
+      <div>
+        <div class="dir__id">DIRECTION B</div>
+        <div class="dir__title">暖陶皮革感</div>
+        <div class="dir__subtitle">舒适体验 · 理想/Rivian 内饰美学</div>
+      </div>
+      <div class="dir__keywords">
+        <span>温润</span><span>舒适</span><span>高端服务</span><span>家庭场景</span><span>慢生活</span>
+      </div>
+      <div class="dir__fit">
+        家用车 / MPV / 增程电车 · 30+ 在意车内氛围 · 高端酒店礼宾式服务调性
+      </div>
+    </div>
+
+    <div class="palette">
+      <div class="swatch" style="background:#3A2F26;color:#FAF4E9">
+        <div><div class="role">PRIMARY 主色</div><div class="name">浓墨棕</div></div>
+        <div class="hex">#3A2F26</div>
+      </div>
+      <div class="swatch" style="background:#B89968;color:#fff">
+        <div><div class="role">SECONDARY 副色</div><div class="name">黄铜金</div></div>
+        <div class="hex">#B89968</div>
+      </div>
+      <div class="swatch" style="background:#C8472E;color:#fff">
+        <div><div class="role">ACCENT 强调</div><div class="name">釉烧红</div></div>
+        <div class="hex">#C8472E</div>
+      </div>
+      <div class="swatch" style="background:#F5EDDF;color:#3A2F26">
+        <div><div class="role">NEUTRAL 基调 · 暖白米色</div><div class="name">陶土米</div></div>
+        <div class="hex">#F5EDDF · #E0D2B6 · #FAF4E9</div>
+      </div>
+    </div>
+
+    <div class="mood-grid">
+      <div class="mood mood--cabin b-cabin">
+        <div>
+          <div class="topbar"><span><b>车主商城</b> · 停车中</span><span>14:32 · 22°C</span></div>
+          <div class="h">傍晚好,准备出发了吗<em>停在 国贸地下车库 · 为您挑选 5 项服务</em></div>
+        </div>
+        <div class="grid-tiles">
+          <div class="tile"><span class="lbl">FUEL</span><span class="val">¥8.21/L</span></div>
+          <div class="tile accent"><span class="lbl">CHARGE</span><span class="val">12 桩闲</span></div>
+          <div class="tile"><span class="lbl">WASH</span><span class="val">¥58 起</span></div>
+          <div class="tile"><span class="lbl">PARK</span><span class="val">¥8/h</span></div>
+        </div>
+        <div class="cta">查看附近服务 →</div>
+      </div>
+      <div class="mood mood--card b-card">
+        <div class="topbar" style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A7A66;letter-spacing:0.08em;margin-bottom:14px"><span style="color:#3A2F26;font-weight:500">车内餐饮 · 周边</span><span>32 家在营</span></div>
+        <div class="product">
+          <div class="img"></div>
+          <div class="meta">
+            <div class="name">星巴克臻选 燕麦拿铁 · 大杯</div>
+            <div class="spec">国贸店 · 步行 3 分钟 · 27 分钟取餐</div>
+            <div class="price"><span class="y">¥</span>38<s>¥45</s></div>
+            <div class="btn-mini">立即预订</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════════ C · 海泡青电车 ════════════ -->
+  <article class="dir">
+    <div class="dir__head">
+      <div>
+        <div class="dir__id">DIRECTION C</div>
+        <div class="dir__title">海泡青电车感</div>
+        <div class="dir__subtitle">新能源科技 · 蔚来/极氪/小米 SU7 美学</div>
+      </div>
+      <div class="dir__keywords">
+        <span>电车感</span><span>冷峻</span><span>未来</span><span>信号清晰</span><span>高科技</span>
+      </div>
+      <div class="dir__fit">
+        新能源车主 / 极客技术品味 · 像「会发光的科技品牌」· 强调色用克制电信号绿
+      </div>
+    </div>
+
+    <div class="palette">
+      <div class="swatch" style="background:#1A2027;color:#F5F7F9">
+        <div><div class="role">PRIMARY 主色</div><div class="name">石墨蓝</div></div>
+        <div class="hex">#1A2027</div>
+      </div>
+      <div class="swatch" style="background:#5D7B8A;color:#fff">
+        <div><div class="role">SECONDARY 副色</div><div class="name">港口灰</div></div>
+        <div class="hex">#5D7B8A</div>
+      </div>
+      <div class="swatch" style="background:#00C2A8;color:#002A26">
+        <div><div class="role">ACCENT 强调</div><div class="name">海泡青</div></div>
+        <div class="hex">#00C2A8</div>
+      </div>
+      <div class="swatch" style="background:#F5F7F9;color:#1A2027">
+        <div><div class="role">NEUTRAL 基调 · 冷灰</div><div class="name">瓷白</div></div>
+        <div class="hex">#F5F7F9 · #D4DCE4 · #E8EDF1</div>
+      </div>
+    </div>
+
+    <div class="mood-grid">
+      <div class="mood mood--cabin c-cabin">
+        <div>
+          <div class="topbar"><span><b>EV MALL</b> · PARKED</span><span>14:32 · 22°C</span></div>
+          <div class="h">续航 412 km · 推荐充电<em>停在 国贸地下车库 · 5 项附近服务</em></div>
+        </div>
+        <div class="grid-tiles">
+          <div class="tile"><span class="lbl">FUEL</span><span class="val">¥8.21/L</span></div>
+          <div class="tile accent"><span class="lbl">CHARGE</span><span class="val">12 桩闲</span></div>
+          <div class="tile"><span class="lbl">WASH</span><span class="val">¥58 起</span></div>
+          <div class="tile"><span class="lbl">PARK</span><span class="val">¥8/h</span></div>
+        </div>
+        <div class="cta">查看附近服务 →</div>
+      </div>
+      <div class="mood mood--card c-card">
+        <div class="topbar" style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5D7B8A;letter-spacing:0.08em;margin-bottom:14px"><span style="color:#1A2027;font-weight:500">充电服务</span><span>SuperCharger</span></div>
+        <div class="product">
+          <div class="img"></div>
+          <div class="meta">
+            <div class="name">国贸三期 · 特斯拉 V3 超充站</div>
+            <div class="spec">12 桩闲 · 最大 250 kW · 估时 22 分钟</div>
+            <div class="price"><span class="y">¥</span>1.28<span style="font-size:10px;color:#5D7B8A;margin-left:6px;font-weight:400">/kWh</span></div>
+            <div class="btn-mini">导航前往</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════════ DIFF TABLE ════════════ -->
+  <section class="diff">
+    <div class="diff-head">
+      <div class="label">DIFF · 决策矩阵</div>
+      <h3>三个方向的真正差异 · 不是黑色系微调</h3>
+    </div>
+    <table>
+      <thead>
+        <tr><th></th><th>A · 仪表黑白</th><th>B · 暖陶皮革</th><th>C · 海泡青电车</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>情绪</td><td>冷酷工具</td><td>温暖招待</td><td>冷峻科技</td></tr>
+        <tr><td>主色温感</td>
+          <td><span class="pill"><span class="d" style="background:#0F0F0F"></span>中性偏冷</span></td>
+          <td><span class="pill"><span class="d" style="background:#3A2F26"></span>暖</span></td>
+          <td><span class="pill"><span class="d" style="background:#1A2027"></span>极冷</span></td>
+        </tr>
+        <tr><td>强调色心理</td>
+          <td><span class="pill" style="background:#FEE;color:#A91823"><span class="d" style="background:#D9342B"></span>警告 / 急迫</span></td>
+          <td><span class="pill" style="background:#FDECDF;color:#80131B"><span class="d" style="background:#C8472E"></span>温暖 / 食欲</span></td>
+          <td><span class="pill" style="background:#DFFAF4;color:#005245"><span class="d" style="background:#00C2A8"></span>电信号 / 清醒</span></td>
+        </tr>
+        <tr><td>卖品调性</td><td>加油 / 充电 / 维修 · 性能配件</td><td>餐饮 / 旅行 / 礼品 · 礼宾推荐</td><td>充电 / 数码 / 车机配件</td></tr>
+        <tr><td>用户画像</td><td>性能党 · 工具人</td><td>家用 · 体验派</td><td>极客 · 新能源新贵</td></tr>
+        <tr><td>视觉参考</td><td>Tesla 浅色中控 · Apple Maps · Bloomberg 浅</td><td>理想 ONE 内饰 · Rivian R1 · 高端酒店预订</td><td>蔚来 NOMI · 极氪 001 · Stripe Docs</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ════════════ PICK ════════════ -->
+  <section class="pick">
+    <div class="l">
+      <span class="num">PICK</span>
+      <div>
+        <h4>选定一个方向 · 进入阶段 2(Design Token · 车载尺度)</h4>
+        <p>车载 Token 与手机差异巨大:基础字号 18sp 起 · 触控 72dp · 横屏栅格 · 8dp grid</p>
+      </div>
+    </div>
+    <div class="picks">
+      <span>A · 仪表黑白</span><span>B · 暖陶皮革</span><span>C · 海泡青电车</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

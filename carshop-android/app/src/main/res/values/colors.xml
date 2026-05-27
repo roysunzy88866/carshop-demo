@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 仅 Activity 冷启动 windowBackground 用,业务色全走 Compose tokens -->
+    <color name="carshop_bg">#F5F7F9</color>
+</resources>

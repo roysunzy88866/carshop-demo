@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Release variant 覆盖 · 11 final-integration
+  主 manifest 为了 mockDebug 的 MockWebServer (localhost HTTP) 开了 usesCleartextTraffic=true。
+  Release 全程走公网 HTTPS,不允许明文流量(spec §8.2 钦定)。
+  这里用 tools:replace 把 cleartext 改回 false。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        tools:replace="android:usesCleartextTraffic"
+        android:usesCleartextTraffic="false" />
+</manifest>

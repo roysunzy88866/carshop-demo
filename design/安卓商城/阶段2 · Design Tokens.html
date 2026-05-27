@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 2 · 车载 Design Tokens · 可视化对照</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --steel-0:   #FFFFFF;
+    --steel-50:  #F5F7F9;
+    --steel-100: #E8EDF1;
+    --steel-200: #D4DCE4;
+    --steel-300: #B8C5CF;
+    --steel-400: #8FA4B1;
+    --steel-500: #5D7B8A;
+    --steel-600: #3F5867;
+    --steel-700: #2A3D49;
+    --steel-800: #1A2027;
+    --steel-900: #0A0E12;
+    --seafoam-50:  #E6FBF6;
+    --seafoam-100: #C2F5E8;
+    --seafoam-200: #93EAD4;
+    --seafoam-300: #5BDABE;
+    --seafoam-400: #2BC9A7;
+    --seafoam-500: #00C2A8;
+    --seafoam-600: #00A892;
+    --seafoam-700: #008270;
+    --seafoam-800: #006150;
+    --seafoam-900: #003D33;
+    --signal-50:  #FEF2F3;
+    --signal-100: #FCE4E6;
+    --signal-200: #F8BFC4;
+    --signal-300: #F2929A;
+    --signal-400: #EC6470;
+    --signal-500: #E63946;
+    --signal-600: #C9293A;
+    --signal-700: #A91823;
+    --signal-800: #80131B;
+    --signal-900: #570D12;
+
+    --bg:           var(--steel-50);
+    --surface:      var(--steel-0);
+    --surface-var:  var(--steel-100);
+    --on-surface:   var(--steel-800);
+    --on-surface-v: var(--steel-500);
+    --text-3:       var(--steel-400);
+    --outline:      var(--steel-200);
+    --outline-v:    var(--steel-100);
+    --divider:      var(--steel-200);
+    --accent:       var(--seafoam-500);
+    --accent-deep:  var(--seafoam-600);
+
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--on-surface);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1920px; margin: 0 auto; padding: 56px 64px 96px; }
+
+  /* head */
+  .head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 64px; padding-bottom: 28px; margin-bottom: 56px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .head .crumb {
+    font-family: var(--font-mono);
+    font-size: 13px; color: var(--text-3);
+    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .head h1 { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.12; }
+  .head h1 small {
+    display: block; font-size: 17px; font-weight: 400;
+    color: var(--on-surface-v); margin-top: 12px; max-width: 920px;
+  }
+  .head .meta {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 13px; color: var(--text-3); line-height: 1.95; flex-shrink: 0;
+  }
+  .head .meta b { color: var(--on-surface); font-weight: 500; }
+
+  /* files / toc */
+  .files { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 48px; }
+  .file {
+    border: 1px solid var(--outline); border-radius: 12px;
+    padding: 18px 24px; background: var(--surface);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .file .name { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+  .file .desc { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+  .file .badge {
+    font-family: var(--font-mono); font-size: 11px; color: var(--on-surface);
+    border: 1px solid var(--outline); padding: 6px 10px; border-radius: 4px;
+    letter-spacing: 0.1em; background: var(--bg);
+  }
+  .toc { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin-bottom: 80px; }
+  .toc a {
+    text-decoration: none; color: var(--on-surface);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    padding: 14px 16px; border: 1px solid var(--outline); border-radius: 8px;
+    display: flex; flex-direction: column; gap: 4px; background: var(--surface);
+  }
+  .toc a:hover { background: var(--steel-800); color: #fff; }
+  .toc a span.n { color: var(--text-3); font-size: 11px; letter-spacing: 0.18em; }
+  .toc a:hover span.n { color: var(--steel-400); }
+
+  /* section */
+  section { margin-bottom: 96px; scroll-margin-top: 24px; }
+  .sec-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; padding-bottom: 20px; margin-bottom: 32px;
+    border-bottom: 2px solid var(--on-surface);
+  }
+  .sec-head .label {
+    font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: 0.22em; color: var(--text-3); margin-bottom: 10px; text-transform: uppercase;
+  }
+  .sec-head h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.018em; line-height: 1.15; }
+  .sec-head .desc { font-size: 15px; color: var(--on-surface-v); max-width: 580px; line-height: 1.55; text-wrap: pretty;}
+  .subsec { margin-bottom: 48px; }
+  .subsec h3 {
+    font-size: 18px; font-weight: 600; letter-spacing: 0.02em;
+    margin-bottom: 18px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--divider);
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .subsec h3 .hint {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 400;
+    color: var(--text-3); letter-spacing: 0.1em;
+  }
+
+  /* ladder */
+  .ladder { display: grid; gap: 6px; }
+  .ladder.steel   { grid-template-columns: repeat(11, 1fr); }
+  .ladder.seafoam { grid-template-columns: repeat(10, 1fr); }
+  .ladder.signal  { grid-template-columns: repeat(10, 1fr); }
+  .stop {
+    aspect-ratio: 1 / 1.45; padding: 14px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; line-height: 1.3;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .stop .k { opacity: 0.75; font-size: 10px; letter-spacing: 0.08em; }
+  .stop .v { font-weight: 500; }
+  .stop.dark  { color: rgba(255,255,255,0.92); }
+  .stop.light { color: rgba(0,0,0,0.78); }
+  .stop .anc { font-size: 9.5px; font-weight: 600; letter-spacing: 0.18em; margin-top: 4px; opacity: 0.85; }
+
+  /* m3 table */
+  .m3-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 13px; border: 1px solid var(--outline);
+    border-radius: 12px; overflow: hidden; background: var(--surface);
+  }
+  .m3-table thead th {
+    background: var(--steel-800); color: #fff; text-align: left;
+    padding: 16px 18px; font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: 0.12em; font-weight: 500;
+  }
+  .m3-table tbody td { padding: 12px 18px; border-bottom: 1px solid var(--divider); vertical-align: middle; }
+  .m3-table tbody tr:last-child td { border-bottom: 0; }
+  .m3-table .compose { font-family: var(--font-mono); font-size: 13px; color: var(--on-surface); font-weight: 500; }
+  .m3-table .token { font-family: var(--font-mono); font-size: 12px; color: var(--on-surface-v); }
+  .m3-table .color-cell { display: flex; align-items: center; gap: 12px; }
+  .m3-table .color-cell .dot { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; }
+  .m3-table .hex { font-family: var(--font-mono); font-size: 12px; color: var(--on-surface-v); }
+  .m3-table tbody tr.group-row td {
+    background: var(--surface-var); font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.22em; color: var(--on-surface-v);
+    padding: 10px 18px; font-weight: 500; text-transform: uppercase;
+  }
+  .m3-table .role { font-size: 13px; color: var(--on-surface-v); line-height: 1.45; }
+
+  /* token chips */
+  .token-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 16px; }
+  .tok {
+    display: grid; grid-template-columns: 36px 1fr auto;
+    align-items: center; gap: 14px;
+    padding: 12px 16px; border: 1px solid var(--outline-v);
+    border-radius: 8px; font-size: 13px; line-height: 1.4; background: var(--surface);
+  }
+  .tok .sw { width: 36px; height: 36px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.06);}
+  .tok .name { font-family: var(--font-mono); font-size: 12px; color: var(--on-surface); font-weight: 500; }
+  .tok .name em { font-style: normal; display: block; font-family: var(--font-sans); font-size: 12px; color: var(--text-3); font-weight: 400; margin-top: 2px;}
+  .tok .hex { font-family: var(--font-mono); font-size: 12px; color: var(--on-surface-v); }
+
+  /* cat */
+  .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .cat { border: 1px solid var(--outline); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .cat .swatch {
+    aspect-ratio: 16 / 9; display: flex; align-items: flex-end; padding: 16px;
+    color: #003D33; font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: 0.1em; font-weight: 700;
+  }
+  .cat .body { padding: 16px 18px; border-top: 1px solid var(--outline-v); }
+  .cat .body .name { font-size: 15px; font-weight: 600; }
+  .cat .body .desc { font-size: 12px; color: var(--text-3); margin-top: 4px; line-height: 1.45; }
+
+  /* type ramp */
+  .type-row {
+    display: grid; grid-template-columns: 280px 1fr 280px;
+    gap: 32px; align-items: baseline;
+    padding: 22px 0; border-bottom: 1px solid var(--divider);
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .meta-tk { display: flex; flex-direction: column; gap: 4px; }
+  .type-row .meta-tk .key { font-family: var(--font-mono); font-size: 13px; color: var(--on-surface); font-weight: 500;}
+  .type-row .meta-tk .compose { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.04em;}
+  .type-row .sample { color: var(--on-surface); line-height: 1; align-self: center; }
+  .type-row .specs { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); text-align: right; line-height: 1.8; letter-spacing: 0.02em;}
+  .type-row .specs b { color: var(--on-surface); font-weight: 500; }
+
+  /* ruler */
+  .ruler { display: flex; flex-direction: column; gap: 6px; }
+  .ruler .row {
+    display: grid; grid-template-columns: 120px 80px 1fr 280px; gap: 20px;
+    align-items: center; padding: 8px 0; border-bottom: 1px solid var(--outline-v);
+  }
+  .ruler .row .key { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+  .ruler .row .val { font-family: var(--font-mono); font-size: 13px; color: var(--on-surface-v); }
+  .ruler .row .bar { height: 16px; background: var(--steel-800); border-radius: 2px; }
+  .ruler .row .use { font-size: 13px; color: var(--text-3); line-height: 1.4; }
+
+  /* sizing grid */
+  .sizing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .siz { border: 1px solid var(--outline-v); border-radius: 8px; padding: 14px 18px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; gap: 12px;}
+  .siz .name { font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+  .siz .name em { font-style: normal; display: block; font-family: var(--font-sans); font-size: 12px; color: var(--text-3); font-weight: 400; margin-top: 3px;}
+  .siz .val { font-family: var(--font-mono); font-size: 13px; color: var(--accent-deep); font-weight: 700; white-space: nowrap;}
+
+  /* radius / border */
+  .radius-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; }
+  .r {
+    border: 1px solid var(--outline); aspect-ratio: 1;
+    background: repeating-linear-gradient(135deg, var(--surface-var) 0 8px, var(--bg) 8px 16px);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding: 14px; text-align: center;
+  }
+  .r .lbl { font-family: var(--font-mono); font-size: 12px; color: var(--on-surface); font-weight: 500; }
+  .r .v { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); margin-top: 3px; }
+  .border-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .b { padding: 28px; border-style: solid; border-color: var(--on-surface); text-align: center; border-radius: 4px; background: var(--surface);}
+  .b.thin    { border-width: 0.5px; }
+  .b.default { border-width: 1px; }
+  .b.thick   { border-width: 2px; }
+  .b.accent  { border-width: 3px; border-color: var(--accent); }
+  .b .lbl { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+  .b .v { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+  /* elev */
+  .elev-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .e {
+    aspect-ratio: 1.1; background: var(--surface);
+    border: 1px solid var(--outline-v); border-radius: 12px;
+    padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .e-0 { box-shadow: none; }
+  .e-1 { box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .e-2 { box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 3px 6px rgba(0,0,0,0.07); }
+  .e-3 { box-shadow: 0 2px 4px rgba(0,0,0,0.07), 0 6px 12px rgba(0,0,0,0.09); }
+  .e-4 { box-shadow: 0 3px 6px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.10); }
+  .e-5 { box-shadow: 0 4px 8px rgba(0,0,0,0.09), 0 12px 24px rgba(0,0,0,0.12); }
+  .e .lbl { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+  .e .v { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); }
+  .e .role { font-size: 12px; color: var(--on-surface-v); line-height: 1.45; }
+
+  /* state opacity */
+  .state-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .state-card {
+    border: 1px solid var(--outline); border-radius: 8px; padding: 16px; background: var(--surface);
+  }
+  .state-card .head-line { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--divider);}
+  .state-card .key { font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+  .state-card .pct { font-family: var(--font-mono); font-size: 13px; color: var(--accent-deep); font-weight: 700; }
+  .state-card .demo {
+    height: 44px; background: var(--steel-800); border-radius: 8px;
+    position: relative; overflow: hidden; margin-bottom: 10px;
+  }
+  .state-card .demo::after { content: ""; position: absolute; inset: 0; background: #fff; }
+  .state-card.s-hover     .demo::after { opacity: 0.08; }
+  .state-card.s-focus     .demo::after { opacity: 0.12; }
+  .state-card.s-pressed   .demo::after { opacity: 0.12; }
+  .state-card.s-dragged   .demo::after { opacity: 0.16; }
+  .state-card.s-selected  .demo::after { opacity: 0.12; }
+  .state-card.s-d-content .demo::after { opacity: 0.38; }
+  .state-card.s-d-cont    .demo::after { opacity: 0.12; }
+  .state-card.s-scrim     .demo::after { opacity: 0.6; background: #000; }
+  .state-card.s-glow      .demo::after { background: radial-gradient(circle at 70% 50%, var(--seafoam-500) 0%, transparent 60%); opacity: 0.18; }
+  .state-card.s-glass     .demo::after { opacity: 0.6; }
+  .state-card .use { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+
+  /* next */
+  .next {
+    margin-top: 72px; padding: 32px 40px;
+    background: var(--steel-800); color: #fff; border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 40px;
+  }
+  .next .l { display: flex; align-items: center; gap: 28px; }
+  .next .num { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.22em; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px;}
+  .next h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.005em; }
+  .next p { font-size: 15px; color: rgba(255,255,255,0.65); margin-top: 6px; }
+  .next .picks { display: flex; gap: 10px; }
+  .next .picks span { font-family: var(--font-mono); font-size: 12px; padding: 10px 18px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; letter-spacing: 0.1em;}
+  .next .picks span.go { background: var(--seafoam-500); color: var(--seafoam-900); border-color: var(--seafoam-500); font-weight: 700;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEAD -->
+  <header class="head">
+    <div>
+      <div class="crumb">STAGE 02 / 04 · DESIGN TOKENS · 车载 · DIRECTION C</div>
+      <h1>
+        车载 Design Tokens · 可视化对照
+        <small>Token Studio 兼容 SSOT · 每个 token = { type, value, description } · 1:1 映射 Compose Material 3 lightColorScheme · 1920×1080 · 80dp 触控 · 8dp grid · 主圆角 12dp</small>
+      </h1>
+    </div>
+    <div class="meta">
+      <b>方向</b>&nbsp;&nbsp;C · 海泡青电车感<br/>
+      <b>平台</b>&nbsp;&nbsp;AAOS · Jetpack Compose<br/>
+      <b>屏幕</b>&nbsp;&nbsp;1920×1080 · landscape · light only<br/>
+      <b>无</b>&nbsp;&nbsp;dark mode / motion / 组件 / 页面
+    </div>
+  </header>
+
+  <!-- FILES -->
+  <div class="files">
+    <div class="file">
+      <div><div class="name">tokens.json</div><div class="desc">单一事实来源 · Token Studio / Style Dictionary 可读 · v1.0.0 车载版</div></div>
+      <span class="badge">SSOT</span>
+    </div>
+    <div class="file">
+      <div><div class="name">阶段2 · Design Tokens.html</div><div class="desc">本页 · 给你审核 · 不作生产依赖</div></div>
+      <span class="badge">REVIEW</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#color-primitive"><span class="n">01</span>Color · Primitive</a>
+    <a href="#color-semantic"><span class="n">02</span>Color · M3 映射</a>
+    <a href="#color-custom"><span class="n">03</span>Color · Custom</a>
+    <a href="#color-category"><span class="n">04</span>Color · Category</a>
+    <a href="#typography"><span class="n">05</span>Typography</a>
+    <a href="#spacing"><span class="n">06</span>Spacing + Sizing</a>
+    <a href="#radius"><span class="n">07</span>Radius + Border</a>
+    <a href="#elevation"><span class="n">08</span>Elevation + State</a>
+  </nav>
+
+  <!-- ═══ 01 PRIMITIVE ═══ -->
+  <section id="color-primitive">
+    <div class="sec-head">
+      <div>
+        <div class="label">01 · COLOR PRIMITIVE</div>
+        <h2>原始色阶 · Steel 11 / Seafoam 10 / Signal 10</h2>
+      </div>
+      <div class="desc">
+        三套独立色阶 · 所有 semantic / custom 都引用这一层 · Steel = 冷调中性,锚 800; Seafoam = 电信号绿,锚 500; Signal = 错误/实物价,锚 500。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>color.primitive.steel · 冷调中性 11 阶 <span class="hint">★ ANCHOR 800 = #1A2027</span></h3>
+      <div class="ladder steel">
+        <div class="stop light" style="background:#FFFFFF"><span class="k">000</span><span class="v">#FFFFFF</span></div>
+        <div class="stop light" style="background:#F5F7F9"><span class="k">050</span><span class="v">#F5F7F9</span></div>
+        <div class="stop light" style="background:#E8EDF1"><span class="k">100</span><span class="v">#E8EDF1</span></div>
+        <div class="stop light" style="background:#D4DCE4"><span class="k">200</span><span class="v">#D4DCE4</span></div>
+        <div class="stop light" style="background:#B8C5CF"><span class="k">300</span><span class="v">#B8C5CF</span></div>
+        <div class="stop light" style="background:#8FA4B1"><span class="k">400</span><span class="v">#8FA4B1</span></div>
+        <div class="stop dark"  style="background:#5D7B8A"><span class="k">500</span><span class="v">#5D7B8A</span></div>
+        <div class="stop dark"  style="background:#3F5867"><span class="k">600</span><span class="v">#3F5867</span></div>
+        <div class="stop dark"  style="background:#2A3D49"><span class="k">700</span><span class="v">#2A3D49</span></div>
+        <div class="stop dark"  style="background:#1A2027"><span class="k">800</span><span class="v">#1A2027</span><span class="anc">★ PRIMARY</span></div>
+        <div class="stop dark"  style="background:#0A0E12"><span class="k">900</span><span class="v">#0A0E12</span></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>color.primitive.seafoam · 海泡青 10 阶 <span class="hint">★ ANCHOR 500 = #00C2A8 · 600 = #00A892 服务券价</span></h3>
+      <div class="ladder seafoam">
+        <div class="stop light" style="background:#E6FBF6"><span class="k">050</span><span class="v">#E6FBF6</span></div>
+        <div class="stop light" style="background:#C2F5E8"><span class="k">100</span><span class="v">#C2F5E8</span></div>
+        <div class="stop light" style="background:#93EAD4"><span class="k">200</span><span class="v">#93EAD4</span></div>
+        <div class="stop light" style="background:#5BDABE"><span class="k">300</span><span class="v">#5BDABE</span></div>
+        <div class="stop dark"  style="background:#2BC9A7"><span class="k">400</span><span class="v">#2BC9A7</span></div>
+        <div class="stop dark"  style="background:#00C2A8"><span class="k">500</span><span class="v">#00C2A8</span><span class="anc">★ TERTIARY</span></div>
+        <div class="stop dark"  style="background:#00A892"><span class="k">600</span><span class="v">#00A892</span><span class="anc">★ PRICE-ENERGY</span></div>
+        <div class="stop dark"  style="background:#008270"><span class="k">700</span><span class="v">#008270</span></div>
+        <div class="stop dark"  style="background:#006150"><span class="k">800</span><span class="v">#006150</span></div>
+        <div class="stop dark"  style="background:#003D33"><span class="k">900</span><span class="v">#003D33</span></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>color.primitive.signal · 信号红 10 阶 <span class="hint">★ ANCHOR 500 = #E63946 · 实物价 / error</span></h3>
+      <div class="ladder signal">
+        <div class="stop light" style="background:#FEF2F3"><span class="k">050</span><span class="v">#FEF2F3</span></div>
+        <div class="stop light" style="background:#FCE4E6"><span class="k">100</span><span class="v">#FCE4E6</span></div>
+        <div class="stop light" style="background:#F8BFC4"><span class="k">200</span><span class="v">#F8BFC4</span></div>
+        <div class="stop light" style="background:#F2929A"><span class="k">300</span><span class="v">#F2929A</span></div>
+        <div class="stop dark"  style="background:#EC6470"><span class="k">400</span><span class="v">#EC6470</span></div>
+        <div class="stop dark"  style="background:#E63946"><span class="k">500</span><span class="v">#E63946</span><span class="anc">★ PRICE / ERROR</span></div>
+        <div class="stop dark"  style="background:#C9293A"><span class="k">600</span><span class="v">#C9293A</span></div>
+        <div class="stop dark"  style="background:#A91823"><span class="k">700</span><span class="v">#A91823</span></div>
+        <div class="stop dark"  style="background:#80131B"><span class="k">800</span><span class="v">#80131B</span></div>
+        <div class="stop dark"  style="background:#570D12"><span class="k">900</span><span class="v">#570D12</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 02 SEMANTIC · M3 ═══ -->
+  <section id="color-semantic">
+    <div class="sec-head">
+      <div>
+        <div class="label">02 · COLOR SEMANTIC · MATERIAL 3 MAPPING</div>
+        <h2>Material 3 lightColorScheme 1:1 映射</h2>
+      </div>
+      <div class="desc">
+        左列直接复制到 <code>Theme.kt</code> 的 <code>lightColorScheme(...)</code>。primary=石墨蓝 · tertiary=海泡青(语义专用,非 CTA)· error=信号红 · 与实物价共用 #E63946。
+      </div>
+    </div>
+
+    <table class="m3-table">
+      <thead>
+        <tr>
+          <th style="width:24%">M3 ColorScheme 字段</th>
+          <th style="width:30%">Token</th>
+          <th style="width:22%">Hex</th>
+          <th>语义角色</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group-row"><td colspan="4">PRIMARY · 主 CTA / 关键操作 emphasis</td></tr>
+        <tr><td class="compose">primary</td><td class="token">color.semantic.primary</td><td><div class="color-cell"><div class="dot" style="background:#1A2027"></div><span class="hex">#1A2027</span></div></td><td class="role">主 CTA 底色:立即购买 / 导航前往 / 扫码支付</td></tr>
+        <tr><td class="compose">onPrimary</td><td class="token">color.semantic.on-primary</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role">主 CTA 上文字</td></tr>
+        <tr><td class="compose">primaryContainer</td><td class="token">color.semantic.primary-container</td><td><div class="color-cell"><div class="dot" style="background:#2A3D49"></div><span class="hex">#2A3D49</span></div></td><td class="role">次级 emphasis 容器</td></tr>
+        <tr><td class="compose">onPrimaryContainer</td><td class="token">color.semantic.on-primary-container</td><td><div class="color-cell"><div class="dot" style="background:#F5F7F9"></div><span class="hex">#F5F7F9</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">inversePrimary</td><td class="token">color.semantic.inverse-primary</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role">反色 surface 上的 emphasis</td></tr>
+
+        <tr class="group-row"><td colspan="4">SECONDARY · 港口灰 · 次级 emphasis</td></tr>
+        <tr><td class="compose">secondary</td><td class="token">color.semantic.secondary</td><td><div class="color-cell"><div class="dot" style="background:#5D7B8A"></div><span class="hex">#5D7B8A</span></div></td><td class="role">次级文字 / icon</td></tr>
+        <tr><td class="compose">onSecondary</td><td class="token">color.semantic.on-secondary</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">secondaryContainer</td><td class="token">color.semantic.secondary-container</td><td><div class="color-cell"><div class="dot" style="background:#E8EDF1"></div><span class="hex">#E8EDF1</span></div></td><td class="role">chip 默认 / 输入框 surfaceVariant 复用</td></tr>
+        <tr><td class="compose">onSecondaryContainer</td><td class="token">color.semantic.on-secondary-container</td><td><div class="color-cell"><div class="dot" style="background:#1A2027"></div><span class="hex">#1A2027</span></div></td><td class="role"></td></tr>
+
+        <tr class="group-row"><td colspan="4">TERTIARY · 海泡青 · 语义专用强调(非 CTA)</td></tr>
+        <tr><td class="compose">tertiary</td><td class="token">color.semantic.tertiary</td><td><div class="color-cell"><div class="dot" style="background:#00A892"></div><span class="hex">#00A892</span></div></td><td class="role">服务券价 / 充电语义 / 在售状态</td></tr>
+        <tr><td class="compose">onTertiary</td><td class="token">color.semantic.on-tertiary</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">tertiaryContainer</td><td class="token">color.semantic.tertiary-container</td><td><div class="color-cell"><div class="dot" style="background:#E6FBF6"></div><span class="hex">#E6FBF6</span></div></td><td class="role">充电标签底 / 推荐徽章底</td></tr>
+        <tr><td class="compose">onTertiaryContainer</td><td class="token">color.semantic.on-tertiary-container</td><td><div class="color-cell"><div class="dot" style="background:#008270"></div><span class="hex">#008270</span></div></td><td class="role"></td></tr>
+
+        <tr class="group-row"><td colspan="4">ERROR · 信号红 · 与实物价 #E63946 共用</td></tr>
+        <tr><td class="compose">error</td><td class="token">color.semantic.error</td><td><div class="color-cell"><div class="dot" style="background:#E63946"></div><span class="hex">#E63946</span></div></td><td class="role">错误状态 / 表单验证失败</td></tr>
+        <tr><td class="compose">onError</td><td class="token">color.semantic.on-error</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">errorContainer</td><td class="token">color.semantic.error-container</td><td><div class="color-cell"><div class="dot" style="background:#FEF2F3"></div><span class="hex">#FEF2F3</span></div></td><td class="role">错误浅底块 · 表单错误条</td></tr>
+        <tr><td class="compose">onErrorContainer</td><td class="token">color.semantic.on-error-container</td><td><div class="color-cell"><div class="dot" style="background:#570D12"></div><span class="hex">#570D12</span></div></td><td class="role"></td></tr>
+
+        <tr class="group-row"><td colspan="4">SURFACE · 背景 / 容器</td></tr>
+        <tr><td class="compose">background</td><td class="token">color.semantic.background</td><td><div class="color-cell"><div class="dot" style="background:#F5F7F9"></div><span class="hex">#F5F7F9</span></div></td><td class="role">屏幕最底层 · 瓷白冷调</td></tr>
+        <tr><td class="compose">onBackground</td><td class="token">color.semantic.on-background</td><td><div class="color-cell"><div class="dot" style="background:#1A2027"></div><span class="hex">#1A2027</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">surface</td><td class="token">color.semantic.surface</td><td><div class="color-cell"><div class="dot" style="background:#FFFFFF;border-color:#D4DCE4"></div><span class="hex">#FFFFFF</span></div></td><td class="role">卡片 / Sheet 默认底色(比 bg 浅,产生层级)</td></tr>
+        <tr><td class="compose">onSurface</td><td class="token">color.semantic.on-surface</td><td><div class="color-cell"><div class="dot" style="background:#1A2027"></div><span class="hex">#1A2027</span></div></td><td class="role">主要文字</td></tr>
+        <tr><td class="compose">surfaceVariant</td><td class="token">color.semantic.surface-variant</td><td><div class="color-cell"><div class="dot" style="background:#E8EDF1"></div><span class="hex">#E8EDF1</span></div></td><td class="role">区分底色 / icon tile</td></tr>
+        <tr><td class="compose">onSurfaceVariant</td><td class="token">color.semantic.on-surface-variant</td><td><div class="color-cell"><div class="dot" style="background:#5D7B8A"></div><span class="hex">#5D7B8A</span></div></td><td class="role">次级文字 / icon</td></tr>
+        <tr><td class="compose">surfaceContainerLow</td><td class="token">color.semantic.surface-container-low</td><td><div class="color-cell"><div class="dot" style="background:#F5F7F9"></div><span class="hex">#F5F7F9</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">surfaceContainer</td><td class="token">color.semantic.surface-container</td><td><div class="color-cell"><div class="dot" style="background:#E8EDF1"></div><span class="hex">#E8EDF1</span></div></td><td class="role">默认容器</td></tr>
+        <tr><td class="compose">surfaceContainerHigh</td><td class="token">color.semantic.surface-container-high</td><td><div class="color-cell"><div class="dot" style="background:#D4DCE4"></div><span class="hex">#D4DCE4</span></div></td><td class="role"></td></tr>
+        <tr><td class="compose">inverseSurface</td><td class="token">color.semantic.inverse-surface</td><td><div class="color-cell"><div class="dot" style="background:#2A3D49"></div><span class="hex">#2A3D49</span></div></td><td class="role">Snackbar / Toast 底</td></tr>
+        <tr><td class="compose">inverseOnSurface</td><td class="token">color.semantic.inverse-on-surface</td><td><div class="color-cell"><div class="dot" style="background:#F5F7F9"></div><span class="hex">#F5F7F9</span></div></td><td class="role"></td></tr>
+
+        <tr class="group-row"><td colspan="4">OUTLINE · 描边 / 分割</td></tr>
+        <tr><td class="compose">outline</td><td class="token">color.semantic.outline</td><td><div class="color-cell"><div class="dot" style="background:#D4DCE4"></div><span class="hex">#D4DCE4</span></div></td><td class="role">默认描边</td></tr>
+        <tr><td class="compose">outlineVariant</td><td class="token">color.semantic.outline-variant</td><td><div class="color-cell"><div class="dot" style="background:#E8EDF1"></div><span class="hex">#E8EDF1</span></div></td><td class="role">弱描边 / divider</td></tr>
+
+        <tr class="group-row"><td colspan="4">UTILITY</td></tr>
+        <tr><td class="compose">scrim</td><td class="token">color.semantic.scrim</td><td><div class="color-cell"><div class="dot" style="background:#000000"></div><span class="hex">#000000</span></div></td><td class="role">模态蒙层(60% 透明)</td></tr>
+        <tr><td class="compose">shadow</td><td class="token">color.semantic.shadow</td><td><div class="color-cell"><div class="dot" style="background:#000000"></div><span class="hex">#000000</span></div></td><td class="role">阴影颜色(极少用)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ 03 CUSTOM ═══ -->
+  <section id="color-custom">
+    <div class="sec-head">
+      <div>
+        <div class="label">03 · COLOR CUSTOM</div>
+        <h2>项目专用语义色 · 不在 M3 内</h2>
+      </div>
+      <div class="desc">
+        电商 + 车机场景特有的别名。<b>text-price = 信号红</b>(实物商品)/ <b>text-price-energy = 海泡青加深</b>(服务券 / 能源)· 两类价格不混用。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>文字 TEXT · 含双价格语义</h3>
+      <div class="token-grid">
+        <div class="tok"><div class="sw" style="background:#1A2027"></div><div class="name">text-primary<em>主要正文 · 同 on-surface</em></div><div class="hex">#1A2027</div></div>
+        <div class="tok"><div class="sw" style="background:#5D7B8A"></div><div class="name">text-secondary<em>次要正文 · 描述 / 副标</em></div><div class="hex">#5D7B8A</div></div>
+        <div class="tok"><div class="sw" style="background:#8FA4B1"></div><div class="name">text-tertiary<em>占位 / 单位 / 时间戳</em></div><div class="hex">#8FA4B1</div></div>
+        <div class="tok"><div class="sw" style="background:#B8C5CF"></div><div class="name">text-disabled<em>禁用 / 划线原价</em></div><div class="hex">#B8C5CF</div></div>
+        <div class="tok"><div class="sw" style="background:#FFFFFF"></div><div class="name">text-inverse<em>反色 · 黑底白字</em></div><div class="hex">#FFFFFF</div></div>
+        <div class="tok"><div class="sw" style="background:#E63946"></div><div class="name">text-price ★<em>实物商品价(轮胎 / 配件)</em></div><div class="hex">#E63946</div></div>
+        <div class="tok"><div class="sw" style="background:#00A892"></div><div class="name">text-price-energy ★<em>服务券 / 能源价(充电 / 洗车 / 餐饮)</em></div><div class="hex">#00A892</div></div>
+        <div class="tok"><div class="sw" style="background:#B8C5CF"></div><div class="name">text-price-strike<em>划线原价 · line-through</em></div><div class="hex">#B8C5CF</div></div>
+        <div class="tok"><div class="sw" style="background:#1A2027"></div><div class="name">text-link<em>链接(下划线区分)</em></div><div class="hex">#1A2027</div></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>描边 BORDER + 分割 DIVIDER</h3>
+      <div class="token-grid">
+        <div class="tok"><div class="sw" style="background:#D4DCE4"></div><div class="name">divider<em>分割线 · 1dp 实线</em></div><div class="hex">#D4DCE4</div></div>
+        <div class="tok"><div class="sw" style="background:#D4DCE4"></div><div class="name">border-default<em>卡片 / 输入框未聚焦</em></div><div class="hex">#D4DCE4</div></div>
+        <div class="tok"><div class="sw" style="background:#E8EDF1"></div><div class="name">border-subtle<em>弱描边 · 列表分组</em></div><div class="hex">#E8EDF1</div></div>
+        <div class="tok"><div class="sw" style="background:#5D7B8A"></div><div class="name">border-strong<em>outlined 按钮</em></div><div class="hex">#5D7B8A</div></div>
+        <div class="tok"><div class="sw" style="background:#1A2027"></div><div class="name">border-focus<em>输入框聚焦</em></div><div class="hex">#1A2027</div></div>
+        <div class="tok"><div class="sw" style="background:#00C2A8"></div><div class="name">border-accent ★<em>选中态 / hero 左侧 3dp 强调条</em></div><div class="hex">#00C2A8</div></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>标签 TAG + 状态点 DOT</h3>
+      <div class="token-grid">
+        <div class="tok"><div class="sw" style="background:#E6FBF6"></div><div class="name">tag-charge-bg<em>充电标签底</em></div><div class="hex">#E6FBF6</div></div>
+        <div class="tok"><div class="sw" style="background:#008270"></div><div class="name">tag-charge-text<em>充电标签字</em></div><div class="hex">#008270</div></div>
+        <div class="tok"><div class="sw" style="background:#00C2A8"></div><div class="name">tag-recommend-bg<em>推荐徽章底(饱和)</em></div><div class="hex">#00C2A8</div></div>
+        <div class="tok"><div class="sw" style="background:#003D33"></div><div class="name">tag-recommend-text<em>推荐徽章字</em></div><div class="hex">#003D33</div></div>
+        <div class="tok"><div class="sw" style="background:#E8EDF1"></div><div class="name">tag-onsale-bg<em>在售/在营 底</em></div><div class="hex">#E8EDF1</div></div>
+        <div class="tok"><div class="sw" style="background:#2A3D49"></div><div class="name">tag-onsale-text<em>在售/在营 字</em></div><div class="hex">#2A3D49</div></div>
+        <div class="tok"><div class="sw" style="background:#FEF2F3"></div><div class="name">tag-coupon-bg<em>优惠券浅底</em></div><div class="hex">#FEF2F3</div></div>
+        <div class="tok"><div class="sw" style="background:#A91823"></div><div class="name">tag-coupon-text<em>优惠券深字</em></div><div class="hex">#A91823</div></div>
+        <div class="tok"><div class="sw" style="background:#00C2A8"></div><div class="name">dot-online<em>在线 / 可用</em></div><div class="hex">#00C2A8</div></div>
+        <div class="tok"><div class="sw" style="background:#8FA4B1"></div><div class="name">dot-offline<em>离线 / 不可用</em></div><div class="hex">#8FA4B1</div></div>
+        <div class="tok"><div class="sw" style="background:#E63946"></div><div class="name">dot-alert<em>通知红点</em></div><div class="hex">#E63946</div></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>特殊 SPECIAL · Hero 光晕 + 玻璃态</h3>
+      <div class="token-grid">
+        <div class="tok"><div class="sw" style="background:radial-gradient(circle at 65% 50%, #00C2A833, #1A2027)"></div><div class="name">hero-glow<em>Hero 卡海泡青光晕(18% opacity)</em></div><div class="hex">#00C2A8 · 18%</div></div>
+        <div class="tok"><div class="sw" style="background:rgba(255,255,255,0.6); border: 1px solid #D4DCE4"></div><div class="name">scrim-glass<em>沉浸式 top bar 玻璃白蒙层(60%)</em></div><div class="hex">#FFFFFF · 60%</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 04 CATEGORY ═══ -->
+  <section id="color-category">
+    <div class="sec-head">
+      <div>
+        <div class="label">04 · COLOR CATEGORY ACCENT</div>
+        <h2>5 品类强调色 · v1 全部默认 #00A892</h2>
+      </div>
+      <div class="desc">
+        车主场景 5 品类(汽车用品 / 加油充电 / 洗车保养 / 周边餐饮 / 旅行服务)· CMS 后台按品类覆盖 hex,实现氛围调节(未来:餐饮换暖橙、洗车换泡沫白、旅行换天蓝)。
+      </div>
+    </div>
+    <div class="cat-grid">
+      <div class="cat">
+        <div class="swatch" style="background:#00A892">AUTO-PARTS</div>
+        <div class="body"><div class="name">汽车用品</div><div class="desc">#00A892 · 轮胎 / 配件 / 内饰</div></div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:#00A892">FUEL-CHARGE</div>
+        <div class="body"><div class="name">加油充电</div><div class="desc">#00A892 · 强语义,建议保持</div></div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:#00A892">WASH-MAINTAIN</div>
+        <div class="body"><div class="name">洗车保养</div><div class="desc">#00A892 · 未来→泡沫蓝</div></div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:#00A892">FOOD-NEARBY</div>
+        <div class="body"><div class="name">周边餐饮</div><div class="desc">#00A892 · 未来→暖橙</div></div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:#00A892">TRAVEL-SERVICE</div>
+        <div class="body"><div class="name">旅行服务</div><div class="desc">#00A892 · 未来→天蓝</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 05 TYPOGRAPHY ═══ -->
+  <section id="typography">
+    <div class="sec-head">
+      <div>
+        <div class="label">05 · TYPOGRAPHY</div>
+        <h2>字号阶梯 · 车机距离 ~70cm 加大 · 含车载专用别名</h2>
+      </div>
+      <div class="desc">
+        M3 13 阶 + 9 个车载电商别名(双价格 / 商品标题 / 续航大数字 / 车牌 mono / 扫码倒计时 / 顶栏 metadata)。最小字号 16sp · body 主力 20sp。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>M3 TYPESCALE · 13 阶 <span class="hint">★ 标星 = 高频使用</span></h3>
+      <div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">display-large</span><span class="compose">→ displayLarge</span></div>
+          <div class="sample" style="font-size:48px;font-weight:700;letter-spacing:-0.02em;line-height:1">车载商城 · EV·MALL</div>
+          <div class="specs"><b>64</b>sp / <b>700</b> / lh <b>72</b> / -0.02em</div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">display-medium</span><span class="compose">→ displayMedium</span></div>
+          <div class="sample" style="font-size:44px;font-weight:700;letter-spacing:-0.015em;line-height:1">超大文案 · 启动展示</div>
+          <div class="specs"><b>56</b>sp / <b>700</b> / lh <b>64</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">display-small</span><span class="compose">→ displaySmall</span></div>
+          <div class="sample" style="font-size:40px;font-weight:700;letter-spacing:-0.01em;line-height:1">空状态主文案</div>
+          <div class="specs"><b>48</b>sp / <b>700</b> / lh <b>56</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">headline-large ★</span><span class="compose">→ headlineLarge · Hero 问候</span></div>
+          <div class="sample" style="font-size:38px;font-weight:700;letter-spacing:-0.015em;line-height:1">傍晚好,张明 · 给爱车补点电</div>
+          <div class="specs"><b>44</b>sp / <b>700</b> / lh <b>52</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">headline-medium</span><span class="compose">→ headlineMedium</span></div>
+          <div class="sample" style="font-size:32px;font-weight:700;letter-spacing:-0.01em;line-height:1">大区块标题 · 32sp</div>
+          <div class="specs"><b>36</b>sp / <b>700</b> / lh <b>44</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">headline-small</span><span class="compose">→ headlineSmall</span></div>
+          <div class="sample" style="font-size:28px;font-weight:700;letter-spacing:-0.012em;line-height:1">楼层标题 · 停车 5 分钟内可办</div>
+          <div class="specs"><b>32</b>sp / <b>700</b> / lh <b>40</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">title-large ★</span><span class="compose">→ titleLarge · Top App Bar</span></div>
+          <div class="sample" style="font-size:26px;font-weight:700;letter-spacing:-0.005em;line-height:1">页面标题 · 商品详情</div>
+          <div class="specs"><b>28</b>sp / <b>700</b> / lh <b>36</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">title-medium ★</span><span class="compose">→ titleMedium · 类目卡名</span></div>
+          <div class="sample" style="font-size:22px;font-weight:600;letter-spacing:-0.005em;line-height:1">汽车用品 / 加油充电 / 洗车保养</div>
+          <div class="specs"><b>24</b>sp / <b>600</b> / lh <b>32</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">title-small ★</span><span class="compose">→ titleSmall · 商品名 / 列表项</span></div>
+          <div class="sample" style="font-size:20px;font-weight:600;line-height:1">特斯拉 V3 超充 · 国贸三期</div>
+          <div class="specs"><b>22</b>sp / <b>600</b> / lh <b>30</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">body-large ★</span><span class="compose">→ bodyLarge · 主力工作字号</span></div>
+          <div class="sample" style="font-size:18px;font-weight:400;line-height:1">正文 / 列表 / 表单 · 这是车载的工作主力字号</div>
+          <div class="specs"><b>20</b>sp / <b>400</b> / lh <b>28</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">body-medium</span><span class="compose">→ bodyMedium · 卡片描述</span></div>
+          <div class="sample" style="font-size:16px;font-weight:400;line-height:1;color:var(--on-surface-v)">次要正文 · 卡片描述 · 商品规格 · 225/45 R18 防爆胎</div>
+          <div class="specs"><b>18</b>sp / <b>400</b> / lh <b>26</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">body-small</span><span class="compose">→ bodySmall</span></div>
+          <div class="sample" style="font-size:14px;font-weight:400;line-height:1;color:var(--text-3)">辅助文字 · 时间戳 · 单位 · 共 32 项推荐</div>
+          <div class="specs"><b>16</b>sp / <b>400</b> / lh <b>22</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">label-large ★</span><span class="compose">→ labelLarge · 主按钮</span></div>
+          <div class="sample" style="font-size:20px;font-weight:500;letter-spacing:0.01em;line-height:1">立即购买 · 导航前往</div>
+          <div class="specs"><b>22</b>sp / <b>500</b> / lh <b>28</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">label-medium</span><span class="compose">→ labelMedium · 紧凑按钮 / Rail item</span></div>
+          <div class="sample" style="font-size:18px;font-weight:500;letter-spacing:0.01em;line-height:1">首页 · 分类 · 购物车</div>
+          <div class="specs"><b>20</b>sp / <b>500</b> / lh <b>26</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">label-small ★</span><span class="compose">→ labelSmall · 最小字号下限</span></div>
+          <div class="sample" style="font-size:14px;font-weight:500;letter-spacing:0.04em;line-height:1">推荐 · 在售 · 充电中 · 在营</div>
+          <div class="specs"><b>16</b>sp / <b>500</b> / lh <b>22</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>车载 + 电商专用别名 · ALIASES · 9 个</h3>
+      <div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">price-display</span><span class="compose">商品详情主价</span></div>
+          <div class="sample"><span style="font-size:22px;color:#E63946;font-weight:700">¥</span><span style="font-size:40px;color:#E63946;font-weight:700;letter-spacing:-0.02em">1280</span><span style="margin-left:12px;font-size:16px;color:#B8C5CF;text-decoration:line-through">¥1580</span></div>
+          <div class="specs"><b>44</b>sp / <b>700</b> / lh <b>48</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">price-card ★</span><span class="compose">商品/服务卡现价</span></div>
+          <div class="sample"><span style="font-size:16px;color:#00A892;font-weight:700">¥</span><span style="font-size:28px;color:#00A892;font-weight:700;letter-spacing:-0.015em">1.28</span><span style="margin-left:6px;font-size:15px;color:#5D7B8A;font-weight:500">/kWh</span><span style="margin-left:12px;font-size:14px;color:#B8C5CF;text-decoration:line-through">¥1.68</span></div>
+          <div class="specs"><b>30</b>sp / <b>700</b> / lh <b>34</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">price-line-item</span><span class="compose">购物车 / 订单行</span></div>
+          <div class="sample"><span style="font-size:12px;color:#E63946;font-weight:700">¥</span><span style="font-size:20px;color:#E63946;font-weight:700">389</span></div>
+          <div class="specs"><b>22</b>sp / <b>700</b> / lh <b>28</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">price-strike</span><span class="compose">划线原价</span></div>
+          <div class="sample" style="font-size:14px;color:#B8C5CF;text-decoration:line-through;line-height:1">¥1580.00</div>
+          <div class="specs"><b>16</b>sp / <b>400</b> / line-through</div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">product-title-card</span><span class="compose">商品卡标题(2 行 max)</span></div>
+          <div class="sample" style="font-size:20px;font-weight:600;line-height:1.35">米其林 PILOT SPORT 4 ZP 防爆胎</div>
+          <div class="specs"><b>22</b>sp / <b>600</b> / lh <b>30</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">product-title-detail</span><span class="compose">详情页主标题</span></div>
+          <div class="sample" style="font-size:26px;font-weight:700;letter-spacing:-0.005em;line-height:1.3">米其林 PILOT SPORT 4 ZP · 225/45 R18</div>
+          <div class="specs"><b>28</b>sp / <b>700</b> / lh <b>36</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">range-number ★</span><span class="compose">续航 / 能耗大数字</span></div>
+          <div class="sample"><span style="font-family:var(--font-sans);font-size:64px;color:#00A892;font-weight:700;letter-spacing:-0.03em;line-height:1">412</span><span style="font-size:22px;color:#5D7B8A;margin-left:8px;font-weight:500">km</span></div>
+          <div class="specs"><b>72</b>sp / <b>700</b> / lh <b>72</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">plate-mono</span><span class="compose">车牌 / 订单号 / VIN</span></div>
+          <div class="sample" style="font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:0.08em;font-weight:500;line-height:1">京 A·E 88888 · NO20260523001384</div>
+          <div class="specs"><b>16</b>sp · mono / <b>500</b> / lh <b>22</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">qr-countdown ★</span><span class="compose">扫码弹窗倒计时</span></div>
+          <div class="sample" style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;line-height:1;color:var(--on-surface)">02:45</div>
+          <div class="specs"><b>36</b>sp · mono / <b>700</b> / lh <b>40</b></div>
+        </div>
+        <div class="type-row">
+          <div class="meta-tk"><span class="key">topbar-overline</span><span class="compose">顶栏 metadata · 大写</span></div>
+          <div class="sample" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;line-height:1;color:var(--text-3)">PARKED · 14:32 · 22°C</div>
+          <div class="specs"><b>14</b>sp · mono / <b>500</b> / lh <b>18</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 06 SPACING + SIZING ═══ -->
+  <section id="spacing">
+    <div class="sec-head">
+      <div>
+        <div class="label">06 · SPACING + SIZING</div>
+        <h2>间距 8dp grid + 尺寸 · 1920×1080 横屏栅格</h2>
+      </div>
+      <div class="desc">
+        Spacing 走 8dp 基准(不是手机的 4dp)。Sizing 是车载强约束:触控目标 80dp / Rail 240dp / Hero 240dp / 类目卡 min-h 176dp / 扫码二维码 480dp。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>SPACING · 8dp grid · 12 阶 + 9 别名</h3>
+      <div class="ruler">
+        <div class="row"><span class="key">space-0</span><span class="val">0 dp</span><div class="bar" style="width:0"></div><span class="use">完全贴边</span></div>
+        <div class="row"><span class="key">space-1</span><span class="val">4 dp</span><div class="bar" style="width:4px"></div><span class="use">子网格 · 行内 icon-text 微调</span></div>
+        <div class="row"><span class="key">space-2 ★</span><span class="val">8 dp</span><div class="bar" style="width:8px"></div><span class="use">网格单元 · 最小间距</span></div>
+        <div class="row"><span class="key">space-3 ★</span><span class="val">16 dp</span><div class="bar" style="width:16px"></div><span class="use">卡片间 gap-card-grid</span></div>
+        <div class="row"><span class="key">space-4 ★</span><span class="val">24 dp</span><div class="bar" style="width:24px"></div><span class="use">卡片内 padding · section 间距</span></div>
+        <div class="row"><span class="key">space-5</span><span class="val">32 dp</span><div class="bar" style="width:32px"></div><span class="use">大卡内 padding · 列表 vertical</span></div>
+        <div class="row"><span class="key">space-6 ★</span><span class="val">40 dp</span><div class="bar" style="width:40px"></div><span class="use">页面左右边距 pad-screen-h</span></div>
+        <div class="row"><span class="key">space-7</span><span class="val">48 dp</span><div class="bar" style="width:48px"></div><span class="use">区块大间距</span></div>
+        <div class="row"><span class="key">space-8</span><span class="val">64 dp</span><div class="bar" style="width:64px"></div><span class="use">紧凑触控 · 大间距</span></div>
+        <div class="row"><span class="key">space-9 ★</span><span class="val">80 dp</span><div class="bar" style="width:80px"></div><span class="use">主触控目标 height-touch-target</span></div>
+        <div class="row"><span class="key">space-10</span><span class="val">96 dp</span><div class="bar" style="width:96px"></div><span class="use">屏幕大间距</span></div>
+        <div class="row"><span class="key">space-11</span><span class="val">128 dp</span><div class="bar" style="width:128px"></div><span class="use">大型分组</span></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>SIZING · 高度 / 宽度 / 尺寸 · 25 项</h3>
+      <div class="sizing-grid">
+        <div class="siz"><div class="name">height-touch-target ★<em>主触控目标 · 按钮/Top Bar/Rail/列表</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-touch-target-compact<em>紧凑触控 · 次级按钮/chip</em></div><span class="val">64 dp</span></div>
+        <div class="siz"><div class="name">height-button<em>主按钮</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-button-compact<em>紧凑按钮</em></div><span class="val">64 dp</span></div>
+        <div class="siz"><div class="name">height-input<em>输入框</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-topbar<em>Top App Bar</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-rail-item<em>左侧 Rail 单项</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-list-item<em>列表项最小</em></div><span class="val">80 dp</span></div>
+        <div class="siz"><div class="name">height-chip<em>Chip(车机最小,小于触控)</em></div><span class="val">48 dp</span></div>
+        <div class="siz"><div class="name">height-tag<em>Tag 标签(不可触控)</em></div><span class="val">32 dp</span></div>
+        <div class="siz"><div class="name">height-tag-large<em>大 Tag · SALE 块</em></div><span class="val">40 dp</span></div>
+        <div class="siz"><div class="name">height-hero<em>Hero 卡</em></div><span class="val">240 dp</span></div>
+        <div class="siz"><div class="name">width-rail ★<em>左侧 Rail 宽度</em></div><span class="val">240 dp</span></div>
+        <div class="siz"><div class="name">width-content<em>主内容区</em></div><span class="val">1680 dp</span></div>
+        <div class="siz"><div class="name">min-height-cat-tile ★<em>首页类目卡</em></div><span class="val">176 dp</span></div>
+        <div class="siz"><div class="name">min-height-card-product<em>商品卡(三列)</em></div><span class="val">320 dp</span></div>
+        <div class="siz"><div class="name">min-height-card-service<em>服务卡横版</em></div><span class="val">176 dp</span></div>
+        <div class="siz"><div class="name">size-icon-md<em>列表 / Rail / Tag</em></div><span class="val">28 dp</span></div>
+        <div class="siz"><div class="name">size-icon-lg<em>按钮 / Top Bar</em></div><span class="val">32 dp</span></div>
+        <div class="siz"><div class="name">size-icon-xl<em>类目卡 / 空状态</em></div><span class="val">48 dp</span></div>
+        <div class="siz"><div class="name">size-avatar-md<em>Rail 用户卡</em></div><span class="val">56 dp</span></div>
+        <div class="siz"><div class="name">size-product-thumb-md<em>横版服务卡</em></div><span class="val">112 dp</span></div>
+        <div class="siz"><div class="name">size-product-thumb-lg<em>购物车 / 收藏</em></div><span class="val">160 dp</span></div>
+        <div class="siz"><div class="name">size-qr-code ★<em>扫码二维码(70cm 距离可识别)</em></div><span class="val">480 dp</span></div>
+        <div class="siz"><div class="name">stroke-icon-md<em>图标线条粗细</em></div><span class="val">1.8</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 07 RADIUS + BORDER ═══ -->
+  <section id="radius">
+    <div class="sec-head">
+      <div>
+        <div class="label">07 · RADIUS + BORDER WIDTH</div>
+        <h2>圆角 8 阶 · 描边宽度 4 阶</h2>
+      </div>
+      <div class="desc">
+        主圆角 12dp(C 方向「会发光的科技」调性,比手机版 4dp 更圆润)。卡片优先 1dp 描边 + 0 阴影;选中态用海泡青 3dp 强调边。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>RADIUS · 8 阶</h3>
+      <div class="radius-grid">
+        <div class="r" style="border-radius:0"><span class="lbl">none</span><span class="v">0 dp</span></div>
+        <div class="r" style="border-radius:4px"><span class="lbl">xs</span><span class="v">4 dp</span></div>
+        <div class="r" style="border-radius:8px"><span class="lbl">sm</span><span class="v">8 dp</span></div>
+        <div class="r" style="border-radius:12px"><span class="lbl">md ★</span><span class="v">12 dp</span></div>
+        <div class="r" style="border-radius:16px"><span class="lbl">lg</span><span class="v">16 dp</span></div>
+        <div class="r" style="border-radius:20px"><span class="lbl">xl</span><span class="v">20 dp</span></div>
+        <div class="r" style="border-radius:24px"><span class="lbl">2xl</span><span class="v">24 dp</span></div>
+        <div class="r" style="border-radius:9999px"><span class="lbl">full</span><span class="v">∞</span></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>BORDER WIDTH · 4 阶</h3>
+      <div class="border-grid">
+        <div class="b thin"><div class="lbl">thin</div><div class="v">0.5 dp</div></div>
+        <div class="b default"><div class="lbl">default ★</div><div class="v">1 dp</div></div>
+        <div class="b thick"><div class="lbl">thick</div><div class="v">2 dp · focus</div></div>
+        <div class="b accent"><div class="lbl">accent ★</div><div class="v">3 dp · 选中 / hero</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 08 ELEVATION + STATE ═══ -->
+  <section id="elevation">
+    <div class="sec-head">
+      <div>
+        <div class="label">08 · ELEVATION + STATE</div>
+        <h2>阴影 6 阶 + 状态透明度 10 项</h2>
+      </div>
+      <div class="desc">
+        卡片首选 elevation-0 + 1dp 描边(扁平、性能友好)。状态透明度走 M3 标准值,新增车载特有 <code>hero-glow 18%</code> 和 <code>scrim-glass 60%</code>。
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>ELEVATION · 6 阶</h3>
+      <div class="elev-grid">
+        <div class="e e-0"><span class="lbl">elevation-0 ★</span><span class="v">0 dp</span><span class="role">完全扁平 · 卡片首选</span></div>
+        <div class="e e-1"><span class="lbl">elevation-1</span><span class="v">1 dp</span><span class="role">极弱(几乎不用)</span></div>
+        <div class="e e-2"><span class="lbl">elevation-2</span><span class="v">3 dp</span><span class="role">Top App Bar 滚动后</span></div>
+        <div class="e e-3"><span class="lbl">elevation-3</span><span class="v">6 dp</span><span class="role">Dialog / BottomSheet</span></div>
+        <div class="e e-4"><span class="lbl">elevation-4</span><span class="v">8 dp</span><span class="role">菜单 / 浮动按钮</span></div>
+        <div class="e e-5"><span class="lbl">elevation-5</span><span class="v">12 dp</span><span class="role">Snackbar / Toast</span></div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <h3>STATE OPACITY · 10 项 · M3 state-layer + 2 个车载特有</h3>
+      <div class="state-grid">
+        <div class="state-card s-hover">
+          <div class="head-line"><span class="key">opacity-hover</span><span class="pct">0.08</span></div>
+          <div class="demo"></div>
+          <div class="use">桌面 hover · 触屏极少用</div>
+        </div>
+        <div class="state-card s-focus">
+          <div class="head-line"><span class="key">opacity-focus</span><span class="pct">0.12</span></div>
+          <div class="demo"></div>
+          <div class="use">键盘 focus / 输入框聚焦反馈</div>
+        </div>
+        <div class="state-card s-pressed">
+          <div class="head-line"><span class="key">opacity-pressed ★</span><span class="pct">0.12</span></div>
+          <div class="demo"></div>
+          <div class="use">Android Ripple 基础值</div>
+        </div>
+        <div class="state-card s-dragged">
+          <div class="head-line"><span class="key">opacity-dragged</span><span class="pct">0.16</span></div>
+          <div class="demo"></div>
+          <div class="use">长按拖拽态</div>
+        </div>
+        <div class="state-card s-selected">
+          <div class="head-line"><span class="key">opacity-selected</span><span class="pct">0.12</span></div>
+          <div class="demo"></div>
+          <div class="use">列表项 / chip 选中态</div>
+        </div>
+        <div class="state-card s-d-content">
+          <div class="head-line"><span class="key">disabled-content</span><span class="pct">0.38</span></div>
+          <div class="demo"></div>
+          <div class="use">禁用文字 / icon</div>
+        </div>
+        <div class="state-card s-d-cont">
+          <div class="head-line"><span class="key">disabled-container</span><span class="pct">0.12</span></div>
+          <div class="demo"></div>
+          <div class="use">禁用按钮底</div>
+        </div>
+        <div class="state-card s-scrim">
+          <div class="head-line"><span class="key">opacity-scrim</span><span class="pct">0.60</span></div>
+          <div class="demo"></div>
+          <div class="use">模态蒙层 · 黑 60% 遮罩</div>
+        </div>
+        <div class="state-card s-glow">
+          <div class="head-line"><span class="key">hero-glow ★</span><span class="pct">0.18</span></div>
+          <div class="demo"></div>
+          <div class="use">Hero 卡海泡青径向光晕</div>
+        </div>
+        <div class="state-card s-glass">
+          <div class="head-line"><span class="key">scrim-glass</span><span class="pct">0.60</span></div>
+          <div class="demo"></div>
+          <div class="use">沉浸式 top bar 玻璃白蒙层</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT -->
+  <section class="next">
+    <div class="l">
+      <span class="num">NEXT</span>
+      <div>
+        <h3>审核通过 → 进入阶段 3:车载通用组件库(5 态)</h3>
+        <p>按钮(80dp / 64dp)· 输入框 · 商品/服务卡 · 标签 · 价格组件 · Top App Bar · 左侧 Rail · 扫码 Dialog · 状态页 · 5 态 mockup</p>
+      </div>
+    </div>
+    <div class="picks">
+      <span class="go">通过 · 进 Stage 3</span><span>有改动</span><span>整套重做</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

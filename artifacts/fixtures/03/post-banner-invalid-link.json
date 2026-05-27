@@ -1,0 +1,5 @@
+{
+  "code": 1000,
+  "data": null,
+  "message": "link_target 指向的商品不存在(product_id=99999)"
+}

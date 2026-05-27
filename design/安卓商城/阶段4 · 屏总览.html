@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 4 · 屏总览 · 8 屏索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components-car.css" />
+<style>
+  html, body { background: var(--color-steel-900); color: #fff; }
+  .wrap { max-width: 2080px; margin: 0 auto; padding: 56px 48px 96px; }
+  .head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 28px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--color-steel-700);
+    gap: 64px;
+  }
+  .head .crumb {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-steel-400);
+    letter-spacing: 0.22em;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .head h1 {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .head h1 small {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--color-steel-400);
+    margin-top: 10px;
+    max-width: 920px;
+  }
+  .head .meta {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-steel-400);
+    line-height: 1.95;
+    flex-shrink: 0;
+  }
+  .head .meta b { color: #fff; font-weight: 500; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .stat {
+    padding: 18px 24px;
+    background: var(--color-steel-800);
+    border: 1px solid var(--color-steel-700);
+    border-radius: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .stat .lbl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--color-steel-400);
+    text-transform: uppercase;
+  }
+  .stat .v {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .stat .v em { font-style: normal; color: var(--color-tertiary); }
+  .stat .sub {
+    font-size: 13px;
+    color: var(--color-steel-400);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .thumb {
+    background: var(--color-steel-800);
+    border: 1px solid var(--color-steel-700);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    cursor: pointer;
+    transition: none;
+    text-decoration: none;
+    color: inherit;
+  }
+  .thumb:hover { border-color: var(--color-tertiary); }
+  .thumb__preview {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: var(--color-steel-900);
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-steel-700);
+  }
+  .thumb__iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1080px;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  .thumb__num {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #fff;
+    background: rgba(0,0,0,0.6);
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+  .thumb__body {
+    padding: 20px 24px;
+  }
+  .thumb__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.005em;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .thumb__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--color-tertiary);
+    color: var(--color-seafoam-900);
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .thumb__desc {
+    font-size: 13px;
+    color: var(--color-steel-400);
+    line-height: 1.5;
+  }
+
+  .legend {
+    margin-top: 56px;
+    padding: 28px 32px;
+    background: var(--color-steel-800);
+    border: 1px solid var(--color-steel-700);
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .legend h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--color-steel-400);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .legend ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .legend li {
+    font-size: 14px;
+    color: var(--color-steel-300);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .legend li .sw {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend li b { color: #fff; font-weight: 500; }
+  .legend li .mono { font-family: var(--font-mono); font-size: 12px; color: var(--color-steel-400);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div>
+      <div class="crumb">STAGE 04 / 04 · CORE SCREENS · INDEX</div>
+      <h1>
+        屏总览 · 8 个核心屏
+        <small>AAOS 1920×1080 横屏 · Direction C 海泡青电车感 · 沿用 components/_tokens.css + _components-car.css · 双价格语义(实物红 / 服务券青)</small>
+      </h1>
+    </div>
+    <div class="meta">
+      <b>SCREENS</b>&nbsp;&nbsp;8 / 8 · light only<br/>
+      <b>RAIL</b>&nbsp;&nbsp;240 · <b>TOUCH</b>&nbsp;&nbsp;80dp<br/>
+      <b>STAGE</b>&nbsp;&nbsp;1920×1080 真实尺度 · iframe 0.25 scale 缩略
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <span class="lbl">CORE SCREENS</span>
+      <span class="v">8</span>
+      <span class="sub">屏数 · 含 2 个 BottomSheet</span>
+    </div>
+    <div class="stat">
+      <span class="lbl">DUAL PRICE</span>
+      <span class="v"><em>2</em></span>
+      <span class="sub">语义 · 实物 #E63946 / 服务券 #00A892</span>
+    </div>
+    <div class="stat">
+      <span class="lbl">SHARED CSS</span>
+      <span class="v">2</span>
+      <span class="sub">_tokens.css + _components-car.css · 0 hardcode</span>
+    </div>
+    <div class="stat">
+      <span class="lbl">QR SIZE</span>
+      <span class="v"><em>480</em><span style="font-size:16px;color:var(--color-steel-400);font-family:var(--font-mono);margin-left:6px">dp</span></span>
+      <span class="sub">车机 70cm 距离手机扫码可识别</span>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <a class="thumb" href="阶段4 · 屏1 · 启动合规.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">01</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏1 · 启动合规.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">启动 + 合规弹窗 <span class="thumb__tag">SPLASH</span></div>
+        <div class="thumb__desc">瓷白 + 海泡青光晕 splash · Dialog 16dp + 两个 80dp 按钮 · 海泡青条款链接</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏2 · 首页.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">02</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏2 · 首页.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">首页 <span class="thumb__tag">HOME</span></div>
+        <div class="thumb__desc">Rail + TopBar + Hero(石墨蓝 + 续航 72sp)+ 5 类目 + 3 服务卡(海泡青价)</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏3 · 商品列表.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">03</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏3 · 商品列表.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">商品列表 · 汽车用品 <span class="thumb__tag">LIST</span></div>
+        <div class="thumb__desc">筛选 chip · 3 列商品网格 · 实物价格 #E63946 · SALE / 新品角标</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏4 · 商品详情-实物.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">04</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏4 · 商品详情-实物.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">详情 · 实物(机油) <span class="thumb__tag">PHYSICAL</span></div>
+        <div class="thumb__desc">800 主图 + 缩略图 · 容量 chip · 价格红 #E63946 · 底部 4 操作</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏5 · 商品详情-服务券.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">05</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏5 · 商品详情-服务券.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">详情 · 服务券(蔚来超充) <span class="thumb__tag">VOUCHER</span></div>
+        <div class="thumb__desc">品牌图卡(石墨蓝 + 海泡青光晕)· 适用门店 · 价格 #00A892</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏6 · 购物车.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">06</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏6 · 购物车.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">购物车 <span class="thumb__tag">CART</span></div>
+        <div class="thumb__desc">分组(实物 3 · 服务券 2)· 双价格语义 · 96dp 结算栏</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏7 · 订单确认+扫码支付.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">07</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏7 · 订单确认+扫码支付.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">订单确认 + 扫码 BS <span class="thumb__tag">CHECKOUT</span></div>
+        <div class="thumb__desc">地址 + 双组商品 + 价格明细 + 支付方式 · 720dp BS · 480 QR + 倒计时</div>
+      </div>
+    </a>
+
+    <a class="thumb" href="阶段4 · 屏8 · 我的券+核销码.html" target="_top">
+      <div class="thumb__preview">
+        <span class="thumb__num">08</span>
+        <iframe class="thumb__iframe" src="阶段4 · 屏8 · 我的券+核销码.html#thumb"></iframe>
+      </div>
+      <div class="thumb__body">
+        <div class="thumb__title">我的券 + 核销 BS <span class="thumb__tag">COUPONS</span></div>
+        <div class="thumb__desc">Tab(全部/未/已/过)· 券卡 3 列 · BS 大 QR + 16 位码 + 适用门店</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div>
+      <h4>COLOR SEMANTICS · 颜色语义</h4>
+      <ul>
+        <li><span class="sw" style="background:#1A2027"></span><b>#1A2027</b> primary · 主 CTA / Rail active</li>
+        <li><span class="sw" style="background:#00A892"></span><b>#00A892</b> tertiary · 服务券价 / 充电语义 / 在售</li>
+        <li><span class="sw" style="background:#E63946"></span><b>#E63946</b> error · 实物商品价 / 错误</li>
+        <li><span class="sw" style="background:#F5F7F9;border:1px solid #444"></span><b>#F5F7F9</b> background · 屏幕底色 瓷白冷调</li>
+      </ul>
+    </div>
+    <div>
+      <h4>KEY SIZING · 关键尺寸</h4>
+      <ul>
+        <li><span class="mono">240dp</span><b>Rail 宽</b> · 左侧主导航</li>
+        <li><span class="mono">80dp</span><b>主触控目标</b> · 按钮 / Top Bar / Rail 项 / 列表</li>
+        <li><span class="mono">64dp</span><b>紧凑触控</b> · 次级按钮 / icon button</li>
+        <li><span class="mono">480dp</span><b>QR 二维码</b> · 70cm 观看距离可被手机识别</li>
+        <li><span class="mono">12dp</span><b>主圆角</b> · 卡片 / 按钮 / 输入</li>
+      </ul>
+    </div>
+    <div>
+      <h4>NEXT · 后续阶段</h4>
+      <ul>
+        <li><b>阶段 5</b> · 次要屏:扫码登录 BS / 订单列表 / 个人中心 / 售后</li>
+        <li><b>工程交付</b> · tokens.json → Theme.kt(Compose Material 3)</li>
+        <li><b>组件复盘</b> · 把 _components-car.css 整理成正式 Stage 3 可视化页(若需要)</li>
+        <li><b>验收</b> · 真车机部署 + 远端可读性测试</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* Scale each iframe to fit its preview container */
+  (function() {
+    function scale() {
+      document.querySelectorAll('.thumb__iframe').forEach(function(f) {
+        const parent = f.parentElement;
+        const w = parent.clientWidth;
+        const s = w / 1920;
+        f.style.transform = 'scale(' + s + ')';
+        parent.style.height = (1080 * s) + 'px';
+      });
+    }
+    window.addEventListener('resize', scale);
+    /* iframes may not be loaded yet — scale on each load */
+    document.querySelectorAll('.thumb__iframe').forEach(function(f) {
+      f.addEventListener('load', scale);
+    });
+    scale();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "id": "O202605251857146279",
+        "device_id": "test-device-abc",
+        "status": "paid",
+        "total_amount": 9500,
+        "shipping_info": {
+          "name": "车主",
+          "phone": "138****0000",
+          "address": "上海市浦东新区世纪大道 100 号"
+        },
+        "items": [
+          {
+            "id": 1,
+            "product_id": 4,
+            "product_snapshot": {
+              "id": 4,
+              "title": "中石化加油卡 100 元",
+              "product_type": "service_voucher",
+              "price": 9500,
+              "spec": "100 元面值",
+              "main_image_url": "https://picsum.photos/seed/fuel100/600/400"
+            },
+            "quantity": 1,
+            "price": 9500
+          }
+        ],
+        "created_at": "2026-05-25T18:57:14.033006+08:00",
+        "paid_at": "2026-05-25T18:57:37.065841+08:00"
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "page_size": 20
+  },
+  "message": "ok"
+}

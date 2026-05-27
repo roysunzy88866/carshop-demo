@@ -1,0 +1,41 @@
+{
+    "code": 0,
+    "data": [
+        {
+            "id": 1,
+            "name": "汽车用品",
+            "icon_url": "https://carshop.hearagain.space/static/icons/car-parts.svg",
+            "sort": 1,
+            "created_at": "2026-05-26T02:08:14.813793+00:00"
+        },
+        {
+            "id": 2,
+            "name": "加油充电",
+            "icon_url": "https://carshop.hearagain.space/static/icons/fuel-charge.svg",
+            "sort": 2,
+            "created_at": "2026-05-26T02:08:14.814768+00:00"
+        },
+        {
+            "id": 3,
+            "name": "洗车保养",
+            "icon_url": "https://carshop.hearagain.space/static/icons/wash-maintain.svg",
+            "sort": 3,
+            "created_at": "2026-05-26T02:08:14.815330+00:00"
+        },
+        {
+            "id": 4,
+            "name": "周边餐饮",
+            "icon_url": "https://carshop.hearagain.space/static/icons/food-nearby.svg",
+            "sort": 4,
+            "created_at": "2026-05-26T02:08:14.815859+00:00"
+        },
+        {
+            "id": 5,
+            "name": "旅行服务",
+            "icon_url": "https://carshop.hearagain.space/static/icons/travel-service.svg",
+            "sort": 5,
+            "created_at": "2026-05-26T02:08:14.816356+00:00"
+        }
+    ],
+    "message": "ok"
+}

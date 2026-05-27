@@ -1,0 +1,49 @@
+# 车机商店 · root .gitignore
+# 子项目(carshop-android / carshop-server / carshop-admin)各自还有自己的 .gitignore,本文件只兜底 root 级
+
+# ─── 系统 / 编辑器 / IDE ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# ─── 日志 / 临时 ──────────────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+.cache/
+
+# ─── 防御性兜底(子 .gitignore 已经覆盖,这里二次兜底,防止误漏)──────────
+**/node_modules/
+**/build/
+**/dist/
+**/.gradle/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/local.properties
+
+# ─── 数据库 / 用户上传(都是运行时数据)─────────────────────────────────
+**/carshop.db
+**/carshop.db-journal
+**/carshop.db-wal
+**/carshop.db-shm
+**/static/uploads/*
+!**/static/uploads/.gitkeep
+
+# ─── APK 产物(release APK 走公网下载站,不入库)────────────────────────
+*.apk
+*.aab
+**/outputs/
+
+# ─── 签名密钥(永远不入库)────────────────────────────────────────────
+*.keystore
+*.jks
+keystore.properties
+
+# ─── feedback / 临时笔记 ──────────────────────────────────────────────
+feedback.md

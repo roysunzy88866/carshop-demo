@@ -1,0 +1,12 @@
+{
+  "code": 0,
+  "data": {
+    "id": 4,
+    "image_url": "https://picsum.photos/seed/banner-test/1680/480",
+    "link_type": "product",
+    "link_target": 1,
+    "sort": 10,
+    "on_show": true
+  },
+  "message": "ok"
+}

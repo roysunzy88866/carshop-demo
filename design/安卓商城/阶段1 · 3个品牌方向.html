@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 1 · 4 个品牌方向</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink:        #14110E;
+    --ink-2:      #4A4640;
+    --ink-3:      #8A8580;
+    --paper:      #F7F5F0;
+    --paper-2:    #EDEAE3;
+    --rule:       #DDD9D1;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", system-ui, sans-serif;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 64px 48px 96px; }
+
+  /* ─────── Header ─────── */
+  .page-head {
+    max-width: 1680px;
+    margin: 0 auto 56px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 64px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .page-head .crumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .page-head h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .page-head h1 small {
+    display: block;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-2);
+    margin-top: 8px;
+    letter-spacing: 0;
+  }
+  .page-head .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-align: right;
+    line-height: 1.9;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .page-head .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ─────── Grid ─────── */
+  .grid {
+    max-width: 1680px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─────── Direction Card ─────── */
+  .dir {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .dir-head {
+    padding: 28px 28px 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dir-head .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    padding: 4px 8px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .dir-head h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .dir-head .sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+  }
+  .dir-head .desc {
+    margin-top: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  /* swatches */
+  .swatches {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+  .swatch {
+    aspect-ratio: 1 / 1.05;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border-right: 1px solid rgba(0,0,0,0.06);
+  }
+  .swatch:last-child { border-right: 0; }
+  .swatch .role {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    opacity: 0.7;
+  }
+  .swatch .role.dark { color: #fff; opacity: 0.8; }
+  .swatch .role.light { color: #0F0F0F; opacity: 0.55; }
+  .swatch .name { font-size: 17px; font-weight: 700; letter-spacing: -0.005em; }
+  .swatch .hex {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+
+  /* neutral row */
+  .neutrals {
+    padding: 16px 22px 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .neutrals .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .neutrals .row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    height: 28px;
+  }
+  .neutrals .row span {
+    border-radius: 1px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .neutrals .basis {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 8px;
+  }
+
+  /* keywords */
+  .keywords {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .keywords .kw {
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink-2);
+    line-height: 1;
+  }
+
+  /* preview phone */
+  .preview-wrap {
+    padding: 26px;
+    display: flex;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 6px, rgba(0,0,0,0.025) 6px 7px);
+  }
+  .phone {
+    width: 280px;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.08),
+      0 12px 32px -8px rgba(20,17,14,0.18);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .phone .status {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .phone .status .dots { display: flex; gap: 3px; align-items: center; }
+  .phone .status .dots i {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    opacity: 0.7;
+  }
+  .phone .top {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .phone .top .logo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+  .phone .top .icons { display: flex; gap: 10px; }
+  .phone .top .icons span {
+    width: 16px; height: 16px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.7;
+  }
+  .phone .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 10px;
+  }
+  .phone .card { display: flex; flex-direction: column; gap: 4px; }
+  .phone .img {
+    aspect-ratio: 3/4;
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,0.06) 0 8px, rgba(0,0,0,0.03) 8px 16px);
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-end;
+    padding: 6px;
+    font-family: var(--mono);
+    font-size: 8px;
+    color: rgba(0,0,0,0.45);
+    letter-spacing: 0.1em;
+  }
+  .phone .title {
+    font-size: 11px;
+    line-height: 1.35;
+    margin-top: 4px;
+    color: rgba(0,0,0,0.85);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .phone .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .phone .now {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .phone .now em {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 1px;
+  }
+  .phone .was {
+    font-size: 10px;
+    text-decoration: line-through;
+    color: rgba(0,0,0,0.4);
+  }
+  .phone .cta {
+    margin: 4px 12px 14px;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .phone .ctx {
+    margin: 0 12px 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: rgba(0,0,0,0.4);
+    text-transform: uppercase;
+  }
+
+  /* footer note in card */
+  .dir-foot {
+    padding: 18px 22px;
+    background: var(--paper);
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    border-top: 1px solid var(--rule);
+  }
+  .dir-foot b { color: var(--ink); font-weight: 600; }
+
+  /* ─────── DIRECTION A · 极简黑白 ─────── */
+  .dir-a .dir-head .tag { color: #0F0F0F; }
+  .dir-a .sw-1 { background: #0F0F0F; color: #fff; }
+  .dir-a .sw-2 { background: #F5F5F5; color: #0F0F0F; }
+  .dir-a .sw-3 { background: #E63946; color: #fff; }
+  .dir-a .ne-1 { background: #FFFFFF; }
+  .dir-a .ne-2 { background: #F5F5F5; }
+  .dir-a .ne-3 { background: #E8E8E8; }
+  .dir-a .ne-4 { background: #C9C9C9; }
+  .dir-a .ne-5 { background: #8A8A8A; }
+  .dir-a .ne-6 { background: #404040; }
+  .dir-a .ne-7 { background: #0F0F0F; }
+  .dir-a .phone { background: #fff; color: #0F0F0F; }
+  .dir-a .phone .cta { background: #0F0F0F; color: #fff; }
+  .dir-a .phone .now { color: #E63946; }
+  .dir-a .phone .top .logo { color: #0F0F0F; }
+
+  /* ─────── DIRECTION B · 燕麦奶白 ─────── */
+  .dir-b .dir-head .tag { color: #2A211B; }
+  .dir-b .sw-1 { background: #F6F0E6; color: #2A211B; }
+  .dir-b .sw-2 { background: #2A211B; color: #F6F0E6; }
+  .dir-b .sw-3 { background: #C26A3C; color: #fff; }
+  .dir-b .ne-1 { background: #FBF8F2; }
+  .dir-b .ne-2 { background: #F1ECE2; }
+  .dir-b .ne-3 { background: #E3DCCD; }
+  .dir-b .ne-4 { background: #C2BAA8; }
+  .dir-b .ne-5 { background: #807868; }
+  .dir-b .ne-6 { background: #4A4238; }
+  .dir-b .ne-7 { background: #2A211B; }
+  .dir-b .phone { background: #FBF8F2; color: #2A211B; }
+  .dir-b .phone .top { border-color: rgba(42,33,27,0.1); }
+  .dir-b .phone .img { background: repeating-linear-gradient(135deg, #E3DCCD 0 8px, #EDE7DA 8px 16px); }
+  .dir-b .phone .cta { background: #2A211B; color: #F6F0E6; }
+  .dir-b .phone .now { color: #C26A3C; }
+  .dir-b .phone .top .logo { color: #2A211B; }
+
+  /* ─────── DIRECTION D · 杏白胭脂 ─────── */
+  .dir-d .dir-head .tag { color: #1A1614; }
+  .dir-d .sw-1 { background: #1A1614; color: #FAF6F1; }
+  .dir-d .sw-2 { background: #FAF6F1; color: #1A1614; }
+  .dir-d .sw-3 { background: #B83A4E; color: #fff; }
+  .dir-d .ne-1 { background: #FFFDFA; }
+  .dir-d .ne-2 { background: #F7F2EC; }
+  .dir-d .ne-3 { background: #EBE3DA; }
+  .dir-d .ne-4 { background: #CFC4B7; }
+  .dir-d .ne-5 { background: #8C8278; }
+  .dir-d .ne-6 { background: #3D3530; }
+  .dir-d .ne-7 { background: #1A1614; }
+  .dir-d .phone { background: #FFFDFA; color: #1A1614; }
+  .dir-d .phone .top { border-color: rgba(26,22,20,0.08); }
+  .dir-d .phone .img { background: repeating-linear-gradient(135deg, #EBE3DA 0 8px, #F2EAE0 8px 16px); }
+  .dir-d .phone .cta { background: #1A1614; color: #FAF6F1; }
+  .dir-d .phone .now { color: #B83A4E; }
+  .dir-d .phone .top .logo { color: #1A1614; }
+
+  /* ─────── DIRECTION C · 深海科技 ─────── */
+  .dir-c .dir-head .tag { color: #0B1A2E; }
+  .dir-c .sw-1 { background: #0B1A2E; color: #fff; }
+  .dir-c .sw-2 { background: #F2F4F8; color: #0B1A2E; }
+  .dir-c .sw-3 { background: #00C2A8; color: #06241F; }
+  .dir-c .ne-1 { background: #FFFFFF; }
+  .dir-c .ne-2 { background: #F2F4F8; }
+  .dir-c .ne-3 { background: #E2E7EE; }
+  .dir-c .ne-4 { background: #B7C0CE; }
+  .dir-c .ne-5 { background: #7A8497; }
+  .dir-c .ne-6 { background: #2C3A52; }
+  .dir-c .ne-7 { background: #0B1A2E; }
+  .dir-c .phone { background: #fff; color: #0B1A2E; }
+  .dir-c .phone .top { border-color: rgba(11,26,46,0.08); }
+  .dir-c .phone .cta { background: #0B1A2E; color: #fff; position: relative; }
+  .dir-c .phone .cta::before {
+    content: "";
+    position: absolute; left: 14px; top: 50%;
+    width: 6px; height: 6px;
+    transform: translateY(-50%);
+    background: #00C2A8;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(0,194,168,0.18);
+  }
+  .dir-c .phone .now { color: #0B1A2E; }
+  .dir-c .phone .top .logo { color: #0B1A2E; }
+
+  /* ─────── compare bar (footer) ─────── */
+  .compare {
+    max-width: 1680px;
+    margin: 64px auto 0;
+    display: grid;
+    grid-template-columns: 180px repeat(4, 1fr);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .compare > div {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+  .compare > div:nth-last-child(-n+5) { border-bottom: 0; }
+  .compare > div:nth-child(5n) { border-right: 0; }
+  .compare .row-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    background: var(--paper);
+  }
+  .compare .hdr {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.005em;
+    background: var(--paper-2);
+  }
+
+  /* legend / instruction */
+  .next {
+    max-width: 1680px;
+    margin: 56px auto 0;
+    padding: 24px 28px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .next .left { display: flex; gap: 20px; align-items: center; }
+  .next .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+  .next h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+  .next p { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+  .next .picks {
+    display: flex;
+    gap: 8px;
+  }
+  .next .picks span {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <div>
+    <div class="crumb">STAGE 01 / 04 · BRAND DIRECTIONS · R02</div>
+    <h1>
+      4 个品牌方向 · 候选
+      <small>R02 · 应反馈新增方向 D(保留 A 极简骨架,暖化用于女性主导电商)。选 1 个后进入阶段 2(Design Token)</small>
+    </h1>
+  </div>
+  <div class="meta">
+    <b>项目</b>&nbsp;&nbsp;安卓自营商城<br/>
+    <b>设备</b>&nbsp;&nbsp;1080×2400 / Light only<br/>
+    <b>字体</b>&nbsp;&nbsp;Source Han Sans SC<br/>
+    <b>组件</b>&nbsp;&nbsp;Material 3 / Compose
+  </div>
+</header>
+
+<main class="grid">
+
+  <!-- ════════════ A ════════════ -->
+  <section class="dir dir-a">
+    <div class="dir-head">
+      <span class="tag">DIRECTION A</span>
+      <h2>极简黑白 · 锋利克制</h2>
+      <div class="sub">EDITORIAL · MONOCHROME · URBAN</div>
+      <p class="desc">
+        Shein 同款的冷酷骨架,但去掉运营花哨标签,只保留"黑白 + 一抹哑光红"。商品图是绝对主角,UI 像杂志版式一样退到背后。CTA 用克制的信号红,只出现在"加入购物车 / 立即购买 / 提交订单"等关键决策点。
+      </p>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch sw-1">
+        <span class="role dark">PRIMARY · 主色</span>
+        <div>
+          <div class="name">极致黑</div>
+          <div class="hex">#0F0F0F</div>
+        </div>
+      </div>
+      <div class="swatch sw-2">
+        <span class="role light">SECONDARY · 副色</span>
+        <div>
+          <div class="name">烟白</div>
+          <div class="hex">#F5F5F5</div>
+        </div>
+      </div>
+      <div class="swatch sw-3">
+        <span class="role dark">ACCENT · CTA</span>
+        <div>
+          <div class="name">信号红</div>
+          <div class="hex">#E63946</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="neutrals">
+      <div class="label">NEUTRAL SCALE · 中性灰(偏冷)</div>
+      <div class="row">
+        <span class="ne-1"></span><span class="ne-2"></span><span class="ne-3"></span>
+        <span class="ne-4"></span><span class="ne-5"></span><span class="ne-6"></span><span class="ne-7"></span>
+      </div>
+      <div class="basis">基调:中性偏冷灰 · 不带暖色油墨感</div>
+    </div>
+
+    <div class="keywords">
+      <span class="kw">锋利</span>
+      <span class="kw">克制</span>
+      <span class="kw">都市</span>
+      <span class="kw">编辑感</span>
+      <span class="kw">专业</span>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="phone">
+        <div class="status"><span>9:41</span><div class="dots"><i></i><i></i><i></i></div></div>
+        <div class="top">
+          <div class="logo">MALL</div>
+          <div class="icons"><span></span><span></span></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">条纹宽松针织开衫女 春秋外套</div>
+            <div class="price-row"><div class="now"><em>¥</em>129</div><div class="was">¥259</div></div>
+          </div>
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">复古直筒牛仔裤 高腰显瘦</div>
+            <div class="price-row"><div class="now"><em>¥</em>189</div><div class="was">¥329</div></div>
+          </div>
+        </div>
+        <div class="ctx">FROM PRODUCT DETAIL</div>
+        <div class="cta">立即购买</div>
+      </div>
+    </div>
+
+    <div class="dir-foot">
+      <b>适合用户</b> · 25-35 都市潮流男女,审美在线、不爱被运营标签轰炸,要"质感 + 不土"。<br/>
+      <b>风险</b> · 太冷可能显得"卖快时尚",和综合品类(食品/家居/数码)结合需注意品类页氛围。
+    </div>
+  </section>
+
+  <!-- ════════════ B ════════════ -->
+  <section class="dir dir-b">
+    <div class="dir-head">
+      <span class="tag">DIRECTION B</span>
+      <h2>燕麦奶白 · 温润生活</h2>
+      <div class="sub">WARM · MUJI-ADJACENT · CRAFT</div>
+      <p class="desc">
+        奶白色基底,把"商城"从冷冰冰的橱窗变成"逛市集"的感觉。文字用焙茶棕(几乎黑但带暖)代替纯黑,白底不刺眼。CTA 用烤橙——比红色温和,但仍然足够醒目,在浅色背景上一眼定位。适合做"有生活感的综合电商"。
+      </p>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch sw-1">
+        <span class="role light">PRIMARY · 主色</span>
+        <div>
+          <div class="name">燕麦奶白</div>
+          <div class="hex">#F6F0E6</div>
+        </div>
+      </div>
+      <div class="swatch sw-2">
+        <span class="role dark">SECONDARY · 副色</span>
+        <div>
+          <div class="name">焙茶棕</div>
+          <div class="hex">#2A211B</div>
+        </div>
+      </div>
+      <div class="swatch sw-3">
+        <span class="role dark">ACCENT · CTA</span>
+        <div>
+          <div class="name">烤橙</div>
+          <div class="hex">#C26A3C</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="neutrals">
+      <div class="label">NEUTRAL SCALE · 中性灰(暖调)</div>
+      <div class="row">
+        <span class="ne-1"></span><span class="ne-2"></span><span class="ne-3"></span>
+        <span class="ne-4"></span><span class="ne-5"></span><span class="ne-6"></span><span class="ne-7"></span>
+      </div>
+      <div class="basis">基调:暖灰 · 略带米色油墨感,降低屏幕刺眼度</div>
+    </div>
+
+    <div class="keywords">
+      <span class="kw">温润</span>
+      <span class="kw">生活感</span>
+      <span class="kw">治愈</span>
+      <span class="kw">慢调</span>
+      <span class="kw">可信</span>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="phone">
+        <div class="status"><span>9:41</span><div class="dots"><i></i><i></i><i></i></div></div>
+        <div class="top">
+          <div class="logo">MALL</div>
+          <div class="icons"><span></span><span></span></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">手工陶瓷家用饭碗 日式釉下彩</div>
+            <div class="price-row"><div class="now"><em>¥</em>49</div><div class="was">¥89</div></div>
+          </div>
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">亚麻宽松长袖衬衫 中性风</div>
+            <div class="price-row"><div class="now"><em>¥</em>168</div><div class="was">¥298</div></div>
+          </div>
+        </div>
+        <div class="ctx">FROM PRODUCT DETAIL</div>
+        <div class="cta">立即购买</div>
+      </div>
+    </div>
+
+    <div class="dir-foot">
+      <b>适合用户</b> · 25-40 偏女性向,看重生活品质;品类涵盖家居/服饰/食品时更有"逛感"。<br/>
+      <b>风险</b> · 米色基底对数码/家电品类略软,需在品类页配合冷调摄影压住。
+    </div>
+  </section>
+
+  <!-- ════════════ C ════════════ -->
+  <section class="dir dir-c">
+    <div class="dir-head">
+      <span class="tag">DIRECTION C</span>
+      <h2>深海科技 · 锐利信号</h2>
+      <div class="sub">TECH · DEEP NAVY · SIGNAL CYAN</div>
+      <p class="desc">
+        白底 + 深海军作为品牌锚色,CTA 用海泡青——一个区别于淘宝红 / 京东红的"信号色"。视觉气质更接近 Apple Store / 数码潮玩 App,文字用深蓝替代纯黑,显得更精密、更"产品本身值得信赖"。适合走"品质综合 + 数码强势"。
+      </p>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch sw-1">
+        <span class="role dark">PRIMARY · 主色</span>
+        <div>
+          <div class="name">深海军</div>
+          <div class="hex">#0B1A2E</div>
+        </div>
+      </div>
+      <div class="swatch sw-2">
+        <span class="role light">SECONDARY · 副色</span>
+        <div>
+          <div class="name">月白</div>
+          <div class="hex">#F2F4F8</div>
+        </div>
+      </div>
+      <div class="swatch sw-3">
+        <span class="role dark">ACCENT · CTA</span>
+        <div>
+          <div class="name">海泡青</div>
+          <div class="hex">#00C2A8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="neutrals">
+      <div class="label">NEUTRAL SCALE · 中性灰(冷调)</div>
+      <div class="row">
+        <span class="ne-1"></span><span class="ne-2"></span><span class="ne-3"></span>
+        <span class="ne-4"></span><span class="ne-5"></span><span class="ne-6"></span><span class="ne-7"></span>
+      </div>
+      <div class="basis">基调:冷灰偏蓝 · 文字深蓝替代纯黑,数据感更强</div>
+    </div>
+
+    <div class="keywords">
+      <span class="kw">锐利</span>
+      <span class="kw">信号</span>
+      <span class="kw">精密</span>
+      <span class="kw">未来</span>
+      <span class="kw">中性</span>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="phone">
+        <div class="status"><span>9:41</span><div class="dots"><i></i><i></i><i></i></div></div>
+        <div class="top">
+          <div class="logo">MALL</div>
+          <div class="icons"><span></span><span></span></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">机械键盘 75% 客制化 三模无线</div>
+            <div class="price-row"><div class="now"><em>¥</em>499</div><div class="was">¥699</div></div>
+          </div>
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">蓝牙降噪耳机 主动降噪 40h</div>
+            <div class="price-row"><div class="now"><em>¥</em>329</div><div class="was">¥499</div></div>
+          </div>
+        </div>
+        <div class="ctx">FROM PRODUCT DETAIL</div>
+        <div class="cta">立即购买</div>
+      </div>
+    </div>
+
+    <div class="dir-foot">
+      <b>适合用户</b> · 数码男性偏多但中性;品类向数码/家电/潮玩倾斜时气场最强。<br/>
+      <b>风险</b> · 服饰/家居/食品品类视觉张力不如方向 A/B;海泡青需严格控制使用面积。
+    </div>
+  </section>
+
+  <!-- ════════════ D ════════════ -->
+  <section class="dir dir-d">
+    <div class="dir-head">
+      <span class="tag">DIRECTION D · NEW</span>
+      <h2>杏白胭脂 · 暖编辑感</h2>
+      <div class="sub">EDITORIAL · WARM OFF-WHITE · ROUGE</div>
+      <p class="desc">
+        保留方向 A 的极简骨架(黑白 + 单一强调色 + 大图主导),但把每一个中性都往暖里调:文字用「暖墨」代替纯黑,背景是「杏白」而不是冷白,CTA 从冷峻的信号红换成更高级的「莓红」。整体气质接近 Net-a-Porter / Mytheresa / Songmont —— 是杂志感,但是「女性走进精品店」的杂志感,不是「都市冷面」的杂志感。
+      </p>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch sw-1">
+        <span class="role dark">PRIMARY · 主色</span>
+        <div>
+          <div class="name">暖墨</div>
+          <div class="hex">#1A1614</div>
+        </div>
+      </div>
+      <div class="swatch sw-2">
+        <span class="role light">SECONDARY · 副色</span>
+        <div>
+          <div class="name">杏白</div>
+          <div class="hex">#FAF6F1</div>
+        </div>
+      </div>
+      <div class="swatch sw-3">
+        <span class="role dark">ACCENT · CTA</span>
+        <div>
+          <div class="name">莓红</div>
+          <div class="hex">#B83A4E</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="neutrals">
+      <div class="label">NEUTRAL SCALE · 中性灰(暖调偏粉)</div>
+      <div class="row">
+        <span class="ne-1"></span><span class="ne-2"></span><span class="ne-3"></span>
+        <span class="ne-4"></span><span class="ne-5"></span><span class="ne-6"></span><span class="ne-7"></span>
+      </div>
+      <div class="basis">基调:暖灰带粉调 · 比 B 的米色更轻,几乎是白,但屏幕不刺眼</div>
+    </div>
+
+    <div class="keywords">
+      <span class="kw">温暖</span>
+      <span class="kw">编辑感</span>
+      <span class="kw">女性向</span>
+      <span class="kw">高级</span>
+      <span class="kw">内敛</span>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="phone">
+        <div class="status"><span>9:41</span><div class="dots"><i></i><i></i><i></i></div></div>
+        <div class="top">
+          <div class="logo">MALL</div>
+          <div class="icons"><span></span><span></span></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">法式淡水珍珠耳钉 925银 日常通勤</div>
+            <div class="price-row"><div class="now"><em>¥</em>89</div><div class="was">¥199</div></div>
+          </div>
+          <div class="card">
+            <div class="img">PRODUCT</div>
+            <div class="title">真丝长款方巾 桑蚕丝 90×90</div>
+            <div class="price-row"><div class="now"><em>¥</em>168</div><div class="was">¥358</div></div>
+          </div>
+        </div>
+        <div class="ctx">FROM PRODUCT DETAIL</div>
+        <div class="cta">立即购买</div>
+      </div>
+    </div>
+
+    <div class="dir-foot">
+      <b>适合用户</b> · 22-38 女性主导,服饰 / 珠宝 / 美妆 / 家居香氛,愿意为「质感」付溢价,讨厌花哨。<br/>
+      <b>差异于 A</b> · 同样克制极简,但每个像素都更暖;红色从「信号灯」变成「口红」。<br/>
+      <b>差异于 B</b> · 背景仍以白为主,不是米色基底,信息密度可保持 Shein 级。
+    </div>
+  </section>
+
+</main>
+
+<!-- compare table -->
+<section class="compare">
+  <div class="row-label"></div>
+  <div class="hdr">A · 极简黑白</div>
+  <div class="hdr">B · 燕麦奶白</div>
+  <div class="hdr">C · 深海科技</div>
+  <div class="hdr">D · 杏白胭脂 ★</div>
+
+  <div class="row-label">气质 TEMPER</div>
+  <div>冷酷 / 编辑感 / 都市</div>
+  <div>温润 / 手作感 / 慢调</div>
+  <div>锐利 / 数据感 / 中性</div>
+  <div>编辑感 / 女性向 / 高级</div>
+
+  <div class="row-label">主导色温</div>
+  <div>无温度 → 偏冷</div>
+  <div>暖色油墨</div>
+  <div>冷色偏蓝</div>
+  <div>偏暖 + 微粉</div>
+
+  <div class="row-label">CTA 视觉</div>
+  <div>黑底白字 + 红色仅用于价格</div>
+  <div>深棕底奶白字 + 烤橙数字价</div>
+  <div>深蓝底白字 + 海泡青点状信号</div>
+  <div>暖墨底杏白字 + 莓红数字价</div>
+
+  <div class="row-label">最契合品类</div>
+  <div>服饰 / 鞋包 / 美妆</div>
+  <div>家居 / 服饰 / 食品 / 母婴</div>
+  <div>数码 / 家电 / 潮玩 / 户外</div>
+  <div>服饰 / 珠宝 / 美妆 / 香氛</div>
+
+  <div class="row-label">差异化程度</div>
+  <div>和 Shein 同源,但去标签化</div>
+  <div>避开所有红黄电商套路</div>
+  <div>避开所有红橙电商套路</div>
+  <div>保留 A 骨架,女性向暖化</div>
+
+  <div class="row-label">技术风险</div>
+  <div>低 · Material 3 无障碍对比度全过</div>
+  <div>低 · 米底注意 elevation 阴影选色</div>
+  <div>低 · 注意青色不要超 6% 面积</div>
+  <div>低 · 莓红与暖墨对比度全过</div>
+</section>
+
+<section class="next">
+  <div class="left">
+    <span class="num">NEXT</span>
+    <div>
+      <h3>选 1 个方向 → 进入阶段 2:Design Token JSON</h3>
+      <p>阶段 2 会展开 12-step 颜色阶梯 · 字号阶梯 · 间距 / 圆角 / 阴影 / 状态色,可 1:1 映射到 Compose Theme</p>
+    </div>
+  </div>
+  <div class="picks">
+    <span>选 A</span><span>选 B</span><span>选 C</span><span>选 D</span><span>再加 1 个</span>
+  </div>
+</section>
+
+</body>
+</html>

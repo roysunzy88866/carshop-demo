@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>阶段 4 · 屏 2 · 首页</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="components/_tokens.css" />
+<link rel="stylesheet" href="components/_components-car.css" />
+<style>
+  .stage { display: flex; }
+  .main {
+    flex: 1;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+    height: 240px;
+  }
+  .cats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .nearby {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="stage-page">
+  <header class="stage-label">
+    <div>
+      <h1>屏 2 · 首页</h1>
+      <div>RAIL 240 · TOPBAR 80 · HERO 240(石墨蓝 + 海泡青光晕)+ 续航 72sp · CATS 5×176 · 3 张服务卡(海泡青价)</div>
+    </div>
+    <div class="right">
+      <b>1920 × 1080</b> · 4 / 8 STAGE<br/>
+      Direction C · 海泡青电车感
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="stage">
+
+      <!-- RAIL -->
+      <aside class="rail">
+        <div class="rail__brand">
+          <div class="logo">EV·MALL<em>.</em></div>
+          <div class="sub">CAR INFOTAINMENT</div>
+        </div>
+        <button class="rail__item rail__item--active">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L14 4 L25 13 L25 25 L17 25 L17 17 L11 17 L11 25 L3 25 Z"/></svg>
+          首页
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="10" rx="1"/><rect x="15" y="3" width="10" height="10" rx="1"/><rect x="3" y="15" width="10" height="10" rx="1"/><rect x="15" y="15" width="10" height="10" rx="1"/></svg>
+          分类
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 L7 6 L9 19 L23 19 L25 9 L8 9"/><circle cx="11" cy="24" r="1.5"/><circle cx="21" cy="24" r="1.5"/></svg>
+          购物车
+          <span class="badge">3</span>
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25 s-9-5.5-9-13 a5 5 0 0 1 9-3 a5 5 0 0 1 9 3 c0 7.5-9 13-9 13z"/></svg>
+          收藏
+        </button>
+        <button class="rail__item">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L25 7 L23 24 L5 24 Z"/><path d="M10 11 L10 4 C 10 2.5, 18 2.5, 18 4 L 18 11"/></svg>
+          订单
+        </button>
+        <div class="rail__foot">
+          <div class="avatar">张</div>
+          <div>
+            <div class="who">张明</div>
+            <div class="plate">京 A·E 88888</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- APPBAR -->
+        <div class="appbar">
+          <div class="appbar__search">
+            <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M17 17 L24 24"/></svg>
+            搜索商品、品牌、服务
+          </div>
+          <div class="appbar__badge">
+            <span class="dot"></span>
+            已停车 · <b>国贸地下 B2 · 215</b>
+          </div>
+          <button class="appbar__icon-btn">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4 a9 9 0 0 0 -9 9 c0 7 -3 9 -3 10 h24 c0-1 -3-3 -3-10 a9 9 0 0 0 -9-9 z"/><path d="M13 26 a3 3 0 0 0 6 0"/></svg>
+            <span class="alert-dot"></span>
+          </button>
+          <button class="appbar__icon-btn">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="11" r="5.5"/><path d="M5 28 C 5 19, 27 19, 27 28"/></svg>
+          </button>
+        </div>
+
+        <!-- HERO -->
+        <div class="hero-grid">
+          <div class="card--hero">
+            <div>
+              <div class="label">PARKED · 14:32 · 22°C</div>
+              <h2>傍晚好,张明 · 给爱车补点电</h2>
+              <div class="where">
+                <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20 s-7-5.5-7-11 a7 7 0 0 1 14 0 c0 5.5 -7 11 -7 11 z"/><circle cx="11" cy="9" r="2.8"/></svg>
+                当前 <b>国贸三期 B2 · 215 号车位</b> · 周边 <b>32 项服务</b>可预订
+              </div>
+            </div>
+          </div>
+          <div class="card--range">
+            <div class="head">
+              <span class="l">RANGE · 续航</span>
+              <span class="tag">充电中 · 12 kW</span>
+            </div>
+            <div>
+              <div class="km">412<span class="u">km</span></div>
+            </div>
+            <div class="bar"></div>
+            <div class="sub">
+              <span><b>78%</b> · 上次满电 3 天前</span>
+              <span>预估满电 02:18</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATS -->
+        <div class="cats">
+          <div class="cat-tile">
+            <div class="ic">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L3 14 C 3 12, 5 10, 7 10 L 25 10 C 27 10, 29 12, 29 14 L 29 20"/><circle cx="9" cy="23" r="3"/><circle cx="23" cy="23" r="3"/><path d="M8 10 L10 6 L22 6 L24 10"/></svg>
+            </div>
+            <div class="name">汽车用品</div>
+            <div class="meta"><b>1,280</b> 件 · 包邮</div>
+          </div>
+          <div class="cat-tile">
+            <div class="ic ic--accent">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L8 14 L14 14 L10 28 L24 12 L18 12 L20 3 Z"/></svg>
+            </div>
+            <div class="name">加油充电</div>
+            <div class="meta"><b>12</b> 桩闲 · 周边</div>
+            <span class="badge">推荐</span>
+          </div>
+          <div class="cat-tile">
+            <div class="ic">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3 C 10 10, 6 16, 6 20 a10 10 0 0 0 20 0 c0-4 -4-10 -10-17z"/></svg>
+            </div>
+            <div class="name">洗车保养</div>
+            <div class="meta"><b>¥58</b> 起 · 上门</div>
+          </div>
+          <div class="cat-tile">
+            <div class="ic">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 L25 4 L25 14 C 25 18, 21 21, 16 21 C 11 21, 7 18, 7 14 Z"/><path d="M25 7 L28 7 L28 13 L25 13"/><path d="M10 28 L22 28"/><path d="M16 21 L16 28"/></svg>
+            </div>
+            <div class="name">周边餐饮</div>
+            <div class="meta"><b>32</b> 家 · 步行 5 分</div>
+          </div>
+          <div class="cat-tile">
+            <div class="ic">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="12"/><path d="M4 16 L28 16 M16 4 C 20 9, 20 23, 16 28 C 12 23, 12 9, 16 4"/></svg>
+            </div>
+            <div class="name">旅行服务</div>
+            <div class="meta">高速 / 酒店 / 票务</div>
+          </div>
+        </div>
+
+        <!-- SECTION HEAD -->
+        <div class="section-head">
+          <h3>停车 5 分钟内可办</h3>
+          <span class="meta-r">国贸地下 B2 · 实时</span>
+          <span class="more">查看全部 →</span>
+        </div>
+
+        <!-- NEARBY -->
+        <div class="nearby">
+          <div class="card--service">
+            <div class="img">CHARGE</div>
+            <div class="body">
+              <div class="name">特斯拉 V3 超充 · 国贸三期</div>
+              <div class="spec">B2 楼层 · <b style="color:var(--color-on-surface);font-weight:600">12 桩闲</b> / 16 桩 · 最大 250 kW</div>
+              <div class="price-row">
+                <span class="price price--energy"><span class="price__now"><span class="yuan">¥</span>1.28<span class="price__unit">/kWh</span></span><span class="price__strike">¥1.68</span></span>
+              </div>
+            </div>
+            <span class="tag-corner"><span class="tag tag--new tag--lg">推荐</span></span>
+          </div>
+          <div class="card--service">
+            <div class="img">WASH</div>
+            <div class="body">
+              <div class="name">e 洗车 · 智能机洗 + 内饰擦拭</div>
+              <div class="spec">国贸地下 B1 · 排队 2 位 · 约 18 分钟</div>
+              <div class="price-row">
+                <span class="price price--energy"><span class="price__now"><span class="yuan">¥</span>58</span><span class="price__strike">¥98</span></span>
+              </div>
+            </div>
+            <span class="tag-corner"><span class="tag tag--coupon tag--lg">车主 6 折</span></span>
+          </div>
+          <div class="card--service">
+            <div class="img">FOOD</div>
+            <div class="body">
+              <div class="name">星巴克 · 燕麦拿铁大杯</div>
+              <div class="spec">国贸店 · 步行 3 分 · 预计 27 分取餐</div>
+              <div class="price-row">
+                <span class="price price--energy"><span class="price__now"><span class="yuan">¥</span>38</span><span class="price__strike">¥45</span></span>
+              </div>
+            </div>
+            <span class="tag-corner"><span class="tag tag--onsale tag--lg">车主券</span></span>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    const stage = document.querySelector('.stage');
+    const wrap = document.querySelector('.stage-wrap');
+    function fit() {
+      const max = wrap.clientWidth;
+      const scale = Math.min(max / 1920, 1);
+      stage.style.transform = `scale(${scale})`;
+      wrap.style.height = (1080 * scale) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    fit();
+  })();
+</script>
+</body>
+</html>

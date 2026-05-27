@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题最小化:实际外观全部交给 Compose 的 CarshopTheme;
+         这里只是给 Activity 一个底色,避免冷启动闪白。 -->
+    <style name="Theme.Carshop" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/carshop_bg</item>
+        <item name="android:statusBarColor">@color/carshop_bg</item>
+        <item name="android:navigationBarColor">@color/carshop_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
